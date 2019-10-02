@@ -43,6 +43,7 @@ void PrintNum(char f, int x, int y);
    5. Collect additional requirements from Edi and Sela and add Those
  */
 #define PROMINI 1
+#define VERSION "1.1 OCT19"
 
 
  // TFT display and SD card will share the hardware SPI interface.
@@ -71,7 +72,7 @@ char  BufferString[100];
 unsigned char i;
 char key;
 uint8_t* p[10];  // pinter to array
-int counter = 0;
+int counter = -1;
 int percentBattery = 0;
 int FontSizeArmenta = 2;
 
@@ -140,6 +141,12 @@ void setup(void) {
 
 	bmpDraw("/icon/w.bmp", 0, 0); // open screen
 	tft.setRotation(3);
+	tft.setTextColor(ILI9341_BLACK);
+	tft.setFont();
+	tft.setTextSize(1);
+	tft.setCursor(10, 10);
+	tft.print("Current Version is ");
+	tft.println(VERSION);
 	delay(2000);
 	paint_half_half();
 
@@ -533,7 +540,7 @@ void parse_pulse_counter(char* buf) {
 }
 
 void parse_pulse_counter_test() {
-	for (int pulse_count = 0; pulse_count < 2000; pulse_count++) {
+	for (int pulse_count = 0; pulse_count < 1200; pulse_count++) {
 		uint32_t currentmilis = millis();
 		int Base_y = 0;
 		tft.setRotation(3);
@@ -560,7 +567,7 @@ void parse_pulse_counter_test() {
 		Serial.print(millis() - currentmilis);
 		Serial.println(F(" milisecond long"));
 	}
-	for (int pulse_count = 2000; pulse_count > 0; pulse_count--) {
+	for (int pulse_count = 1200; pulse_count > 0; pulse_count--) {
 		uint32_t currentmilis = millis();
 		int Base_y = 0;
 		tft.setRotation(3);
@@ -846,7 +853,7 @@ void check_digits_changed_and_blank(int curr_number) {
 		}
 		else
 		{
-			tft.fillRect(0, 0, 2 * digitL + 1, 120, ILI9341_bk1); // The tens are MSB
+			tft.fillRect(0, 0, 2 * digitL + 10, 120, ILI9341_bk1); // The tens are MSB
 		}
 	}
 	else if (last_digit_is_changed)
@@ -861,11 +868,11 @@ void check_digits_changed_and_blank(int curr_number) {
 		}
 		else if (curr_number >= 10)
 		{
-			tft.fillRect(digitL, 0, digitL + 1, 120, ILI9341_bk1); // The singles are one digit to the right
+			tft.fillRect(digitL, 0, digitL + 10, 120, ILI9341_bk1); // The singles are one digit to the right
 		}
 		else
 		{
-			tft.fillRect(0, 0, digitL + 1, 120, ILI9341_bk1); // The singles are MSB
+			tft.fillRect(0, 0, digitL + 10, 120, ILI9341_bk1); // The singles are MSB
 		}
 	}
 }
