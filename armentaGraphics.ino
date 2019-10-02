@@ -42,7 +42,7 @@ void PrintNum(char f, int x, int y);
    4. Check if font can be changed to Font by graphic designer, ran throught process to create a font
    5. Collect additional requirements from Edi and Sela and add Those
  */
-#define PROMINI 1
+#define PROMINI 0
 #define VERSION "1.1 OCT19"
 
 
