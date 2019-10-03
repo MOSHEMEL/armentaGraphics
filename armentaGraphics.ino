@@ -6,6 +6,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include "ArmentaFont.h"
+#include "ArmentaFontHuge.h"
 
 uint16_t read16(File& f);
 uint32_t read32(File& f);
@@ -495,104 +496,82 @@ void parse_pulse_counter(char* buf) {
 	uint32_t currentmilis = millis();
 	buf++;
 	int new_counter = atoi(buf);
-	if (counter != new_counter) {
+	if (counter != new_counter) 
+	{
 		check_digits_changed_and_blank(new_counter);
 		counter = new_counter;
-		if (1) {
+		int Base_y = 0;
+		tft.setRotation(3);
+		tft.setCursor(8, 20);
+		tft.setTextColor(ILI9341_WHITE);
+#if PROMINI
+		tft.setFont(&ArmentaFont32pt7b);
+		tft.setTextSize(FontSizeArmenta);
+#else
+		tft.setFont(&ArmentaFont64pt7b);
+		tft.setTextSize(FontSizeArmenta / 2);
+#endif
+		tft.setCursor(8, Base_y + 100);
+		
+		if ((counter <= 9999) && (counter >= 0)) 
+		{
+			tft.println(counter);
+			Serial.print(F("Printing char is "));
+			Serial.print(millis() - currentmilis);
+			Serial.println(F(" milisecond long"));
 
-			int Base_y = 0;
-			tft.setRotation(3);
-			tft.setCursor(8, 20);
-			tft.setTextColor(ILI9341_WHITE);
-			tft.setFont(&ArmentaFont32pt7b);
-			tft.setTextSize(FontSizeArmenta);
-			tft.setCursor(8, Base_y + 100);
-			// TODO : check speed to print each char and not only every 5th.
-			// (num%5==0) &&
-			// speed is 150ms
-			// Probably the speed is limited by the TFT display only
-			if ((counter <= 9999) && (counter >= 0)) {
-				tft.println(counter);
-				Serial.print(F("Printing char is "));
-				Serial.print(millis() - currentmilis);
-				Serial.println(F(" milisecond long"));
-
-			}
-			else {
-				return;
-			}
-		}
-		else {
-			int Base_y = 0;
-			buf++;
-			tft.setRotation(3);
-			tft.setCursor(8, 20);
-			tft.fillRect(0, 0, 320, 120, ILI9341_bk1);
-
-			tft.setTextColor(ILI9341_WHITE);
-			tft.setTextSize(4);
-			tft.setCursor(8, Base_y + 20);
-			//  tft.println(buf);
-
-			PrintNumLcd(buf);
 		}
 	}
 }
 
 void parse_pulse_counter_test() {
-	for (int pulse_count = 0; pulse_count < 1200; pulse_count++) {
-		uint32_t currentmilis = millis();
-		int Base_y = 0;
-		tft.setRotation(3);
-		tft.setCursor(8, 20);
+	while (true)
+	{
+		// PERPETUAL BURN IN TEST. WILL RUN UNTIL RESET
+		for (int pulse_count = 0; pulse_count < 10000; pulse_count++) {
+			uint32_t currentmilis = millis();
+			int Base_y = 0;
+			tft.setRotation(3);
+			tft.setCursor(8, 20);
 
+			check_digits_changed_and_blank(pulse_count);
+			counter = pulse_count;
+			tft.setTextColor(ILI9341_WHITE);
+#if PROMINI
+			tft.setFont(&ArmentaFont32pt7b);
+			tft.setTextSize(FontSizeArmenta);
+#else
+			tft.setFont(&ArmentaFont64pt7b);
+			tft.setTextSize(FontSizeArmenta / 2);
+#endif
+			tft.setCursor(8, Base_y + 100);
+			tft.println(pulse_count);
+			Serial.print(F("Printing char is "));
+			Serial.print(millis() - currentmilis);
+			Serial.println(F(" milisecond long"));
+		}
+		for (int pulse_count = 99999; pulse_count > 0; pulse_count--) {
+			uint32_t currentmilis = millis();
+			int Base_y = 0;
+			tft.setRotation(3);
+			tft.setCursor(8, 20);
 
-		//      for (y = 18; y < 120; y++)
-		//      {
-		//        //   delay(100);
-		//        tft.drawLine(3, Base_y + y, 320, Base_y + y, ILI9341_bk1);
-		//      }
-		check_digits_changed_and_blank(pulse_count);
-		counter = pulse_count;
-		tft.setTextColor(ILI9341_WHITE);
-		tft.setFont(&ArmentaFont32pt7b);
-		tft.setTextSize(FontSizeArmenta);
-		tft.setCursor(8, Base_y + 100);
-		// TODO : check speed to print each char and not only every 5th.
-		// (num%5==0) &&
-		// speed is 150ms
-		// Probably the speed is limited by the TFT display only
-		tft.println(pulse_count);
-		Serial.print(F("Printing char is "));
-		Serial.print(millis() - currentmilis);
-		Serial.println(F(" milisecond long"));
-	}
-	for (int pulse_count = 1200; pulse_count > 0; pulse_count--) {
-		uint32_t currentmilis = millis();
-		int Base_y = 0;
-		tft.setRotation(3);
-		tft.setCursor(8, 20);
-
-
-		//      for (y = 18; y < 120; y++)
-		//      {
-		//        //   delay(100);
-		//        tft.drawLine(3, Base_y + y, 320, Base_y + y, ILI9341_bk1);
-		//      }
-		check_digits_changed_and_blank(pulse_count);
-		counter = pulse_count;
-		tft.setTextColor(ILI9341_WHITE);
-		tft.setFont(&ArmentaFont32pt7b);
-		tft.setTextSize(FontSizeArmenta);
-		tft.setCursor(8, Base_y + 100);
-		// TODO : check speed to print each char and not only every 5th.
-		// (num%5==0) &&
-		// speed is 150ms
-		// Probably the speed is limited by the TFT display only
-		tft.println(pulse_count);
-		Serial.print(F("Printing char is "));
-		Serial.print(millis() - currentmilis);
-		Serial.println(F(" milisecond long"));
+			check_digits_changed_and_blank(pulse_count);
+			counter = pulse_count;
+			tft.setTextColor(ILI9341_WHITE);
+#if PROMINI
+			tft.setFont(&ArmentaFont32pt7b);
+			tft.setTextSize(FontSizeArmenta);
+#else
+			tft.setFont(&ArmentaFont64pt7b);
+			tft.setTextSize(FontSizeArmenta / 2);
+#endif
+			tft.setCursor(8, Base_y + 100);
+			tft.println(pulse_count);
+			Serial.print(F("Printing char is "));
+			Serial.print(millis() - currentmilis);
+			Serial.println(F(" milisecond long"));
+		}
 	}
 }
 
@@ -709,112 +688,6 @@ void PrintOnLcd(char* buf)
 	}
 }
 
-void PrintNum(char f, int x, int y)
-{
-	int Base_x = x;
-	int Base_y = y;
-	for (int y = 40; y <= 124; y++)  //124
-	{
-		for (int j = 0; j <= 8; j++)
-
-		{
-			x = j;
-			uint8_t v2 = p[f][j + (y - 40) * 9];
-			if ((n8m[j + (y - 40) * 9]) == 0xCC)
-			{
-				//  Serial.print("%%%%%");
-			}
-			uint8_t v1 = p[f][j + (y - 40) * 9];
-			if ((v2 >> 4) == 0x00)
-			{
-				tft.drawLine(Base_x + x * 8, Base_y + y, Base_x + x * 8 + 8, Base_y + y, ILI9341_bk1);
-				//    Serial.print("0000");
-			}
-			else
-			{
-				//  Serial.print("****");
-				tft.drawLine(Base_x + x * 8, Base_y + y, Base_x + x * 8 + 8, Base_y + y, ILI9341_WHITE);
-			}
-
-
-			if ((v2 << 4) == 0x00)
-			{
-				tft.drawLine(Base_x + x * 8, Base_y + y, Base_x + x * 8 + 8, Base_y + y, ILI9341_bk1);
-				//   Serial.print("0000");
-			}
-			else
-			{
-				//     Serial.print("****");
-				tft.drawLine(Base_x + x * 8, Base_y + y, Base_x + x * 8 + 8, Base_y + y, ILI9341_WHITE);
-			}
-
-			// tft.drawLine(18, Base_y + y, 85, Base_y + y,ILI9341_YELLOW ); //ILI9341_bk1
-			// tft.drawLine(18, Base_y + y, 85, Base_y + y, ILI9341_BLUE);
-		}
-		//  Serial.println("");
-	}
-
-}
-
-
-
-void PrintNumLcd(char* buf)
-{
-	char NumberOfDigits;
-	int Base_x = 8;
-	int Base_y = 20;
-	NumberOfDigits = strlen(buf);
-
-	for (char f = 0; f <= 9; f++)  //f = font index array
-	{
-		int currentMillis = millis();
-		for (int y = 40; y <= 124; y++)  //124
-		{
-			for (char j = 0; j <= 8; j++)
-
-			{
-				char x = j;
-				uint8_t v2 = p[f][j + (y - 40) * 9];
-				if ((n8m[j + (y - 40) * 9]) == 0xCC)
-				{
-					//  Serial.print("%%%%%");
-				}
-				uint8_t v1 = p[f][j + (y - 40) * 9];
-				if ((v2 >> 4) == 0x00)
-				{
-					tft.drawLine(Base_x + x * 8, Base_y + y, Base_x + x * 8 + 8, Base_y + y, ILI9341_bk1);
-					//    Serial.print("0000");
-				}
-				else
-				{
-					//  Serial.print("****");
-					tft.drawLine(Base_x + x * 8, Base_y + y, Base_x + x * 8 + 8, Base_y + y, ILI9341_WHITE);
-				}
-
-
-				if ((v2 << 4) == 0x00)
-				{
-					tft.drawLine(Base_x + x * 8, Base_y + y, Base_x + x * 8 + 8, Base_y + y, ILI9341_bk1);
-					//   Serial.print("0000");
-				}
-				else
-				{
-					//     Serial.print("****");
-					tft.drawLine(Base_x + x * 8, Base_y + y, Base_x + x * 8 + 8, Base_y + y, ILI9341_WHITE);
-				}
-
-				// tft.drawLine(18, Base_y + y, 85, Base_y + y,ILI9341_YELLOW ); //ILI9341_bk1
-				// tft.drawLine(18, Base_y + y, 85, Base_y + y, ILI9341_BLUE);
-			}
-			//  Serial.println("");
-		}
-		Serial.println(millis() - currentMillis);
-		delay(10);
-	} // for f
-
-
-
-}
 
 void check_digits_changed_and_blank(int curr_number) {
 	// This function is blanking digits based on the difference modulo
