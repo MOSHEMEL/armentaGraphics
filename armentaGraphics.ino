@@ -43,9 +43,9 @@ void PrintNum(char f, int x, int y);
    4. Check if font can be changed to Font by graphic designer, ran throught process to create a font
    5. Collect additional requirements from Edi and Sela and add Those
  */
-#define PROMINI 0
+#define PROMINI 1
 #define DEBUG_FLAG 1
-#define VERSION "1.2 OCT19"
+#define VERSION "1.1 OCT19"
 
 
  // TFT display and SD card will share the hardware SPI interface.
@@ -492,6 +492,30 @@ void parse_battery_percent(char* buf) {
 	}
 }
 
+bool graphics_to_Screen(int print_number)
+{
+	int Base_y = 0;
+	tft.setRotation(3);
+	tft.setCursor(8, 20);
+	tft.setTextColor(ILI9341_WHITE);
+#if PROMINI
+		tft.setFont(&ArmentaFont32pt7b);
+		tft.setTextSize(FontSizeArmenta);
+#else
+	tft.setFont(&ArmentaFont64pt7b);
+	tft.setTextSize(FontSizeArmenta / 2);
+#endif
+	tft.setCursor(8, Base_y + 100);
+	bool printed = false;
+	if ((print_number <= 99999) && (print_number >= 0))
+	{
+		tft.println(String(print_number));
+		printed = true;
+		counter = print_number;
+	}
+	return printed;
+}
+
 void parse_pulse_counter(char* buf) {
 	// This function is sent always even if no number needs to be printed
 	uint32_t currentmilis = millis();
@@ -500,27 +524,16 @@ void parse_pulse_counter(char* buf) {
 	if (counter != new_counter) 
 	{
 		check_digits_changed_and_blank(new_counter);
-		counter = new_counter;
-		int Base_y = 0;
-		tft.setRotation(3);
-		tft.setCursor(8, 20);
-		tft.setTextColor(ILI9341_WHITE);
-#if PROMINI
-		tft.setFont(&ArmentaFont32pt7b);
-		tft.setTextSize(FontSizeArmenta);
-#else
-		tft.setFont(&ArmentaFont64pt7b);
-		tft.setTextSize(FontSizeArmenta / 2);
-#endif
-		tft.setCursor(8, Base_y + 100);
-		
-		if ((counter <= 9999) && (counter >= 0)) 
+		bool printed = graphics_to_Screen(counter);
+		if (printed)
 		{
-			tft.println(counter);
+#if DEBUG_FLAG
 			Serial.print(F("Printing char is "));
+			Serial.print(counter);
+			Serial.print(" and takes ");
 			Serial.print(millis() - currentmilis);
 			Serial.println(F(" milisecond long"));
-
+#endif
 		}
 	}
 }
@@ -531,55 +544,33 @@ void parse_pulse_counter_test() {
 		// PERPETUAL BURN IN TEST. WILL RUN UNTIL RESET
 		for (int pulse_count = 0; pulse_count < 100000; pulse_count++) {
 			uint32_t currentmilis = millis();
-			int Base_y = 0;
-			tft.setRotation(3);
-			tft.setCursor(8, 20);
-
 			check_digits_changed_and_blank(pulse_count);
-			counter = pulse_count;
-			tft.setTextColor(ILI9341_WHITE);
-#if PROMINI
-			tft.setFont(&ArmentaFont32pt7b);
-			tft.setTextSize(FontSizeArmenta);
-#else
-			tft.setFont(&ArmentaFont64pt7b);
-			tft.setTextSize(FontSizeArmenta / 2);
-#endif
-			tft.setCursor(8, Base_y + 100);
-			tft.println(pulse_count);
+			bool printed = graphics_to_Screen(pulse_count);
+			if (printed)
+			{
 #if DEBUG_FLAG
-			Serial.print(F("Printing char is "));
-			Serial.print(pulse_count);
-			Serial.print(" and takes ");
-			Serial.print(millis() - currentmilis);
-			Serial.println(F(" milisecond long"));
+				Serial.print(F("Printing char is "));
+				Serial.print(pulse_count);
+				Serial.print(" and takes ");
+				Serial.print(millis() - currentmilis);
+				Serial.println(F(" milisecond long"));
 #endif
+			}
 		}
 		for (int pulse_count = 99999; pulse_count > 0; pulse_count--) {
 			uint32_t currentmilis = millis();
-			int Base_y = 0;
-			tft.setRotation(3);
-			tft.setCursor(8, 20);
-
 			check_digits_changed_and_blank(pulse_count);
-			counter = pulse_count;
-			tft.setTextColor(ILI9341_WHITE);
-#if PROMINI
-			tft.setFont(&ArmentaFont32pt7b);
-			tft.setTextSize(FontSizeArmenta);
-#else
-			tft.setFont(&ArmentaFont64pt7b);
-			tft.setTextSize(FontSizeArmenta / 2);
-#endif
-			tft.setCursor(8, Base_y + 100);
-			tft.println(pulse_count);
+			bool printed = graphics_to_Screen(pulse_count);
+			if (printed)
+			{
 #if DEBUG_FLAG
-			Serial.print(F("Printing char is "));
-			Serial.print(pulse_count);
-			Serial.print(" and takes ");
-			Serial.print(millis() - currentmilis);
-			Serial.println(F(" milisecond long"));
+				Serial.print(F("Printing char is "));
+				Serial.print(pulse_count);
+				Serial.print(" and takes ");
+				Serial.print(millis() - currentmilis);
+				Serial.println(F(" milisecond long"));
 #endif
+			}
 		}
 	}
 }
@@ -698,7 +689,8 @@ void PrintOnLcd(char* buf)
 }
 
 
-void check_digits_changed_and_blank(int curr_number) {
+void check_digits_changed_and_blank(int curr_number)
+		{
 	// This function is blanking digits based on the difference modulo
 	// Thus this is a symetric transform that works both descending and ascending
 	bool last_digit_is_changed = !(((curr_number - counter) % 10) == 0);
