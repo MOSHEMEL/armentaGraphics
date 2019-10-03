@@ -44,7 +44,8 @@ void PrintNum(char f, int x, int y);
    5. Collect additional requirements from Edi and Sela and add Those
  */
 #define PROMINI 0
-#define VERSION "1.1 OCT19"
+#define DEBUG_FLAG 1
+#define VERSION "1.2 OCT19"
 
 
  // TFT display and SD card will share the hardware SPI interface.
@@ -528,7 +529,7 @@ void parse_pulse_counter_test() {
 	while (true)
 	{
 		// PERPETUAL BURN IN TEST. WILL RUN UNTIL RESET
-		for (int pulse_count = 0; pulse_count < 10000; pulse_count++) {
+		for (int pulse_count = 0; pulse_count < 100000; pulse_count++) {
 			uint32_t currentmilis = millis();
 			int Base_y = 0;
 			tft.setRotation(3);
@@ -546,9 +547,13 @@ void parse_pulse_counter_test() {
 #endif
 			tft.setCursor(8, Base_y + 100);
 			tft.println(pulse_count);
+#if DEBUG_FLAG
 			Serial.print(F("Printing char is "));
+			Serial.print(pulse_count);
+			Serial.print(" and takes ");
 			Serial.print(millis() - currentmilis);
 			Serial.println(F(" milisecond long"));
+#endif
 		}
 		for (int pulse_count = 99999; pulse_count > 0; pulse_count--) {
 			uint32_t currentmilis = millis();
@@ -568,9 +573,13 @@ void parse_pulse_counter_test() {
 #endif
 			tft.setCursor(8, Base_y + 100);
 			tft.println(pulse_count);
+#if DEBUG_FLAG
 			Serial.print(F("Printing char is "));
+			Serial.print(pulse_count);
+			Serial.print(" and takes ");
 			Serial.print(millis() - currentmilis);
 			Serial.println(F(" milisecond long"));
+#endif
 		}
 	}
 }
@@ -696,16 +705,35 @@ void check_digits_changed_and_blank(int curr_number) {
 	bool tens_digit_is_changed = !(((curr_number / 10 - counter / 10) % 10) == 0);
 	bool hundreds_digit_is_changed = !(((curr_number / 100 - counter / 100) % 10) == 0);
 	bool thousands_digit_is_changed = !(((curr_number / 1000 - counter / 1000) % 10) == 0);
+	bool tens_of_thousands_digit_is_changed = !(((curr_number / 10000 - counter / 10000) % 10) == 0);
 	bool flags[4];
 	int digitL = 64;
 	tft.setRotation(3);
 	tft.setCursor(8, 20);
-	if (thousands_digit_is_changed) {
-		tft.fillRect(0, 0, 300, 120, ILI9341_bk1);
+	if (tens_of_thousands_digit_is_changed)
+	{
+		if (curr_number >= 10000)
+		{
+			tft.fillRect(0, 0, 5*digitL, 120, ILI9341_bk1);
+		}
+	}
+	else if (thousands_digit_is_changed) {
+		if (curr_number >= 10000)
+		{
+			tft.fillRect(digitL, 0, 4 * digitL, 120, ILI9341_bk1);
+		}
+		else if (curr_number >= 1000)
+		{
+			tft.fillRect(0, 0, 4*digitL, 120, ILI9341_bk1);
+		}
 	}
 	else if (hundreds_digit_is_changed)
 	{
-		if (curr_number >= 1000)
+		if (curr_number >= 10000)
+		{
+			tft.fillRect(2*digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1);
+		}
+		else if (curr_number >= 1000)
 		{
 			tft.fillRect(digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // The hundreds are one digit to the right
 		}
@@ -716,6 +744,10 @@ void check_digits_changed_and_blank(int curr_number) {
 	}
 	else if (tens_digit_is_changed)
 	{
+		if (curr_number >= 10000)
+		{
+			tft.fillRect(3 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1);
+		}
 		if (curr_number >= 1000)
 		{
 			tft.fillRect(2 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // The tens are two digit to the right
@@ -731,7 +763,11 @@ void check_digits_changed_and_blank(int curr_number) {
 	}
 	else if (last_digit_is_changed)
 	{
-		if (curr_number >= 1000)
+		if (curr_number >= 10000)
+		{
+			tft.fillRect(4 * digitL, 0, digitL + 1, 120, ILI9341_bk1);
+		}
+		else if (curr_number >= 1000)
 		{
 			tft.fillRect(3 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // The singles are 3 digit to the right
 		}
