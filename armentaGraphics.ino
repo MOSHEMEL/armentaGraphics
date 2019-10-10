@@ -424,21 +424,21 @@ void parse_E(char* buf) {
 	tft.println(buf);
 }
 float clip_percent(float num)
+{
+	if (num > 100)
 	{
-		if (num > 100)
-		{
-			return 100.0;
-		}
-		else if (num < 0)
-		{
-			return 0.0;
-		}
-		else
-		{
-			return num;
-		}
+		return 100.0;
 	}
-	
+	else if (num < 0)
+	{
+		return 0.0;
+	}
+	else
+	{
+		return num;
+	}
+}
+
 void parse_battery_percent(char* buf) {
 	int Base_y = 0;
 	buf++;
@@ -472,26 +472,25 @@ void parse_battery_percent(char* buf) {
 
 
 		Base_y = 208;
-		if ((percentBattery >= 0) && (percentBattery <= 100)) {
-			if (percentBattery <= 10) {
-				for (int y = 0; y <= percentBattery * 42 / 100; y++) {
-					//   delay(100);
-					tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
-						ILI9341_RED);
-				}
-			}
-			else {
-				for (int y = 0; y <= percentBattery * 42 / 100; y++) {
-					//   delay(100);
-					tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
-						ILI9341_GREEN);
-				}
-			}
-			for (int y = percentBattery * 42 / 100; y <= 42; y++) {
+		if (percentBattery <= 10) {
+			for (int y = 0; y <= percentBattery * 42 / 100; y++) {
 				//   delay(100);
-				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18, ILI9341_WHITE);
+				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
+					ILI9341_RED);
 			}
 		}
+		else {
+			for (int y = 0; y <= percentBattery * 42 / 100; y++) {
+				//   delay(100);
+				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
+					ILI9341_GREEN);
+			}
+		}
+		for (int y = percentBattery * 42 / 100; y <= 42; y++) {
+			//   delay(100);
+			tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18, ILI9341_WHITE);
+		}
+
 	}
 }
 
@@ -502,8 +501,8 @@ bool graphics_to_Screen(int print_number)
 	tft.setCursor(8, 20);
 	tft.setTextColor(ILI9341_WHITE);
 #if PROMINI
-		tft.setFont(&ArmentaFont32pt7b);
-		tft.setTextSize(FontSizeArmenta);
+	tft.setFont(&ArmentaFont32pt7b);
+	tft.setTextSize(FontSizeArmenta);
 #else
 	tft.setFont(&ArmentaFont64pt7b);
 	tft.setTextSize(FontSizeArmenta / 2);
@@ -524,7 +523,7 @@ void parse_pulse_counter(char* buf) {
 	uint32_t currentmilis = millis();
 	buf++;
 	int new_counter = atoi(buf);
-	if (counter != new_counter) 
+	if (counter != new_counter)
 	{
 		check_digits_changed_and_blank(new_counter);
 		bool printed = graphics_to_Screen(new_counter);
@@ -693,7 +692,7 @@ void PrintOnLcd(char* buf)
 
 
 void check_digits_changed_and_blank(int curr_number)
-		{
+{
 	// This function is blanking digits based on the difference modulo
 	// Thus this is a symetric transform that works both descending and ascending
 	bool last_digit_is_changed = !(((curr_number - counter) % 10) == 0);
@@ -709,7 +708,7 @@ void check_digits_changed_and_blank(int curr_number)
 	{
 		if (curr_number >= 10000)
 		{
-			tft.fillRect(0, 0, 5*digitL, 120, ILI9341_bk1);
+			tft.fillRect(0, 0, 5 * digitL, 120, ILI9341_bk1);
 		}
 	}
 	else if (thousands_digit_is_changed) {
@@ -719,14 +718,14 @@ void check_digits_changed_and_blank(int curr_number)
 		}
 		else if (curr_number >= 1000)
 		{
-			tft.fillRect(0, 0, 4*digitL, 120, ILI9341_bk1);
+			tft.fillRect(0, 0, 4 * digitL, 120, ILI9341_bk1);
 		}
 	}
 	else if (hundreds_digit_is_changed)
 	{
 		if (curr_number >= 10000)
 		{
-			tft.fillRect(2*digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1);
+			tft.fillRect(2 * digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1);
 		}
 		else if (curr_number >= 1000)
 		{

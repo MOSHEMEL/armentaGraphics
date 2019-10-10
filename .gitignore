@@ -340,5 +340,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
 __vm/Compile.vmps.xml
 __vm/Configuration.Debug.vmps.xml
+CppProperties.json
+*.xml
