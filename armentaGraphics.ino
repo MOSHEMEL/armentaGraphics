@@ -20,9 +20,7 @@ void parse_clean_screen(char* buf);
 void parse_pulse(char* buf);
 void parse_pressure(char* buf);
 void parse_aplicator(char* buf);
-void PrintOnLcd(char* buf);
-void PrintNumLcd(char* buf);
-void PrintNum(char f, int x, int y);
+
 /*
    16.09.19 Armenta Copyright
    Nick comments:
@@ -43,7 +41,7 @@ void PrintNum(char f, int x, int y);
    4. Check if font can be changed to Font by graphic designer, ran throught process to create a font
    5. Collect additional requirements from Edi and Sela and add Those
  */
-#define PROMINI 1
+#define PROMINI 0
 #define DEBUG_FLAG 1
 #define VERSION "1.1 OCT19"
 
@@ -104,22 +102,11 @@ void setup(void) {
 	SPI.beginTransaction(SPISettings(96000000, MSBFIRST, SPI_MODE0));
 	tft.begin();
 	pinMode(LED_TOGGLE, OUTPUT);
-	p[0] = n0m;
-	p[1] = n1m;
-	p[2] = n2m;
-	p[3] = n3m;
-	p[4] = n4m;
-	p[5] = n5m;
-	p[6] = n6m;
-	p[7] = n7m;
-	p[8] = n8m;
-	p[9] = n9m;
-	yield();
 
 #if PROMINI
 	Serial.print("Initializing SD card...");
 #else
-	Serial1.print("Initializing SD card...");
+	Serial.print("Initializing SD card...");
 #endif
 #if PROMINI
 	if (!SD.begin(4)) { // SD_CS define is acting up
@@ -128,14 +115,14 @@ void setup(void) {
 #else
 	if (!SD.begin(28)) { // SD_CS define is acting up
 		Serial.println("MKRZERO setting setup: if not apprropriate board, please switch");
-		Serial1.println("failed!");
+		Serial.println("failed!");
 #endif
 	}
 	else {
 #if PROMINI
 		Serial.println("OK!");
 #else
-		Serial1.println("OK!");
+		Serial.println("OK!");
 #endif
 	}
 	tft.fillScreen(ILI9341_BLACK);
@@ -200,14 +187,15 @@ void loop(void) {
 #if PROMINI
 		Serial.available() > 0
 #else
-		Serial.available() > 0
+		Serial1.available() > 0
 #endif
 
 		) {
 #if PROMINI
 		key = Serial.read();
 #else
-		key = Serial.read();
+		key = Serial1.read();
+		Serial.write(key);
 #endif
 		if (key == '$') //head
 		{
@@ -435,13 +423,28 @@ void parse_E(char* buf) {
 	tft.setCursor(8, Base_y + 20);
 	tft.println(buf);
 }
-
+float clip_percent(float num)
+	{
+		if (num > 100)
+		{
+			return 100.0;
+		}
+		else if (num < 0)
+		{
+			return 0.0;
+		}
+		else
+		{
+			return num;
+		}
+	}
+	
 void parse_battery_percent(char* buf) {
 	int Base_y = 0;
 	buf++;
 	int newpercentBattery = atoi(buf);
 	if (percentBattery != newpercentBattery) {
-		percentBattery = newpercentBattery;
+		percentBattery = clip_percent(newpercentBattery);
 		tft.setRotation(3);
 		tft.setCursor(8, Base_y + 20);
 		// battery
@@ -463,8 +466,8 @@ void parse_battery_percent(char* buf) {
 		Serial.print("Percent Battery ");
 		Serial.println(percentBattery);
 #else
-		Serial1.print("Percent Battery ");
-		Serial1.println(percentBattery);
+		Serial.print("Percent Battery ");
+		Serial.println(percentBattery);
 #endif
 
 
@@ -524,7 +527,7 @@ void parse_pulse_counter(char* buf) {
 	if (counter != new_counter) 
 	{
 		check_digits_changed_and_blank(new_counter);
-		bool printed = graphics_to_Screen(counter);
+		bool printed = graphics_to_Screen(new_counter);
 		if (printed)
 		{
 #if DEBUG_FLAG
@@ -626,8 +629,8 @@ void parse_aplicator(char* buf) {
 	Serial.print("Percent Applicaor Counter");
 	Serial.println(percentP);
 #else
-	Serial1.print("Percent Applicaor Counter");
-	Serial1.println(percentP);
+	Serial.print("Percent Applicaor Counter");
+	Serial.println(percentP);
 #endif
 	if ((percentP >= 0) && (percentP <= 100)) {
 		if (percentP <= 10) // l0 percent
@@ -652,7 +655,7 @@ void PrintOnLcd(char* buf)
 #if PROMINI
 	Serial.println(buf);
 #else
-	Serial1.println(buf);
+	Serial.println(buf);
 #endif
 	if ((*buf == 'C') || (*buf == 'c'))
 	{
