@@ -7,11 +7,16 @@
 #include <SD.h>
 #include "ArmentaFont.h"
 #include "ArmentaFontHuge.h"
+#include "welcome.c"
+#include "aplicator_error.c"
+#include "aplicator_ok.c"
+#include "battery.c"
+#include "pressure_high.c"
+#include "pressure_low.c"
+#include "pulseN.c"
+#include "pulseY.c"
 
-uint16_t read16(File& f);
-uint32_t read32(File& f);
 void check_digits_changed_and_blank(int curr_number);
-void bmpDraw(char* filename, int16_t x, int16_t y);
 void blank_upper_side();
 void paint_half_half();
 void parse_E(char* buf);
@@ -27,7 +32,7 @@ void parse_aplicator(char* buf);
    1. change pinout on ili9341 according to working example used in previous code
    2. add support pin to adress cs on sd_card (currently pin4) - wire is conected to CCS pinout on example
    3. Give better names
-   4. BmpDraw function currently adresses by row, col which are iterators and not positional x,y
+   4. tft.drawRGBBitmap function currently adresses by row, col which are iterators and not positional x,y
    5. If it works. Add to the codebase on github and seal up.
    20.09.19 Armenta
    Nick comments:
@@ -126,9 +131,8 @@ void setup(void) {
 #endif
 	}
 	tft.fillScreen(ILI9341_BLACK);
-	//bmpDraw("/a.bmp",0,30);
 
-	bmpDraw("/icon/w.bmp", 0, 0); // open screen
+	tft.drawRGBBitmap(0, 0, (uint16_t*)(WELCOME_pixel_data), WELCOME_WIDTH, WELCOME_HEIGHT);
 	tft.setRotation(3);
 	tft.setTextColor(ILI9341_BLACK);
 	tft.setFont();
@@ -139,23 +143,20 @@ void setup(void) {
 	delay(2000);
 	paint_half_half();
 
-	//  bmpDraw("/icon/n5.bmp", 10, 40);
-	//  bmpDraw("/icon/n8.bmp", 80, 40);
-	//  bmpDraw("/icon/n8.bmp", 160, 40);
-	//  bmpDraw("/icon/n8.bmp", 240, 40);
 
 	delay(2000);
-	bmpDraw("/icon/pr1l.bmp", 10, 168);
-	bmpDraw("/icon/pulseNo.bmp", 90, 168);
-	bmpDraw("/icon/bat_1.bmp", 160, 168);
-	bmpDraw("/icon/ap_red.bmp", 230, 168);
+	tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_low.pixel_data), pressure_low.width, pressure_low.height);
+	tft.drawRGBBitmap(90, 168, (uint16_t*)(pulseN.pixel_data), pulseN.width, pulseN.height);
+	tft.drawRGBBitmap(160, 168, (uint16_t*)(battery.pixel_data), battery.width, battery.height);
+	tft.drawRGBBitmap(230, 168, (uint16_t*)(aplicator_error.pixel_data), aplicator_error.width, aplicator_error.height);
+
 
 	delay(2000);
+	tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_high.pixel_data), pressure_high.width, pressure_high.height);
+	tft.drawRGBBitmap(90, 168, (uint16_t*)(pulseY.pixel_data), pulseY.width, pulseY.height);
+	tft.drawRGBBitmap(160, 168, (uint16_t*)(battery.pixel_data), battery.width, battery.height);
+	tft.drawRGBBitmap(230, 168, (uint16_t*)(aplicator_ok.pixel_data), aplicator_ok.width, aplicator_ok.height);
 
-	bmpDraw("/icon/pr1h.bmp", 10, 168);
-	bmpDraw("/icon/pulseY.bmp", 90, 168);
-	bmpDraw("/icon/bat_1.bmp", 160, 168);
-	bmpDraw("/icon/ap_clean.bmp", 230, 168);
 
 	// tft.drawLine(0, 168, 320, 168, ILI9341_RED);
 	// tft.drawLine(0, 162, 320, 162, ILI9341_RED);
@@ -187,14 +188,14 @@ void loop(void) {
 #if PROMINI
 		Serial.available() > 0
 #else
-		Serial1.available() > 0
+		Serial.available() > 0
 #endif
 
 		) {
 #if PROMINI
 		key = Serial.read();
 #else
-		key = Serial1.read();
+		key = Serial.read();
 		Serial.write(key);
 #endif
 		if (key == '$') //head
@@ -227,158 +228,6 @@ void loop(void) {
 	}
 }
 
-// IN RGB565 // and rgb888 IS 0x00ACB2 < 0, 172, 178
-// *****************************************************************************************
-uint16_t read16(File & f) {
-	uint16_t result;
-	((uint8_t*)&result)[0] = f.read(); // LSB
-	((uint8_t*)&result)[1] = f.read(); // MSB
-	return result;
-}
-
-uint32_t read32(File & f) {
-	uint32_t result;
-	((uint8_t*)&result)[0] = f.read(); // LSB
-	((uint8_t*)&result)[1] = f.read();
-	((uint8_t*)&result)[2] = f.read();
-	((uint8_t*)&result)[3] = f.read(); // MSB
-	return result;
-}
-
-void bmpDraw(char* filename, int16_t x, int16_t y) {
-
-	File     bmpFile;
-	int      bmpWidth, bmpHeight;   // W+H in pixels
-	uint8_t  bmpDepth;              // Bit depth (currently must be 24)
-	uint32_t bmpImageoffset;        // Start of image data in file
-	uint32_t rowSize;               // Not always = bmpWidth; may have padding
-	uint8_t  sdbuffer[3 * BUFFPIXEL]; // pixel buffer (R+G+B per pixel)
-	uint8_t  buffidx = sizeof(sdbuffer); // Current position in sdbuffer
-	boolean  goodBmp = false;       // Set to true on valid header parse
-	boolean  flip = true;        // BMP is stored bottom-to-top
-	int      w, h, row, col, x2, y2, bx1, by1;
-	uint8_t  r, g, b;
-	uint32_t pos = 0, startTime = millis();
-
-	if ((x >= tft.width()) || (y >= tft.height())) return;
-
-
-
-	Serial.println();
-	Serial.print(F("Loading image '"));
-	Serial.print(filename);
-	Serial.println('\'');
-
-	// Open requested file on SD card
-	if ((bmpFile = SD.open(filename)) == NULL) {
-		Serial.print(F("File not found"));
-		return;
-	}
-
-	// Parse BMP header
-	if (read16(bmpFile) == 0x4D42) { // BMP signature
-		Serial.print(F("File size: ")); Serial.println(read32(bmpFile));
-
-		(void)read32(bmpFile); // Read & ignore creator bytes
-		bmpImageoffset = read32(bmpFile); // Start of image data
-		Serial.print(F("Image Offset: ")); Serial.println(bmpImageoffset, DEC);
-		// Read DIB header
-		Serial.print(F("Header size: ")); Serial.println(read32(bmpFile));
-
-		bmpWidth = read32(bmpFile);
-		bmpHeight = read32(bmpFile);
-		if (read16(bmpFile) == 1) { // # planes -- must be '1'
-			bmpDepth = read16(bmpFile); // bits per pixel
-			Serial.print(F("Bit Depth: ")); Serial.println(bmpDepth);
-			if ((bmpDepth == 24) && (read32(bmpFile) == 0)) { // 0 = uncompressed
-
-				goodBmp = true; // Supported BMP format -- proceed!
-				Serial.print(F("Image size: "));
-				Serial.print(bmpWidth);
-				Serial.print('x');
-				Serial.println(bmpHeight);
-
-				// BMP rows are padded (if needed) to 4-byte boundary
-				rowSize = (bmpWidth * 3 + 3) & ~3;
-
-				// If bmpHeight is negative, image is in top-down order.
-				// This is not canon but has been observed in the wild.
-				if (bmpHeight < 0) {
-					bmpHeight = -bmpHeight;
-					flip = false;
-				}
-
-				// Crop area to be loaded
-				x2 = x + bmpWidth - 1; // Lower-right corner
-				y2 = y + bmpHeight - 1;
-				if ((x2 >= 0) && (y2 >= 0)) { // On screen?
-					w = bmpWidth; // Width/height of section to load/display
-					h = bmpHeight;
-					bx1 = by1 = 0; // UL coordinate in BMP file
-					if (x < 0) { // Clip left
-						bx1 = -x;
-						x = 0;
-						w = x2 + 1;
-					}
-					if (y < 0) { // Clip top
-						by1 = -y;
-						y = 0;
-						h = y2 + 1;
-					}
-					if (x2 >= tft.width())  w = tft.width() - x; // Clip right
-					if (y2 >= tft.height()) h = tft.height() - y; // Clip bottom
-
-					// Set TFT address window to clipped image bounds
-					tft.startWrite(); // Requires start/end transaction now
-					tft.setAddrWindow(x, y, w, h);
-
-					for (row = 0; row < h; row++) { // For each scanline...
-
-					  // Seek to start of scan line.  It might seem labor-
-					  // intensive to be doing this on every line, but this
-					  // method covers a lot of gritty details like cropping
-					  // and scanline padding.  Also, the seek only takes
-					  // place if the file position actually needs to change
-					  // (avoids a lot of cluster math in SD library).
-						if (flip) // Bitmap is stored bottom-to-top order (normal BMP)
-							pos = bmpImageoffset + (bmpHeight - 1 - (row + by1)) * rowSize;
-						else     // Bitmap is stored top-to-bottom
-							pos = bmpImageoffset + (row + by1) * rowSize;
-						pos += bx1 * 3; // Factor in starting column (bx1)
-						if (bmpFile.position() != pos) { // Need seek?
-							tft.endWrite(); // End TFT transaction
-							bmpFile.seek(pos);
-							buffidx = sizeof(sdbuffer); // Force buffer reload
-							tft.startWrite(); // Start new TFT transaction
-						}
-						for (col = 0; col < w; col++) { // For each pixel...
-						  // Time to read more pixel data?
-							if (buffidx >= sizeof(sdbuffer)) { // Indeed
-								tft.endWrite(); // End TFT transaction
-								bmpFile.read(sdbuffer, sizeof(sdbuffer));
-								buffidx = 0; // Set index to beginning
-								tft.startWrite(); // Start new TFT transaction
-							}
-							// Convert pixel from BMP to TFT format, push to display
-							b = sdbuffer[buffidx++];
-							g = sdbuffer[buffidx++];
-							r = sdbuffer[buffidx++];
-							//tft.writePixel(x, y, tft.color565(r, g, b));
-							tft.pushColor(tft.color565(r, g, b));
-						} // end pixel
-					} // end scanline
-					tft.endWrite(); // End last TFT transaction
-				} // end onscreen
-				Serial.print(F("Loaded in "));
-				Serial.print(millis() - startTime);
-				Serial.println(" ms");
-			} // end goodBmp
-		}
-	}
-
-	bmpFile.close();
-	if (!goodBmp) Serial.println(F("BMP format not recognized."));
-}
 
 void blank_upper_side() {
 	int Base_y = 0;
@@ -504,8 +353,8 @@ bool graphics_to_Screen(int print_number)
 	tft.setFont(&ArmentaFont32pt7b);
 	tft.setTextSize(FontSizeArmenta);
 #else
-	tft.setFont(&ArmentaFont64pt7b);
-	tft.setTextSize(FontSizeArmenta / 2);
+	tft.setFont(&ArmentaFont32pt7b);
+	tft.setTextSize(FontSizeArmenta);
 #endif
 	tft.setCursor(8, Base_y + 100);
 	bool printed = false;
@@ -584,10 +433,11 @@ void parse_pulse(char* buf) {
 	tft.setCursor(8, Base_y + 20);
 	buf[1] = 0;
 	if ((*buf == 'Y') || (*buf == 'y')) {
-		bmpDraw("/icon/‏‏pulseYes.bmp", 90, 168);
+		tft.drawRGBBitmap(90, 168, (uint16_t*)(pulseY.pixel_data), pulseY.width, pulseY.height);
+
 	}
 	else {
-		bmpDraw("/icon/pulseNo.bmp", 90, 168);
+		tft.drawRGBBitmap(90, 168, (uint16_t*)(pulseN.pixel_data), pulseN.width, pulseN.height);
 	}
 }
 
@@ -601,10 +451,10 @@ void parse_pressure(char* buf) {
 	if ((pressure >= 0) && (pressure <= 100)) {
 		// TODO: add functionality depending on Selas' input in regards to 27 psi pressure.
 		if (pressure > 27) {
-			bmpDraw("/icon/pr1h.bmp", 10, 168);
+			tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_high.pixel_data), pressure_high.width, pressure_high.height);
 		}
 		else {
-			bmpDraw("/icon/pr1l.bmp", 10, 168);
+			tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_low.pixel_data), pressure_low.width, pressure_low.height);
 		}
 	}
 }
@@ -634,10 +484,10 @@ void parse_aplicator(char* buf) {
 	if ((percentP >= 0) && (percentP <= 100)) {
 		if (percentP <= 10) // l0 percent
 		{
-			bmpDraw("/icon/ap_red.bmp", 230, 168);
+			tft.drawRGBBitmap(230, 168, (uint16_t*)(aplicator_error.pixel_data), aplicator_error.width, aplicator_error.height);
 		}
 		else {
-			bmpDraw("/icon/ap_clean.bmp", 230, 168);
+			tft.drawRGBBitmap(230, 168, (uint16_t*)(aplicator_ok.pixel_data), aplicator_ok.width, aplicator_ok.height);
 		}
 		tft.setTextColor(ILI9341_BLACK);
 		tft.setFont();

@@ -22,4 +22,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="battery.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pulseN.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pulseY.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aplicator_ok.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aplicator_error.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pressure_high.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pressure_low.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="welcome.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
