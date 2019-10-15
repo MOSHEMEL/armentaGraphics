@@ -1,12 +1,11 @@
 
 #include "armenta.h"
-#include "charactersArmenta.h"
-#include <Adafruit_GFX.h>    // Core graphics library
+#include "arduino_aux.h"
+#include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h> // Hardware-specific library
 #include <SPI.h>
 #include <SD.h>
-#include "ArmentaFont.h"
-#include "ArmentaFontHuge.h"
+
 #include "welcome.c"
 #include "aplicator_error.c"
 #include "aplicator_ok.c"
@@ -16,9 +15,6 @@
 #include "pulseN.c"
 #include "pulseY.c"
 
-void check_digits_changed_and_blank(int curr_number);
-void blank_upper_side();
-void paint_half_half();
 void parse_E(char* buf);
 void parse_battery_percent(char* buf);
 void parse_clean_screen(char* buf);
@@ -45,10 +41,18 @@ void parse_aplicator(char* buf);
    3. Font was selected randomly
    4. Check if font can be changed to Font by graphic designer, ran throught process to create a font
    5. Collect additional requirements from Edi and Sela and add Those
+	15.10.19 Nick:
+	1. created a special branch for mkrzero that doesn't use sdcard
+	2. fonts are from graphical designer
+	3. size on mkrzero was rescaled to half , cause otherwise the file is too big
+	4. so far testing seems o.k and not much stuff is broken
+	5. TODO: add other screens like errors and etc
+	6. TODO: let guys in field work with new version and write their grievances
+	7. TODO: add flashing from stm32, OTA update of sw.
  */
 #define PROMINI 0
 #define DEBUG_FLAG 1
-#define VERSION "1.1 OCT19"
+#define VERSION "1.3 OCT19"
 
 
  // TFT display and SD card will share the hardware SPI interface.
@@ -90,6 +94,7 @@ int FontSizeArmenta = 2;
 // good balance.
 
 #define ILI9341_bk1        0x0555
+# define Warning_RED 0x7F2E5
 #define BUFFPIXEL 20
 // These read 16- and 32-bit types from the SD card file.
 // BMP data is stored little-endian, Arduino is little-endian too.
@@ -157,11 +162,6 @@ void setup(void) {
 	tft.drawRGBBitmap(160, 168, (uint16_t*)(battery.pixel_data), battery.width, battery.height);
 	tft.drawRGBBitmap(230, 168, (uint16_t*)(aplicator_ok.pixel_data), aplicator_ok.width, aplicator_ok.height);
 
-
-	// tft.drawLine(0, 168, 320, 168, ILI9341_RED);
-	// tft.drawLine(0, 162, 320, 162, ILI9341_RED);
-
-
 	// battery
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	tft.setCursor(174, 184); //17,184
@@ -188,14 +188,14 @@ void loop(void) {
 #if PROMINI
 		Serial.available() > 0
 #else
-		Serial.available() > 0
+		Serial1.available() > 0
 #endif
 
 		) {
 #if PROMINI
 		key = Serial.read();
 #else
-		key = Serial.read();
+		key = Serial1.read();
 		Serial.write(key);
 #endif
 		if (key == '$') //head
@@ -229,34 +229,6 @@ void loop(void) {
 }
 
 
-void blank_upper_side() {
-	int Base_y = 0;
-
-	for (int y = 40; y < 124; y++) {
-		if (y == 5) {
-			Base_y++;
-		}
-		if (y == 15) {
-			Base_y++;
-		}
-		tft.drawLine(18, Base_y + y, 85, Base_y + y, ILI9341_bk1);
-		//   tft.drawLine(18, Base_y + y, 85, Base_y + y, ILI9341_BLUE);
-	}
-}
-
-void paint_half_half() {
-
-	int Base_y = 0;
-	for (int y = 0; y <= 240; y++) {
-		if (y < 163) {
-			tft.drawLine(0, Base_y + y, 320, Base_y + y, ILI9341_bk1);
-		}
-		else {
-			tft.drawLine(0, Base_y + y, 320, Base_y + y, ILI9341_WHITE);
-		}
-	}
-}
-
 void parse_E(char* buf) {
 	int Base_y = 140;
 	buf++;
@@ -271,21 +243,6 @@ void parse_E(char* buf) {
 	tft.setTextSize(4);
 	tft.setCursor(8, Base_y + 20);
 	tft.println(buf);
-}
-float clip_percent(float num)
-{
-	if (num > 100)
-	{
-		return 100.0;
-	}
-	else if (num < 0)
-	{
-		return 0.0;
-	}
-	else
-	{
-		return num;
-	}
 }
 
 void parse_battery_percent(char* buf) {
@@ -343,29 +300,7 @@ void parse_battery_percent(char* buf) {
 	}
 }
 
-bool graphics_to_Screen(int print_number)
-{
-	int Base_y = 0;
-	tft.setRotation(3);
-	tft.setCursor(8, 20);
-	tft.setTextColor(ILI9341_WHITE);
-#if PROMINI
-	tft.setFont(&ArmentaFont32pt7b);
-	tft.setTextSize(FontSizeArmenta);
-#else
-	tft.setFont(&ArmentaFont32pt7b);
-	tft.setTextSize(FontSizeArmenta);
-#endif
-	tft.setCursor(8, Base_y + 100);
-	bool printed = false;
-	if ((print_number <= 99999) && (print_number >= 0))
-	{
-		tft.println(String(print_number));
-		printed = true;
-		counter = print_number;
-	}
-	return printed;
-}
+
 
 void parse_pulse_counter(char* buf) {
 	// This function is sent always even if no number needs to be printed
@@ -381,7 +316,7 @@ void parse_pulse_counter(char* buf) {
 #if DEBUG_FLAG
 			Serial.print(F("Printing char is "));
 			Serial.print(counter);
-			Serial.print(" and takes ");
+			Serial.print(F(" and takes "));
 			Serial.print(millis() - currentmilis);
 			Serial.println(F(" milisecond long"));
 #endif
@@ -389,42 +324,6 @@ void parse_pulse_counter(char* buf) {
 	}
 }
 
-void parse_pulse_counter_test() {
-	while (true)
-	{
-		// PERPETUAL BURN IN TEST. WILL RUN UNTIL RESET
-		for (int pulse_count = 0; pulse_count < 100000; pulse_count++) {
-			uint32_t currentmilis = millis();
-			check_digits_changed_and_blank(pulse_count);
-			bool printed = graphics_to_Screen(pulse_count);
-			if (printed)
-			{
-#if DEBUG_FLAG
-				Serial.print(F("Printing char is "));
-				Serial.print(pulse_count);
-				Serial.print(" and takes ");
-				Serial.print(millis() - currentmilis);
-				Serial.println(F(" milisecond long"));
-#endif
-			}
-		}
-		for (int pulse_count = 99999; pulse_count > 0; pulse_count--) {
-			uint32_t currentmilis = millis();
-			check_digits_changed_and_blank(pulse_count);
-			bool printed = graphics_to_Screen(pulse_count);
-			if (printed)
-			{
-#if DEBUG_FLAG
-				Serial.print(F("Printing char is "));
-				Serial.print(pulse_count);
-				Serial.print(" and takes ");
-				Serial.print(millis() - currentmilis);
-				Serial.println(F(" milisecond long"));
-#endif
-			}
-		}
-	}
-}
 
 void parse_pulse(char* buf) {
 	int Base_y = 60;
@@ -459,13 +358,7 @@ void parse_pressure(char* buf) {
 	}
 }
 
-void parse_draw_rectangles(char* buf) {
-	buf++;
-	int rect_is = atoi(buf);
-	tft.drawRect(0, 0, rect_is, rect_is, ILI9341_WHITE);
-	delay(5000);
-	tft.drawRect(0, 0, rect_is, rect_is, ILI9341_BLACK);
-}
+
 
 void parse_aplicator(char* buf) {
 	int Base_y = 60;
@@ -497,6 +390,64 @@ void parse_aplicator(char* buf) {
 		tft.print('%');
 	}
 }
+void reset_screen()
+{
+	paint_half_half();
+	tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_high.pixel_data), pressure_high.width, pressure_high.height);
+	tft.drawRGBBitmap(90, 168, (uint16_t*)(pulseY.pixel_data), pulseY.width, pulseY.height);
+	tft.drawRGBBitmap(160, 168, (uint16_t*)(battery.pixel_data), battery.width, battery.height);
+	tft.drawRGBBitmap(230, 168, (uint16_t*)(aplicator_ok.pixel_data), aplicator_ok.width, aplicator_ok.height);
+}
+
+void parse_fail(char* buf)
+{
+	buf++;
+	tft.setRotation(3);
+	int ammount_left = atoi(buf);
+	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
+		// TODO: add functionality depending on Selas' input in regards to 27 psi pressure.
+		tft.fillScreen(Warning_RED);
+		tft.setFont();
+		tft.setRotation(3);
+		tft.setTextColor(ILI9341_WHITE);
+		tft.setCursor(130, 30);
+		tft.println("AM");
+		tft.setCursor(50, 60);
+		tft.println("Remaining Pulses");
+#if PROMINI
+		tft.setFont(&ArmentaFont32pt7b);
+		tft.setTextSize(FontSizeArmenta);
+#else
+		tft.setFont(&ArmentaFont32pt7b);
+		tft.setTextSize(FontSizeArmenta);
+#endif
+		if (ammount_left == 1000)
+		{
+			tft.setCursor(30, 200);
+			tft.println(ammount_left);
+		}
+		else if(ammount_left == 0)
+		{
+			tft.setCursor(130, 200);
+			tft.println(ammount_left);
+		}
+		else
+		{
+			tft.setCursor(80, 200);
+			tft.println(ammount_left);
+		}
+	}
+	// After we draw the screen - we then show the 
+	delay(2000);
+	reset_screen();
+}
+
+
+
+void parse_reset_screen(char* buf)
+{
+	reset_screen();
+}
 
 void PrintOnLcd(char* buf)
 {
@@ -506,126 +457,45 @@ void PrintOnLcd(char* buf)
 #else
 	Serial.println(buf);
 #endif
-	if ((*buf == 'C') || (*buf == 'c'))
+	if ((*buf == 'C') || (*buf == 'c')) // counter [number]
 	{
 		parse_pulse_counter(buf);
 	} // enf if
-	else if ((*buf == 'A') || (*buf == 'a'))
+	else if ((*buf == 'A') || (*buf == 'a')) // pulse present
 	{
 		parse_pulse(buf);
 	} // end if
-	else if ((*buf == 'P') || (*buf == 'p'))
+	else if ((*buf == 'P') || (*buf == 'p')) // pressure [number]
 	{
 		parse_pressure(buf);
 	} // end if
-	else if ((*buf == 't') || (*buf == 'T'))
+	else if ((*buf == 't') || (*buf == 'T')) // parse applicator in size
 	{
 		parse_aplicator(buf);
 	} // end if
-	else if ((*buf == 'B') || (*buf == 'b'))
+	else if ((*buf == 'B') || (*buf == 'b')) // battery [number]
 	{
 		parse_battery_percent(buf);
 	} // end if
-	else if ((*buf == 'E') || (*buf == 'b'))
+	else if ((*buf == 'E') || (*buf == 'e')) // error with number
 	{
 		parse_E(buf);
 	} // end if
-	else if ((*buf == 'R') || (*buf == 'r'))
+	else if ((*buf == 'R') || (*buf == 'r')) // reset screen and wipe
 	{
-		parse_pulse_counter_test();
+		parse_reset_screen(buf);
 	}
-	else if ((*buf == 'D') || (*buf == 'd'))
+	else if ((*buf == 'D') || (*buf == 'd')) // test rectangles
 	{
 		parse_draw_rectangles(buf);
 	}
+	else if ((*buf == 'f') || (*buf == 'F')) // last few pulses left
+	{
+		parse_fail(buf);
+	}
+	else if ((*buf == 'g') || (*buf == 'G')) // test the screen run
+	{
+		parse_pulse_counter_test(buf);
+	}
 }
 
-
-void check_digits_changed_and_blank(int curr_number)
-{
-	// This function is blanking digits based on the difference modulo
-	// Thus this is a symetric transform that works both descending and ascending
-	bool last_digit_is_changed = !(((curr_number - counter) % 10) == 0);
-	bool tens_digit_is_changed = !(((curr_number / 10 - counter / 10) % 10) == 0);
-	bool hundreds_digit_is_changed = !(((curr_number / 100 - counter / 100) % 10) == 0);
-	bool thousands_digit_is_changed = !(((curr_number / 1000 - counter / 1000) % 10) == 0);
-	bool tens_of_thousands_digit_is_changed = !(((curr_number / 10000 - counter / 10000) % 10) == 0);
-	bool flags[4];
-	int digitL = 64;
-	tft.setRotation(3);
-	tft.setCursor(8, 20);
-	if (tens_of_thousands_digit_is_changed)
-	{
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(0, 0, 5 * digitL, 120, ILI9341_bk1);
-		}
-	}
-	else if (thousands_digit_is_changed) {
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(digitL, 0, 4 * digitL, 120, ILI9341_bk1);
-		}
-		else if (curr_number >= 1000)
-		{
-			tft.fillRect(0, 0, 4 * digitL, 120, ILI9341_bk1);
-		}
-	}
-	else if (hundreds_digit_is_changed)
-	{
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(2 * digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1);
-		}
-		else if (curr_number >= 1000)
-		{
-			tft.fillRect(digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // The hundreds are one digit to the right
-		}
-		else
-		{
-			tft.fillRect(0, 0, 3 * digitL + 1, 120, ILI9341_bk1); // The hundreds are MSB
-		}
-	}
-	else if (tens_digit_is_changed)
-	{
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(3 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1);
-		}
-		if (curr_number >= 1000)
-		{
-			tft.fillRect(2 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // The tens are two digit to the right
-		}
-		else if (curr_number >= 100)
-		{
-			tft.fillRect(digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // The tens are one digit to the right
-		}
-		else
-		{
-			tft.fillRect(0, 0, 2 * digitL + 10, 120, ILI9341_bk1); // The tens are MSB
-		}
-	}
-	else if (last_digit_is_changed)
-	{
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(4 * digitL, 0, digitL + 1, 120, ILI9341_bk1);
-		}
-		else if (curr_number >= 1000)
-		{
-			tft.fillRect(3 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // The singles are 3 digit to the right
-		}
-		else if (curr_number >= 100)
-		{
-			tft.fillRect(2 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // The singles are 2 digit to the right
-		}
-		else if (curr_number >= 10)
-		{
-			tft.fillRect(digitL, 0, digitL + 10, 120, ILI9341_bk1); // The singles are one digit to the right
-		}
-		else
-		{
-			tft.fillRect(0, 0, digitL + 10, 120, ILI9341_bk1); // The singles are MSB
-		}
-	}
-}

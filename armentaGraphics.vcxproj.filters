@@ -21,6 +21,9 @@
     <ClInclude Include="__vm\.armentaGraphics.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="arduino_aux.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="battery.c">
