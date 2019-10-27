@@ -47,7 +47,7 @@
     <ClCompile Include="pressure_low.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="welcome.c">
+    <ClCompile Include="w_cropped.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>

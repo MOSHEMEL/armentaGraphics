@@ -6,7 +6,6 @@
 #include <SPI.h>
 #include <SD.h>
 
-#include "welcome.c"
 #include "aplicator_error.c"
 #include "aplicator_ok.c"
 #include "battery.c"
@@ -14,6 +13,7 @@
 #include "pressure_low.c"
 #include "pulseN.c"
 #include "pulseY.c"
+#include "w_cropped.c"
 
 void parse_E(char* buf);
 void parse_battery_percent(char* buf);
@@ -135,10 +135,9 @@ void setup(void) {
 		Serial.println("OK!");
 #endif
 	}
-	tft.fillScreen(ILI9341_BLACK);
-
-	tft.drawRGBBitmap(0, 0, (uint16_t*)(WELCOME_pixel_data), WELCOME_WIDTH, WELCOME_HEIGHT);
+	tft.fillScreen(ILI9341_WHITE);
 	tft.setRotation(3);
+	tft.drawRGBBitmap(75, 50, (uint16_t*)(w_exported.pixel_data), w_exported.width, w_exported.height);
 	tft.setTextColor(ILI9341_BLACK);
 	tft.setFont();
 	tft.setTextSize(1);
@@ -341,20 +340,18 @@ void parse_pulse(char* buf) {
 }
 
 void parse_pressure(char* buf) {
+	// TODO: change to parse pLOW or pO.K
 	int Base_y = 60;
 	buf++;
 	tft.setRotation(3);
 	tft.setCursor(8, Base_y + 20);
-	buf[2] = 0;
-	int pressure = atoi(buf);
-	if ((pressure >= 0) && (pressure <= 100)) {
-		// TODO: add functionality depending on Selas' input in regards to 27 psi pressure.
-		if (pressure > 27) {
-			tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_high.pixel_data), pressure_high.width, pressure_high.height);
-		}
-		else {
-			tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_low.pixel_data), pressure_low.width, pressure_low.height);
-		}
+	if(strcmp(buf,"LOW") == 0)
+	{
+		tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_low.pixel_data), pressure_low.width, pressure_low.height);
+	}
+	else if(strcmp(buf,"O.K") == 0)
+	{
+		tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_high.pixel_data), pressure_high.width, pressure_high.height);
 	}
 }
 
@@ -418,8 +415,8 @@ void parse_fail(char* buf)
 		tft.setFont(&ArmentaFont32pt7b);
 		tft.setTextSize(FontSizeArmenta);
 #else
-		tft.setFont(&ArmentaFont32pt7b);
-		tft.setTextSize(FontSizeArmenta);
+		tft.setFont(&ArmentaFont64pt7b);
+		tft.setTextSize(FontSizeArmenta / 2);
 #endif
 		if (ammount_left == 1000)
 		{
@@ -447,6 +444,29 @@ void parse_fail(char* buf)
 void parse_reset_screen(char* buf)
 {
 	reset_screen();
+}
+
+void blank_on_reset(char* buf)
+{
+	buf++;
+	int new_counter = atoi(buf);
+	tft.setRotation(3);
+	tft.fillRect(0, 0, 320, 120, ILI9341_bk1);
+	graphics_to_Screen(new_counter);
+}
+
+void print_error(char* buf)
+{
+	buf++;
+	tft.fillScreen(Warning_RED);
+	tft.setFont();
+	tft.setRotation(3);
+	tft.setTextColor(ILI9341_WHITE);
+	tft.setTextSize(6);
+	tft.setCursor(50, 60);
+	tft.println("Error");
+	tft.println(buf);
+	tft.setTextSize(2);
 }
 
 void PrintOnLcd(char* buf)
@@ -480,12 +500,12 @@ void PrintOnLcd(char* buf)
 	else if ((*buf == 'E') || (*buf == 'e')) // error with number
 	{
 		parse_E(buf);
-	} // end if
-	else if ((*buf == 'R') || (*buf == 'r')) // reset screen and wipe
+	} 
+	else if ((*buf == 'r') || (*buf == 'R')) // reset screen and wipe
 	{
 		parse_reset_screen(buf);
 	}
-	else if ((*buf == 'D') || (*buf == 'd')) // test rectangles
+	else if ((*buf == 'd') || (*buf == 'D')) // test rectangles
 	{
 		parse_draw_rectangles(buf);
 	}
@@ -496,6 +516,14 @@ void PrintOnLcd(char* buf)
 	else if ((*buf == 'g') || (*buf == 'G')) // test the screen run
 	{
 		parse_pulse_counter_test(buf);
+	}
+	else if ((*buf == 'q') || (*buf == 'Q'))
+	{
+		blank_on_reset(buf);
+	}
+	else if ((*buf == 'z') || (*buf == 'Z'))
+	{
+		print_error(buf);
 	}
 }
 

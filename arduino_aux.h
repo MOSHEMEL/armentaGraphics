@@ -3,6 +3,7 @@
 #endif
 #include "Adafruit_ILI9341.h"
 #include "ArmentaFont.h"
+#include "ArmentaFontHuge.h"
 extern Adafruit_ILI9341 tft;
 #define ILI9341_bk1        0x0555
 extern int counter;
@@ -160,8 +161,8 @@ bool graphics_to_Screen(int print_number)
 	tft.setFont(&ArmentaFont32pt7b);
 	tft.setTextSize(FontSizeArmenta);
 #else
-	tft.setFont(&ArmentaFont32pt7b);
-	tft.setTextSize(FontSizeArmenta);
+	tft.setFont(&ArmentaFont64pt7b);
+	tft.setTextSize(FontSizeArmenta/2);
 #endif
 	tft.setCursor(8, Base_y + 100);
 	bool printed = false;
