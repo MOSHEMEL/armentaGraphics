@@ -41,9 +41,9 @@ void parse_aplicator(char* buf);
    4. Check if font can be changed to Font by graphic designer, ran throught process to create a font
    5. Collect additional requirements from Edi and Sela and add Those
  */
-#define PROMINI 0
+#define PROMINI 1
 #define DEBUG_FLAG 1
-#define VERSION "1.1 OCT19"
+#define VERSION "1.2 OCT19"
 
 
  // TFT display and SD card will share the hardware SPI interface.
@@ -85,6 +85,7 @@ int FontSizeArmenta = 2;
 // good balance.
 
 #define ILI9341_bk1        0x0555
+#define Warning_RED 0x7F2E5 // 125, 75, 75 in 5:6:5 depth
 #define BUFFPIXEL 20
 // These read 16- and 32-bit types from the SD card file.
 // BMP data is stored little-endian, Arduino is little-endian too.
@@ -153,7 +154,7 @@ void setup(void) {
 	delay(2000);
 
 	bmpDraw("/icon/pr1h.bmp", 10, 168);
-	bmpDraw("/icon/pulseY.bmp", 90, 168);
+	bmpDraw("/icon/pulseYes.bmp", 90, 168);
 	bmpDraw("/icon/bat_1.bmp", 160, 168);
 	bmpDraw("/icon/ap_clean.bmp", 230, 168);
 
@@ -475,15 +476,13 @@ void parse_battery_percent(char* buf) {
 		if (percentBattery <= 10) {
 			for (int y = 0; y <= percentBattery * 42 / 100; y++) {
 				//   delay(100);
-				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
-					ILI9341_RED);
+				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18, ILI9341_RED);
 			}
 		}
 		else {
 			for (int y = 0; y <= percentBattery * 42 / 100; y++) {
 				//   delay(100);
-				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
-					ILI9341_GREEN);
+				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18, ILI9341_GREEN);
 			}
 		}
 		for (int y = percentBattery * 42 / 100; y <= 42; y++) {
@@ -540,7 +539,7 @@ void parse_pulse_counter(char* buf) {
 	}
 }
 
-void parse_pulse_counter_test() {
+void parse_pulse_counter_test(char* buff) {
 	while (true)
 	{
 		// PERPETUAL BURN IN TEST. WILL RUN UNTIL RESET
@@ -647,6 +646,59 @@ void parse_aplicator(char* buf) {
 		tft.print('%');
 	}
 }
+void reset_screen()
+{
+	paint_half_half();
+	bmpDraw("/icon/pr1h.bmp", 10, 168);
+	bmpDraw("/icon/pulseYes.bmp", 90, 168);
+	bmpDraw("/icon/bat_1.bmp", 160, 168);
+	bmpDraw("/icon/ap_clean.bmp", 230, 168);
+}
+
+void parse_fail(char* buf)
+{
+	buf++;
+	tft.setRotation(3);
+	int ammount_left = atoi(buf);
+	if ((ammount_left >= 0) && (ammount_left%200==0)) {
+		// TODO: add functionality depending on Selas' input in regards to 27 psi pressure.
+		tft.fillScreen(Warning_RED);
+		tft.setFont();
+		tft.setRotation(3);
+		tft.setTextColor(ILI9341_WHITE);
+		tft.setCursor(130, 30);
+		tft.println("AM");
+		tft.setCursor(50, 60);
+		tft.println("Remaining Pulses");
+#if PROMINI
+		tft.setFont(&ArmentaFont32pt7b);
+		tft.setTextSize(FontSizeArmenta);
+#else
+		tft.setFont(&ArmentaFont64pt7b);
+		tft.setTextSize(FontSizeArmenta / 2);
+#endif
+		if (ammount_left == 1000)
+		{
+			tft.setCursor(30, 200);
+			tft.println(ammount_left);
+		}
+		else
+		{
+			tft.setCursor(80, 200);
+			tft.println(ammount_left);
+		}
+	}
+	// After we draw the screen - we then show the 
+	delay(2000);
+	reset_screen();
+}
+
+
+
+void parse_reset_screen(char* buf)
+{
+	reset_screen();
+}
 
 void PrintOnLcd(char* buf)
 {
@@ -656,37 +708,45 @@ void PrintOnLcd(char* buf)
 #else
 	Serial.println(buf);
 #endif
-	if ((*buf == 'C') || (*buf == 'c'))
+	if ((*buf == 'C') || (*buf == 'c')) // counter [number]
 	{
 		parse_pulse_counter(buf);
 	} // enf if
-	else if ((*buf == 'A') || (*buf == 'a'))
+	else if ((*buf == 'A') || (*buf == 'a')) // pulse present
 	{
 		parse_pulse(buf);
 	} // end if
-	else if ((*buf == 'P') || (*buf == 'p'))
+	else if ((*buf == 'P') || (*buf == 'p')) // pressure [number]
 	{
 		parse_pressure(buf);
 	} // end if
-	else if ((*buf == 't') || (*buf == 'T'))
+	else if ((*buf == 't') || (*buf == 'T')) // parse applicator in size
 	{
 		parse_aplicator(buf);
 	} // end if
-	else if ((*buf == 'B') || (*buf == 'b'))
+	else if ((*buf == 'B') || (*buf == 'b')) // battery [number]
 	{
 		parse_battery_percent(buf);
 	} // end if
-	else if ((*buf == 'E') || (*buf == 'b'))
+	else if ((*buf == 'E') || (*buf == 'e')) // error with number
 	{
 		parse_E(buf);
 	} // end if
-	else if ((*buf == 'R') || (*buf == 'r'))
+	else if ((*buf == 'R') || (*buf == 'r')) // test the screen run
 	{
-		parse_pulse_counter_test();
+		parse_reset_screen(buf);
 	}
-	else if ((*buf == 'D') || (*buf == 'd'))
+	else if ((*buf == 'D') || (*buf == 'd')) // test rectangles
 	{
 		parse_draw_rectangles(buf);
+	}
+	else if ((*buf == 'f') || (*buf == 'F'))
+	{
+		parse_fail(buf);
+	}
+	else if ((*buf == 'g') || (*buf == 'G'))
+	{
+		parse_pulse_counter_test(buf);
 	}
 }
 
