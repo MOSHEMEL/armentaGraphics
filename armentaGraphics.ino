@@ -500,7 +500,7 @@ void PrintOnLcd(char* buf)
 	else if ((*buf == 'E') || (*buf == 'e')) // error with number
 	{
 		parse_E(buf);
-	} 
+	}
 	else if ((*buf == 'r') || (*buf == 'R')) // reset screen and wipe
 	{
 		parse_reset_screen(buf);
