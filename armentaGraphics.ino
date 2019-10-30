@@ -43,7 +43,7 @@ void parse_aplicator(char* buf);
  */
 #define PROMINI 1
 #define DEBUG_FLAG 1
-#define VERSION "1.2 OCT19"
+#define VERSION "1.3 OCT19"
 
 
  // TFT display and SD card will share the hardware SPI interface.
@@ -589,22 +589,28 @@ void parse_pulse(char* buf) {
 		bmpDraw("/icon/pulseNo.bmp", 90, 168);
 	}
 }
-
+	
 void parse_pressure(char* buf) {
+	// TODO: change to parse pLOW or pO.K
 	int Base_y = 60;
 	buf++;
 	tft.setRotation(3);
 	tft.setCursor(8, Base_y + 20);
-	buf[2] = 0;
-	int pressure = atoi(buf);
-	if ((pressure >= 0) && (pressure <= 100)) {
-		// TODO: add functionality depending on Selas' input in regards to 27 psi pressure.
-		if (pressure > 27) {
-			bmpDraw("/icon/pr1h.bmp", 10, 168);
-		}
-		else {
-			bmpDraw("/icon/pr1l.bmp", 10, 168);
-		}
+	if (strcmp(buf, "LOW") == 0)
+	{
+#if PROMINI
+		bmpDraw("/icon/pr1l.bmp", 10, 168);
+#else
+		tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_low.pixel_data), pressure_low.width, pressure_low.height);
+#endif
+	}
+	else if (strcmp(buf, "O.K") == 0)
+	{
+#if PROMINI
+		bmpDraw("/icon/pr1h.bmp", 10, 168);
+#else
+		tft.drawRGBBitmap(10, 168, (uint16_t*)(pressure_low.pixel_data), pressure_low.width, pressure_low.height);
+#endif
 	}
 }
 
@@ -700,6 +706,30 @@ void parse_reset_screen(char* buf)
 	reset_screen();
 }
 
+void blank_on_reset(char* buf)
+{
+	buf++;
+	int new_counter = atoi(buf);
+	tft.setRotation(3);
+	tft.fillRect(0, 0, 320, 120, ILI9341_bk1);
+	graphics_to_Screen(new_counter);
+}
+
+void print_error(char* buf)
+{
+	buf++;
+	tft.fillScreen(Warning_RED);
+	tft.setFont();
+	tft.setRotation(3);
+	tft.setTextColor(ILI9341_WHITE);
+	tft.setTextSize(6);
+	tft.setCursor(50, 60);
+	tft.println("Error");
+	tft.println(buf);
+	tft.setTextSize(2);
+}
+
+
 void PrintOnLcd(char* buf)
 {
 	// If the promini is the board of choise. There is no Serial1
@@ -748,9 +778,16 @@ void PrintOnLcd(char* buf)
 	{
 		parse_pulse_counter_test(buf);
 	}
+	else if ((*buf == 'q') || (*buf == 'Q'))
+	{
+		blank_on_reset(buf);
+	}
+	else if ((*buf == 'z') || (*buf == 'Z'))
+	{
+		print_error(buf);
+	}
 }
-
-
+	
 void check_digits_changed_and_blank(int curr_number)
 {
 	// This function is blanking digits based on the difference modulo
