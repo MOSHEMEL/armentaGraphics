@@ -1,13 +1,23 @@
 ﻿#ifndef _STDBOOL
-	#include "stdbool.h"
+#include "stdbool.h"
 #endif
+
+#include "config.h"
+
 #include "Adafruit_ILI9341.h"
 #include "ArmentaFont.h"
 #include "ArmentaFontHuge.h"
 extern Adafruit_ILI9341 tft;
 #define ILI9341_bk1        0x0555
+
 extern int counter;
 extern int FontSizeArmenta;
+void blank_upper_side(void);
+void check_digits_changed_and_blank(int curr_number);
+float clip_percent(float num);
+bool graphics_to_Screen(int print_number);
+void paint_half_half();
+void reset_screen();
 
 void check_digits_changed_and_blank(int curr_number)
 {
@@ -98,7 +108,8 @@ void check_digits_changed_and_blank(int curr_number)
 	}
 }
 
-void blank_upper_side() {
+void blank_upper_side()
+{
 	int Base_y = 0;
 
 	for (int y = 40; y < 124; y++) {
@@ -141,16 +152,6 @@ float clip_percent(float num)
 	}
 }
 
-void parse_draw_rectangles(char* buf) {
-	buf++;
-	int rect_is = atoi(buf);
-	tft.drawRect(0, 0, rect_is, rect_is, ILI9341_WHITE);
-	delay(5000);
-	tft.drawRect(0, 0, rect_is, rect_is, ILI9341_BLACK);
-}
-
-
-
 bool graphics_to_Screen(int print_number)
 {
 	int Base_y = 0;
@@ -162,7 +163,7 @@ bool graphics_to_Screen(int print_number)
 	tft.setTextSize(FontSizeArmenta);
 #else
 	tft.setFont(&ArmentaFont64pt7b);
-	tft.setTextSize(FontSizeArmenta/2);
+	tft.setTextSize(FontSizeArmenta / 2);
 #endif
 	tft.setCursor(8, Base_y + 100);
 	bool printed = false;
@@ -175,39 +176,11 @@ bool graphics_to_Screen(int print_number)
 	return printed;
 }
 
-void parse_pulse_counter_test(char* buf) {
-	while (true)
-	{
-		// PERPETUAL BURN IN TEST. WILL RUN UNTIL RESET
-		for (int pulse_count = 0; pulse_count < 100000; pulse_count++) {
-			uint32_t currentmilis = millis();
-			check_digits_changed_and_blank(pulse_count);
-			bool printed = graphics_to_Screen(pulse_count);
-			if (printed)
-			{
-#if DEBUG_FLAG
-				Serial.print(F("Printing char is "));
-				Serial.print(pulse_count);
-				Serial.print(" and takes ");
-				Serial.print(millis() - currentmilis);
-				Serial.println(F(" milisecond long"));
-#endif
-			}
-		}
-		for (int pulse_count = 99999; pulse_count > 0; pulse_count--) {
-			uint32_t currentmilis = millis();
-			check_digits_changed_and_blank(pulse_count);
-			bool printed = graphics_to_Screen(pulse_count);
-			if (printed)
-			{
-#if DEBUG_FLAG
-				Serial.print(F("Printing char is "));
-				Serial.print(pulse_count);
-				Serial.print(" and takes ");
-				Serial.print(millis() - currentmilis);
-				Serial.println(F(" milisecond long"));
-#endif
-			}
-		}
-	}
+void reset_screen()
+{
+	paint_half_half();
+	DRAW_PULSE_Y
+		DRAW_BATTERY
+		DRAW_PRESSURE_HIGH
+		DRAW_AP_OK
 }
