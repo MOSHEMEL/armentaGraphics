@@ -21,5 +21,46 @@
     <ClInclude Include="__vm\.armentaGraphics.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="arduino_aux.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawfigures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parsers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="drawspi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="aplicator_error.h">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="aplicator_ok.h">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="battery.h">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pressure_high.h">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pressure_low.h">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pulseN.h">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pulseY.h">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="w_cropped.h">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
