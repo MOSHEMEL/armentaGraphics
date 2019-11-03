@@ -22,18 +22,17 @@ void parse_pulse_counter_test(char* buf);
 void parse_aplicator(char* buf) {
 	int Base_y = 60;
 	buf++;
-	tft.setRotation(3);
-	tft.setCursor(8, Base_y + 20);
-	buf[2] = 0;
 	int percentP = atoi(buf);
-#if PROMINI
-	Serial.print("Percent Applicaor Counter");
-	Serial.println(percentP);
-#else
-	Serial.print("Percent Applicaor Counter");
-	Serial.println(percentP);
-#endif
 	if ((percentP >= 0) && (percentP <= 100)) {
+		tft.setRotation(3);
+
+	#if PROMINI
+		Serial.print("Percent Applicaor Counter");
+		Serial.println(percentP);
+	#else
+		Serial.print("Percent Applicaor Counter");
+		Serial.println(percentP);
+	#endif
 		if (percentP <= 10) // l0 percent
 		{
 			DRAW_AP_ERROR
@@ -41,10 +40,16 @@ void parse_aplicator(char* buf) {
 		else {
 			DRAW_AP_OK
 		}
+		tft.setCursor(8, Base_y + 20);
+		Base_y = 184;
+		for (int y = 0; y < 15; y++) {
+			//   delay(100);
+			tft.drawLine(245, Base_y + y, 295, Base_y + y, ILI9341_WHITE);
+		}
 		tft.setTextColor(ILI9341_BLACK);
 		tft.setFont();
 		tft.setTextSize(2);
-		tft.setCursor(245, 180);
+		tft.setCursor(245, 184);
 		tft.print(percentP);
 		tft.print('%');
 	}
@@ -58,9 +63,9 @@ void parse_battery_percent(char* buf) {
 		percentBattery = clip_percent(newpercentBattery);
 		tft.setRotation(3);
 		tft.setCursor(8, Base_y + 20);
-		// battery
-		Base_y = 180;
-		for (int y = 0; y < 23; y++) {
+		// battery blank prev text
+		Base_y = 184;
+		for (int y = 0; y < 15; y++) {
 			//   delay(100);
 			tft.drawLine(174, Base_y + y, 224, Base_y + y, ILI9341_WHITE);
 		}
@@ -106,19 +111,7 @@ void parse_battery_percent(char* buf) {
 }
 
 void parse_E(char* buf) {
-	int Base_y = 140;
-	buf++;
-	tft.setRotation(3);
-	tft.setCursor(8, Base_y + 20);
-	for (int y = 18; y < 53; y++) {
-		//   delay(100);
-		tft.drawLine(3, Base_y + y, 133, Base_y + y, ILI9341_BLACK);
-	}
-	tft.setTextColor(ILI9341_WHITE);
-	tft.setFont();
-	tft.setTextSize(4);
-	tft.setCursor(8, Base_y + 20);
-	tft.println(buf);
+
 }
 
 void parse_fail(char* buf)
@@ -129,13 +122,15 @@ void parse_fail(char* buf)
 	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
 		// TODO: add functionality depending on Selas' input in regards to 27 psi pressure.
 		tft.fillScreen(Warning_RED);
-		tft.setFont();
+		tft.setFont(); // we have no letters to show so we cant use font to print letters
+		tft.setTextSize(4);
+
 		tft.setRotation(3);
 		tft.setTextColor(ILI9341_WHITE);
-		tft.setCursor(130, 30);
-		tft.println("AM");
+		tft.setCursor(50, 30);
+		tft.println("AM Pulses");
 		tft.setCursor(50, 60);
-		tft.println("Remaining Pulses");
+		tft.println("Remaining");
 #if PROMINI
 		tft.setFont(&ArmentaFont32pt7b);
 		tft.setTextSize(FontSizeArmenta);
@@ -161,11 +156,11 @@ void parse_fail(char* buf)
 	}
 	// After we draw the screen - we then show the 
 	delay(2000);
+	tft.setFont();
 	reset_screen();
 }
 
 void parse_pressure(char* buf) {
-	// TODO: change to parse pLOW or pO.K
 	int Base_y = 60;
 	buf++;
 	tft.setRotation(3);
@@ -230,8 +225,9 @@ void print_error(char* buf)
 	tft.setRotation(3);
 	tft.setTextColor(ILI9341_WHITE);
 	tft.setTextSize(6);
-	tft.setCursor(50, 60);
+	tft.setCursor(50, 30);
 	tft.println("Error");
+	tft.setCursor(50, 90);
 	tft.println(buf);
 	tft.setTextSize(2);
 }

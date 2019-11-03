@@ -80,26 +80,19 @@ void setup(void) {
 
 #if PROMINI
 	Serial.print("Initializing SD card...");
-#else
-	Serial.print("Initializing SD card...");
+
 #endif
 #if PROMINI
-	if (!SD.begin(4)) { // SD_CS define is acting up
+	if (!SD.begin(4)) 
+	{ // SD_CS define is acting up
 		Serial.println("failed!");
 		Serial.println("Pro mini setting setup: if not apprropriate board, please switch");
-#else
-	if (!SD.begin(28)) { // SD_CS define is acting up
-		Serial.println("MKRZERO setting setup: if not apprropriate board, please switch");
-		Serial.println("failed!");
-#endif
 	}
 	else {
-#if PROMINI
 		Serial.println("OK!");
-#else
-		Serial.println("OK!");
-#endif
 	}
+#endif
+	
 	tft.fillScreen(ILI9341_WHITE);
 	tft.setRotation(3);
 	DRAW_WELCOME
@@ -110,6 +103,12 @@ void setup(void) {
 	tft.print("Current Version is ");
 	tft.println(VERSION);
 	delay(2000);
+#if DEBUG_STANDALONE
+	tft.println("DEBUG VERSION");
+	tft.println("DEBUG VERSION");
+	tft.println("DEBUG VERSION");
+	delay(1000);
+#endif
 	paint_half_half();
 
 
@@ -133,7 +132,7 @@ void setup(void) {
 
 
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
-	tft.setCursor(245, 180);
+	tft.setCursor(245, 184);
 	tft.println("25%");
 
 	blank_upper_side();
@@ -146,18 +145,17 @@ void loop(void) {
 	led_toggle = !led_toggle;
 	digitalWrite(LED_TOGGLE, led_toggle);
 	if (
-#if PROMINI
+#if PROMINI || DEBUG_STANDALONE
 		Serial.available() > 0
 #else
 		Serial1.available() > 0
 #endif
 
 		) {
-#if PROMINI
+#if PROMINI || DEBUG_STANDALONE
 		key = Serial.read();
 #else
 		key = Serial1.read();
-		Serial.write(key);
 #endif
 		if (key == '$') //head
 		{
@@ -177,7 +175,6 @@ void loop(void) {
 			CounterString[i] = 0;
 			if (BufferString[0] == '$')
 			{
-				CounterString[10] = 0;
 				PrintOnLcd(&CounterString[1]);
 			}
 		}
@@ -191,11 +188,7 @@ void loop(void) {
 void PrintOnLcd(char* buf)
 {
 	// If the promini is the board of choise. There is no Serial1
-#if PROMINI
 	Serial.println(buf);
-#else
-	Serial.println(buf);
-#endif
 	if ((*buf == 'C') || (*buf == 'c')) // counter [number]
 	{
 		parse_pulse_counter(buf);
