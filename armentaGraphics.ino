@@ -57,6 +57,7 @@ bool led_toggle = 0;
 
 int y = 0;
 char  BufferString[MAX_COMMAND_LENGTH];
+char CounterString[MAX_COMMAND_LENGTH];
 unsigned char i;
 char key;
 int counter = -1;
@@ -161,32 +162,32 @@ void loop(void) {
 		if (key == '$') //head
 		{
 			i = 0;
-			start_command = true;
 		}
-		else if(key == '#')
+		CounterString[i] = key;
+		BufferString[i] = key;
+		CounterString[i + 1] = 0;
+		BufferString[i + 1] = 0;
+		if (key == '$')
 		{
-			if(start_command && (BufferString[0] == '$'))
+			i = 0;
+			BufferString[0] == '$';
+		}
+		else if (key == '#') // ending tail
+		{
+			CounterString[i] = 0;
+			if (BufferString[0] == '$')
 			{
-				PrintOnLcd(&BufferString[1]);
-				// Restart sequence reading
-				i = 0;
-				start_command = false;
+				CounterString[10] = 0;
+				PrintOnLcd(&CounterString[1]);
 			}
-		}
-		else if(start_command)
-		{
-			BufferString[i] = key;
 		}
 		i++;
 		key = 0;
-		if (i > MAX_COMMAND_LENGTH) {
-			// Restart sequence reading
+		if (i >= MAX_COMMAND_LENGTH) {
 			i = 0;
-			start_command = false;
 		}
 	}
 }
-
 void PrintOnLcd(char* buf)
 {
 	// If the promini is the board of choise. There is no Serial1

@@ -170,11 +170,11 @@ void parse_pressure(char* buf) {
 	buf++;
 	tft.setRotation(3);
 	tft.setCursor(8, Base_y + 20);
-	if (strcmp(buf, "LOW") == 0)
+	if (strncmp(buf, "LOW",3) == 0)
 	{
 		DRAW_PRESSURE_LOW
 	}
-	else if (strcmp(buf, "O.K") == 0)
+	else if (strncmp(buf, "O.K",3) == 0)
 	{
 		DRAW_PRESSURE_HIGH
 	}
