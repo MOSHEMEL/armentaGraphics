@@ -180,7 +180,7 @@ void reset_screen()
 {
 	paint_half_half();
 	DRAW_PULSE_Y
-		DRAW_BATTERY
-		DRAW_PRESSURE_HIGH
-		DRAW_AP_OK
+	DRAW_BATTERY
+	DRAW_PRESSURE_HIGH
+	DRAW_AP_OK
 }

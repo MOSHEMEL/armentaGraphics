@@ -228,8 +228,10 @@ void print_error(char* buf)
 	tft.setCursor(50, 30);
 	tft.println("Error");
 	tft.setCursor(50, 90);
-	tft.println(buf);
 	tft.setTextSize(2);
+	tft.println(buf);
+	delay(2000);
+	reset_screen();
 }
 
 void blank_on_reset(char* buf)
