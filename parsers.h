@@ -59,54 +59,50 @@ void parse_battery_percent(char* buf) {
 	int Base_y = 0;
 	buf++;
 	int newpercentBattery = atoi(buf);
-	if (percentBattery != newpercentBattery) {
-		percentBattery = clip_percent(newpercentBattery);
-		tft.setRotation(3);
-		tft.setCursor(8, Base_y + 20);
-		// battery blank prev text
-		Base_y = 184;
-		for (int y = 0; y < 15; y++) {
-			//   delay(100);
-			tft.drawLine(174, Base_y + y, 224, Base_y + y, ILI9341_WHITE);
-		}
-		tft.setTextColor(ILI9341_BLACK);
-		tft.setTextSize(2);
-		tft.setCursor(174, 184); //17,184
-		tft.setFont();
-		tft.print(percentBattery);
-		tft.print('%');
-		tft.setCursor(0, 0); //17,184
-		// base bars battery percent
+	percentBattery = clip_percent(newpercentBattery);
+	tft.setRotation(3);
+	// battery blank prev text
+	Base_y = 184;
+	for (int y = 0; y < 15; y++) {
+		//   delay(100);
+		tft.drawLine(174, Base_y + y, 224, Base_y + y, ILI9341_WHITE);
+	}
+	tft.setTextColor(ILI9341_BLACK);
+	tft.setTextSize(2);
+	tft.setCursor(174, 184); //17,184
+	tft.setFont();
+	tft.print(percentBattery);
+	tft.print('%');
+	tft.setCursor(0, 0); //17,184
+	// base bars battery percent
 
 #if PROMINI
-		Serial.print("Percent Battery ");
-		Serial.println(percentBattery);
+	Serial.print("Percent Battery ");
+	Serial.println(percentBattery);
 #else
-		Serial.print("Percent Battery ");
-		Serial.println(percentBattery);
+	Serial.print("Percent Battery ");
+	Serial.println(percentBattery);
 #endif
 
 
-		Base_y = 208;
-		if (percentBattery <= 10) {
-			for (int y = 0; y <= percentBattery * 42 / 100; y++) {
-				//   delay(100);
-				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
-					ILI9341_RED);
-			}
-		}
-		else {
-			for (int y = 0; y <= percentBattery * 42 / 100; y++) {
-				//   delay(100);
-				tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
-					ILI9341_GREEN);
-			}
-		}
-		for (int y = percentBattery * 42 / 100; y <= 42; y++) {
+	Base_y = 208;
+	if (percentBattery <= 10) {
+		for (int y = 0; y <= percentBattery * 42 / 100; y++) {
 			//   delay(100);
-			tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18, ILI9341_WHITE);
+			tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
+				ILI9341_RED);
 		}
-
+	}
+	else {
+		for (int y = 0; y <= percentBattery * 42 / 100; y++) {
+			//   delay(100);
+			tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
+				ILI9341_GREEN);
+		}
+	}
+	for (int y = percentBattery * 42 / 100; y <= 42; y++) {
+		//   delay(100);
+		tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18, ILI9341_WHITE);
 	}
 }
 
