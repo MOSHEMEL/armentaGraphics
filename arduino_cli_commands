@@ -1,0 +1,71 @@
+arduino-cli.exe compile -b arduino:samd:mkrzero armentaGraphics.ino -o armentaGraphics.arduino.samd.mkrzero -t -u -p COM19
+
+
+Compiling 'armentaGraphics' for 'Arduino MKRZERO'
+Program size: 148,864 bytes (used 57% of a 262,144 byte maximum) (0.88 secs)
+ 
+Uploading 'armentaGraphics' to 'Arduino MKRZERO' using 'COM19'
+Atmel SMART device 0x10010005 found
+Device       : ATSAMD21G18A
+Chip ID      : 10010005
+Version      : v2.0 [Arduino:XYZ] Dec 20 2016 15:36:46
+Address      : 8192
+Pages        : 3968
+Page Size    : 64 bytes
+Total Size   : 248KB
+Planes       : 1
+Lock Regions : 16
+Locked       : none
+Security     : false
+Boot Flash   : true
+BOD          : false
+BOR          : false
+Arduino      : FAST_CHIP_ERASE
+Arduino      : FAST_MULTI_PAGE_WRITE
+Arduino      : CAN_CHECKSUM_MEMORY_BUFFER
+Erase flash
+done in 0.784 seconds
+Write 149408 bytes to flash (2335 pages)
+[                              ] 2% (64/2335 pages)
+[=                             ] 5% (128/2335 pages)
+[==                            ] 8% (192/2335 pages)
+[===                           ] 10% (256/2335 pages)
+[====                          ] 13% (320/2335 pages)
+[====                          ] 16% (384/2335 pages)
+[=====                         ] 19% (448/2335 pages)
+[======                        ] 21% (512/2335 pages)
+[=======                       ] 24% (576/2335 pages)
+[========                      ] 27% (640/2335 pages)
+[=========                     ] 30% (704/2335 pages)
+[=========                     ] 32% (768/2335 pages)
+[==========                    ] 35% (832/2335 pages)
+[===========                   ] 38% (896/2335 pages)
+[============                  ] 41% (960/2335 pages)
+[=============                 ] 43% (1024/2335 pages)
+[=============                 ] 46% (1088/2335 pages)
+[==============                ] 49% (1152/2335 pages)
+[===============               ] 52% (1216/2335 pages)
+[================              ] 54% (1280/2335 pages)
+[=================             ] 57% (1344/2335 pages)
+[==================            ] 60% (1408/2335 pages)
+[==================            ] 63% (1472/2335 pages)
+[===================           ] 65% (1536/2335 pages)
+[====================          ] 68% (1600/2335 pages)
+[=====================         ] 71% (1664/2335 pages)
+[======================        ] 74% (1728/2335 pages)
+[=======================       ] 76% (1792/2335 pages)
+[=======================       ] 79% (1856/2335 pages)
+[========================      ] 82% (1920/2335 pages)
+[=========================     ] 84% (1984/2335 pages)
+[==========================    ] 87% (2048/2335 pages)
+[===========================   ] 90% (2112/2335 pages)
+[===========================   ] 93% (2176/2335 pages)
+[============================  ] 95% (2240/2335 pages)
+[============================= ] 98% (2304/2335 pages)
+[==============================] 100% (2335/2335 pages)
+	The upload process has finished. via 'COM18'
+done in 0.811 seconds
+Verify 149408 bytes of flash with checksum.
+Verify successful
+done in 0.120 seconds
+CPU reset.
