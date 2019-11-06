@@ -17,6 +17,8 @@ void print_error(char* buf);
 void blank_on_reset(char* buf);
 void parse_draw_rectangles(char* buf);
 void parse_pulse_counter_test(char* buf);
+void parse_version(char* buf);
+void parse_test_battery(void);
 
 
 void parse_aplicator(char* buf) {
@@ -24,7 +26,7 @@ void parse_aplicator(char* buf) {
 	buf++;
 	int percentP = atoi(buf);
 	if ((percentP >= 0) && (percentP <= 100)) {
-		tft.setRotation(3);
+		
 
 	#if PROMINI
 		Serial.print("Percent Applicaor Counter");
@@ -49,7 +51,7 @@ void parse_aplicator(char* buf) {
 		tft.setTextColor(ILI9341_BLACK);
 		tft.setFont();
 		tft.setTextSize(2);
-		tft.setCursor(245, 184);
+		tft.setCursor(AM_TEXT_POS);
 		tft.print(percentP);
 		tft.print('%');
 	}
@@ -60,21 +62,18 @@ void parse_battery_percent(char* buf) {
 	buf++;
 	int newpercentBattery = atoi(buf);
 	percentBattery = clip_percent(newpercentBattery);
-	tft.setRotation(3);
+	
 	// battery blank prev text
 	Base_y = 184;
 	for (int y = 0; y < 15; y++) {
-		//   delay(100);
 		tft.drawLine(174, Base_y + y, 224, Base_y + y, ILI9341_WHITE);
 	}
 	tft.setTextColor(ILI9341_BLACK);
-	tft.setTextSize(2);
-	tft.setCursor(174, 184); //17,184
 	tft.setFont();
+	tft.setTextSize(2);
+	tft.setCursor(BATTERY_TEXT_POS); 
 	tft.print(percentBattery);
 	tft.print('%');
-	tft.setCursor(0, 0); //17,184
-	// base bars battery percent
 
 #if PROMINI
 	Serial.print("Percent Battery ");
@@ -113,7 +112,7 @@ void parse_E(char* buf) {
 void parse_fail(char* buf)
 {
 	buf++;
-	tft.setRotation(3);
+	
 	int ammount_left = atoi(buf);
 	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
 		// TODO: add functionality depending on Selas' input in regards to 27 psi pressure.
@@ -121,7 +120,7 @@ void parse_fail(char* buf)
 		tft.setFont(); // we have no letters to show so we cant use font to print letters
 		tft.setTextSize(4);
 
-		tft.setRotation(3);
+		
 		tft.setTextColor(ILI9341_WHITE);
 		tft.setCursor(50, 30);
 		tft.println("AM Pulses");
@@ -159,7 +158,7 @@ void parse_fail(char* buf)
 void parse_pressure(char* buf) {
 	int Base_y = 60;
 	buf++;
-	tft.setRotation(3);
+	
 	tft.setCursor(8, Base_y + 20);
 	if (strncmp(buf, "LOW",3) == 0)
 	{
@@ -174,7 +173,7 @@ void parse_pressure(char* buf) {
 void parse_pulse(char* buf) {
 	int Base_y = 60;
 	buf++;
-	tft.setRotation(3);
+	
 	tft.setCursor(8, Base_y + 20);
 	buf[1] = 0;
 	if ((*buf == 'Y') || (*buf == 'y')) {
@@ -218,7 +217,7 @@ void print_error(char* buf)
 	buf++;
 	tft.fillScreen(Warning_RED);
 	tft.setFont();
-	tft.setRotation(3);
+	
 	tft.setTextColor(ILI9341_WHITE);
 	tft.setTextSize(6);
 	tft.setCursor(50, 30);
@@ -234,7 +233,34 @@ void blank_on_reset(char* buf)
 {
 	buf++;
 	int new_counter = atoi(buf);
-	tft.setRotation(3);
+	
 	tft.fillRect(0, 0, 320, 120, ILI9341_bk1);
 	graphics_to_Screen(new_counter);
+}
+
+void parse_test_battery(void)
+{
+	char buf[4];
+	buf[0] = 'b';
+	for (int i = 0; i <= 100; i++)
+	{
+		String buffer = String(i);
+		buffer.toCharArray(&buf[1], 4);
+		parse_battery_percent(buf);
+		delay(1);
+	}
+}
+
+void parse_version(char* buf)
+{
+	String MCU_version = String(buf);
+	MCU_version.toLowerCase();
+	tft.setTextColor(ILI9341_BLACK);
+	tft.setFont();
+	tft.setTextSize(1);
+	tft.setCursor(10, 10);
+	tft.print("Armenta ltd. gfx:");
+	tft.print(VERSION);
+	tft.print(" mcu:");
+	tft.print(MCU_version);
 }

@@ -30,7 +30,7 @@ void check_digits_changed_and_blank(int curr_number)
 	bool tens_of_thousands_digit_is_changed = !(((curr_number / 10000 - counter / 10000) % 10) == 0);
 	bool flags[4];
 	int digitL = 64;
-	tft.setRotation(3);
+	
 	tft.setCursor(8, 20);
 	if (tens_of_thousands_digit_is_changed)
 	{
@@ -155,7 +155,7 @@ float clip_percent(float num)
 bool graphics_to_Screen(int print_number)
 {
 	int Base_y = 0;
-	tft.setRotation(3);
+	
 	tft.setCursor(8, 20);
 	tft.setTextColor(ILI9341_WHITE);
 #if PROMINI

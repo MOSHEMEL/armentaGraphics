@@ -76,6 +76,7 @@ void setup(void) {
 #endif
 	SPI.beginTransaction(SPISettings(96000000, MSBFIRST, SPI_MODE0));
 	tft.begin();
+	tft.setRotation(3);
 	pinMode(LED_TOGGLE, OUTPUT);
 
 #if PROMINI
@@ -94,16 +95,12 @@ void setup(void) {
 #endif
 	
 	tft.fillScreen(ILI9341_WHITE);
-	tft.setRotation(3);
+	
 	DRAW_WELCOME
-	tft.setTextColor(ILI9341_BLACK);
-	tft.setFont();
-	tft.setTextSize(1);
-	tft.setCursor(10, 10);
-	tft.print("Current Version is ");
-	tft.println(VERSION);
+
 	delay(2000);
 #if DEBUG_STANDALONE
+	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	tft.println("DEBUG VERSION");
 	tft.println("DEBUG VERSION");
 	tft.println("DEBUG VERSION");
@@ -125,14 +122,14 @@ void setup(void) {
 	DRAW_PRESSURE_HIGH
 	DRAW_AP_OK
 
-	// battery
+	// am percentage
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
-	tft.setCursor(174, 184); //17,184
+	tft.setCursor(AM_TEXT_POS);
 	tft.println("25%");
 
-
+	// battery percentage
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
-	tft.setCursor(245, 184);
+	tft.setCursor(BATTERY_TEXT_POS);
 	tft.println("25%");
 
 	blank_upper_side();
@@ -140,8 +137,9 @@ void setup(void) {
 	delay(100);
 }
 
+
 void loop(void) {
-	tft.setRotation(3);
+	
 	led_toggle = !led_toggle;
 	digitalWrite(LED_TOGGLE, led_toggle);
 	if (
@@ -189,15 +187,15 @@ void PrintOnLcd(char* buf)
 {
 	// If the promini is the board of choise. There is no Serial1
 	Serial.println(buf);
-	if ((*buf == 'C') || (*buf == 'c')) // counter [number]
+	if ((*buf == 'c') || (*buf == 'C')) // counter [number]
 	{
 		parse_pulse_counter(buf);
 	} // enf if
-	else if ((*buf == 'A') || (*buf == 'a')) // pulse present
+	else if ((*buf == 'a') || (*buf == 'A')) // pulse present
 	{
 		parse_pulse(buf);
 	} // end if
-	else if ((*buf == 'P') || (*buf == 'p')) // pressure [number]
+	else if ((*buf == 'p') || (*buf == 'P')) // pressure [number]
 	{
 		parse_pressure(buf);
 	} // end if
@@ -205,11 +203,11 @@ void PrintOnLcd(char* buf)
 	{
 		parse_aplicator(buf);
 	} // end if
-	else if ((*buf == 'B') || (*buf == 'b')) // battery [number]
+	else if ((*buf == 'b') || (*buf == 'B')) // battery [number]
 	{
 		parse_battery_percent(buf);
 	} // end if
-	else if ((*buf == 'E') || (*buf == 'e')) // error with number
+	else if ((*buf == 'e') || (*buf == 'E')) // error with number
 	{
 		parse_E(buf);
 	}
@@ -229,5 +227,14 @@ void PrintOnLcd(char* buf)
 	{
 		print_error(buf);
 	}
+	else if ((*buf == 'm') || (*buf == 'M'))
+	{
+		parse_test_battery();
+	}
+	else if ((*buf == 'v') || (*buf == 'V'))
+	{
+		parse_version(buf);
+	}
+	tft.setCursor(0, 0);
 }
 
