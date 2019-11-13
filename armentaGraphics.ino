@@ -108,19 +108,20 @@ void setup(void) {
 #endif
 	paint_half_half();
 
+	delay(2000);
+	DRAW_PULSE_Y
+	DRAW_BATTERY
+	DRAW_PRESSURE_HIGH
+	DRAW_AP_ERROR
 
 	delay(2000);
 	DRAW_PULSE_N
 	DRAW_BATTERY
 	DRAW_PRESSURE_LOW
-	DRAW_AP_ERROR
-
-
-	delay(2000);
-	DRAW_PULSE_Y
-	DRAW_BATTERY
-	DRAW_PRESSURE_HIGH
 	DRAW_AP_OK
+
+
+
 
 	// am percentage
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);

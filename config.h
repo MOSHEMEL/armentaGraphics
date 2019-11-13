@@ -6,7 +6,7 @@
 #include "Adafruit_ILI9341.h"
 
 #define DEBUG_FLAG 0
-#define DEBUG_STANDALONE 1
+#define DEBUG_STANDALONE 0
 #define VERSION "2.2"
 #define PROMINI 0
 #define LED_TOGGLE 0
