@@ -179,8 +179,8 @@ bool graphics_to_Screen(int print_number)
 void reset_screen()
 {
 	paint_half_half();
-	DRAW_PULSE_Y
+	DRAW_PULSE_N
 	DRAW_BATTERY
-	DRAW_PRESSURE_HIGH
-	DRAW_AP_OK
+	DRAW_PRESSURE_LOW
+	DRAW_AP_ERROR
 }

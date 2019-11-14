@@ -115,7 +115,6 @@ void parse_fail(char* buf)
 	
 	int ammount_left = atoi(buf);
 	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
-		// TODO: add functionality depending on Selas' input in regards to 27 psi pressure.
 		tft.fillScreen(Warning_RED);
 		tft.setFont(); // we have no letters to show so we cant use font to print letters
 		tft.setTextSize(4);
