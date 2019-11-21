@@ -98,7 +98,7 @@ void setup(void) {
 	
 	DRAW_WELCOME
 
-	delay(2000);
+	delay(200);
 #if DEBUG_STANDALONE
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	tft.println("DEBUG VERSION");
@@ -108,13 +108,13 @@ void setup(void) {
 #endif
 	paint_half_half();
 
-	delay(2000);
+	delay(20);
 	DRAW_PULSE_Y
 	DRAW_BATTERY
 	DRAW_PRESSURE_HIGH
 	DRAW_AP_ERROR
 
-	delay(2000);
+	delay(20);
 	DRAW_PULSE_N
 	DRAW_BATTERY
 	DRAW_PRESSURE_LOW
@@ -134,8 +134,7 @@ void setup(void) {
 	tft.println("25%");
 
 	blank_upper_side();
-	graphics_to_Screen(0);
-	delay(100);
+	delay(10);
 }
 
 
