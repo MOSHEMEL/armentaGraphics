@@ -257,7 +257,7 @@ void parse_version(char* buf)
 	tft.setTextColor(ILI9341_BLACK);
 	tft.setFont();
 	tft.setTextSize(1);
-	tft.setCursor(10, 10);
+	tft.setCursor(10, 155);
 	tft.print("Armenta ltd. gfx:");
 	tft.print(VERSION);
 	tft.print(" mcu:");
