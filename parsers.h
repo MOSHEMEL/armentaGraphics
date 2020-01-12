@@ -19,7 +19,7 @@ void parse_draw_rectangles(char* buf);
 void parse_pulse_counter_test(char* buf);
 void parse_version(char* buf);
 void parse_test_battery(void);
-
+void parse_cs(char* buf);
 
 void parse_aplicator(char* buf) {
 	int Base_y = 60;
@@ -262,4 +262,16 @@ void parse_version(char* buf)
 	tft.print(VERSION);
 	tft.print(" mcu:");
 	tft.print(MCU_version);
+}
+void parse_cs(char* buf)
+{
+	buf++;
+	tft.fillScreen(ILI9341_WHITE);
+	tft.setFont();
+	tft.setTextColor(ILI9341_BLACK);
+	tft.setTextSize(2);
+	tft.setCursor(0, 30);
+	tft.println(buf);
+	delay(5000);
+	reset_screen();
 }

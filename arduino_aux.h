@@ -19,6 +19,90 @@ bool graphics_to_Screen(int print_number);
 void paint_half_half();
 void reset_screen();
 
+void blank_5_digits(int curr_number, int digitL)
+{
+	if (curr_number >= 10000)
+	{
+		tft.fillRect(0, 0, 5 * digitL, 120, ILI9341_bk1); // width_all = 5; offset = 0;
+	}
+}
+
+void blank_4_digits(int curr_number, int digitL)
+{
+	if (curr_number >= 10000)
+	{
+		tft.fillRect(digitL, 0, 4 * digitL, 120, ILI9341_bk1); // width_all = 5; offset = 1;
+	}
+	else if (curr_number >= 1000)
+	{
+		tft.fillRect(0, 0, 4 * digitL, 120, ILI9341_bk1); // width_all = 4; offset = 0;
+	}
+}
+
+void blank_3_digits(int curr_number, int digitL)
+{
+	if (curr_number >= 10000)
+	{
+		tft.fillRect(2 * digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 2;
+	}
+	else if (curr_number >= 1000)
+	{
+		tft.fillRect(digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 1;
+	}
+	else
+	{
+		tft.fillRect(0, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 0;
+	}
+}
+
+void blank_2_digits(int curr_number, int digitL)
+{
+	if (curr_number >= 10000)
+	{
+		tft.fillRect(3 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 3;
+	}
+	if (curr_number >= 1000)
+	{
+		tft.fillRect(2 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 2;
+	}
+	else if (curr_number >= 100)
+	{
+		tft.fillRect(digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 1;
+	}
+	else
+	{
+		tft.fillRect(0, 0, 2 * digitL + 10, 120, ILI9341_bk1); // width_all = 2; offset = 0;
+	}
+}
+
+void blank_1_digits(int curr_number, int digitL)
+{
+	if (curr_number % 5==1)
+	{
+		tft.fillRect(0, 0, 320, 120, ILI9341_bk1); // blank everything each 5 times
+	}
+	else if (curr_number >= 10000)
+	{
+		tft.fillRect(4 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 4;
+	}
+	else if (curr_number >= 1000)
+	{
+		tft.fillRect(3 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 3;
+	}
+	else if (curr_number >= 100)
+	{
+		tft.fillRect(2 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 2;
+	}
+	else if (curr_number >= 10)
+	{
+		tft.fillRect(digitL, 0, digitL + 10, 120, ILI9341_bk1); // width_all = 2; offset = 1;
+	}
+	else
+	{
+		tft.fillRect(0, 0, digitL + 10, 120, ILI9341_bk1); // width_all = 1; offset = 0;
+	}
+}
+
 void check_digits_changed_and_blank(int curr_number)
 {
 	// This function is blanking digits based on the difference modulo
@@ -34,77 +118,22 @@ void check_digits_changed_and_blank(int curr_number)
 	tft.setCursor(8, 20);
 	if (tens_of_thousands_digit_is_changed)
 	{
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(0, 0, 5 * digitL, 120, ILI9341_bk1);
-		}
+		blank_5_digits(curr_number, digitL);
 	}
 	else if (thousands_digit_is_changed) {
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(digitL, 0, 4 * digitL, 120, ILI9341_bk1);
-		}
-		else if (curr_number >= 1000)
-		{
-			tft.fillRect(0, 0, 4 * digitL, 120, ILI9341_bk1);
-		}
+		blank_4_digits(curr_number, digitL);
 	}
 	else if (hundreds_digit_is_changed)
 	{
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(2 * digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1);
-		}
-		else if (curr_number >= 1000)
-		{
-			tft.fillRect(digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // The hundreds are one digit to the right
-		}
-		else
-		{
-			tft.fillRect(0, 0, 3 * digitL + 1, 120, ILI9341_bk1); // The hundreds are MSB
-		}
+		blank_3_digits(curr_number, digitL);
 	}
 	else if (tens_digit_is_changed)
 	{
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(3 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1);
-		}
-		if (curr_number >= 1000)
-		{
-			tft.fillRect(2 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // The tens are two digit to the right
-		}
-		else if (curr_number >= 100)
-		{
-			tft.fillRect(digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // The tens are one digit to the right
-		}
-		else
-		{
-			tft.fillRect(0, 0, 2 * digitL + 10, 120, ILI9341_bk1); // The tens are MSB
-		}
+		blank_2_digits(curr_number, digitL);
 	}
 	else if (last_digit_is_changed)
 	{
-		if (curr_number >= 10000)
-		{
-			tft.fillRect(4 * digitL, 0, digitL + 1, 120, ILI9341_bk1);
-		}
-		else if (curr_number >= 1000)
-		{
-			tft.fillRect(3 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // The singles are 3 digit to the right
-		}
-		else if (curr_number >= 100)
-		{
-			tft.fillRect(2 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // The singles are 2 digit to the right
-		}
-		else if (curr_number >= 10)
-		{
-			tft.fillRect(digitL, 0, digitL + 10, 120, ILI9341_bk1); // The singles are one digit to the right
-		}
-		else
-		{
-			tft.fillRect(0, 0, digitL + 10, 120, ILI9341_bk1); // The singles are MSB
-		}
+		blank_1_digits(curr_number, digitL);
 	}
 }
 

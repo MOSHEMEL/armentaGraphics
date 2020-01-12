@@ -65,7 +65,64 @@ int percentBattery = 0;
 int FontSizeArmenta = 2;
 bool start_command = false;
 
-
+void PrintOnLcd(char* buf)
+{
+	// If the promini is the board of choise. There is no Serial1
+	Serial.println(buf);
+	if ((*buf == 'c') || (*buf == 'C')) // counter [number]
+	{
+		parse_pulse_counter(buf);
+	} // enf if
+	else if ((*buf == 'a') || (*buf == 'A')) // pulse present
+	{
+		parse_pulse(buf);
+	} // end if
+	else if ((*buf == 'p') || (*buf == 'P')) // pressure [number]
+	{
+		parse_pressure(buf);
+	} // end if
+	else if ((*buf == 't') || (*buf == 'T')) // parse applicator in size
+	{
+		parse_aplicator(buf);
+	} // end if
+	else if ((*buf == 'b') || (*buf == 'B')) // battery [number]
+	{
+		parse_battery_percent(buf);
+	} // end if
+	else if ((*buf == 'e') || (*buf == 'E')) // error with number
+	{
+		parse_E(buf);
+	}
+	else if ((*buf == 'r') || (*buf == 'R')) // reset screen and wipe
+	{
+		parse_reset_screen(buf);
+	}
+	else if ((*buf == 'f') || (*buf == 'F')) // last few pulses left
+	{
+		parse_fail(buf);
+	}
+	else if ((*buf == 'q') || (*buf == 'Q'))
+	{
+		blank_on_reset(buf);
+	}
+	else if ((*buf == 'z') || (*buf == 'Z'))
+	{
+		print_error(buf);
+	}
+	else if ((*buf == 'm') || (*buf == 'M'))
+	{
+		parse_test_battery();
+	}
+	else if ((*buf == 'v') || (*buf == 'V'))
+	{
+		parse_version(buf);
+	}
+	else if ((*buf == 'g') || (*buf == 'G'))
+	{
+		parse_cs(buf);
+	}
+	tft.setCursor(0, 0);
+}
 
 void setup(void) {
 #if PROMINI
@@ -183,58 +240,3 @@ void loop(void) {
 		}
 	}
 }
-void PrintOnLcd(char* buf)
-{
-	// If the promini is the board of choise. There is no Serial1
-	Serial.println(buf);
-	if ((*buf == 'c') || (*buf == 'C')) // counter [number]
-	{
-		parse_pulse_counter(buf);
-	} // enf if
-	else if ((*buf == 'a') || (*buf == 'A')) // pulse present
-	{
-		parse_pulse(buf);
-	} // end if
-	else if ((*buf == 'p') || (*buf == 'P')) // pressure [number]
-	{
-		parse_pressure(buf);
-	} // end if
-	else if ((*buf == 't') || (*buf == 'T')) // parse applicator in size
-	{
-		parse_aplicator(buf);
-	} // end if
-	else if ((*buf == 'b') || (*buf == 'B')) // battery [number]
-	{
-		parse_battery_percent(buf);
-	} // end if
-	else if ((*buf == 'e') || (*buf == 'E')) // error with number
-	{
-		parse_E(buf);
-	}
-	else if ((*buf == 'r') || (*buf == 'R')) // reset screen and wipe
-	{
-		parse_reset_screen(buf);
-	}
-	else if ((*buf == 'f') || (*buf == 'F')) // last few pulses left
-	{
-		parse_fail(buf);
-	}
-	else if ((*buf == 'q') || (*buf == 'Q'))
-	{
-		blank_on_reset(buf);
-	}
-	else if ((*buf == 'z') || (*buf == 'Z'))
-	{
-		print_error(buf);
-	}
-	else if ((*buf == 'm') || (*buf == 'M'))
-	{
-		parse_test_battery();
-	}
-	else if ((*buf == 'v') || (*buf == 'V'))
-	{
-		parse_version(buf);
-	}
-	tft.setCursor(0, 0);
-}
-
