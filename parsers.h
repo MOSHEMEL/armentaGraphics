@@ -232,7 +232,6 @@ void blank_on_reset(char* buf)
 {
 	buf++;
 	int new_counter = atoi(buf);
-	delay(20);
 	tft.fillRect(0, 0, 320, 120, ILI9341_bk1);
 	graphics_to_Screen(new_counter);
 }

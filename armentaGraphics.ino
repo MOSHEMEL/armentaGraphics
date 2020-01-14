@@ -53,8 +53,6 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(7, 6);
 // If using the breakout, change pins as desired
 bool led_toggle = 0;
 
-
-
 int y = 0;
 char  BufferString[MAX_COMMAND_LENGTH];
 char CounterString[MAX_COMMAND_LENGTH];
@@ -68,7 +66,7 @@ bool start_command = false;
 void PrintOnLcd(char* buf)
 {
 	// If the promini is the board of choise. There is no Serial1
-	Serial.println(buf);
+	//Serial.println(buf);
 	if ((*buf == 'c') || (*buf == 'C')) // counter [number]
 	{
 		parse_pulse_counter(buf);
@@ -183,19 +181,18 @@ void setup(void) {
 	// am percentage
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	tft.setCursor(AM_TEXT_POS);
-	tft.println("25%");
+	tft.println("...");
 
 	// battery percentage
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	tft.setCursor(BATTERY_TEXT_POS);
-	tft.println("25%");
+	tft.println("...");
 
 	blank_upper_side();
-	delay(10);
 }
 
 
-void loop(void) {
+void loop2(void) {
 	
 	led_toggle = !led_toggle;
 	digitalWrite(LED_TOGGLE, led_toggle);
@@ -215,23 +212,23 @@ void loop(void) {
 		if (key == '$') //head
 		{
 			i = 0;
-		}
-		CounterString[i] = key;
-		BufferString[i] = key;
-		CounterString[i + 1] = 0;
-		BufferString[i + 1] = 0;
-		if (key == '$')
-		{
-			i = 0;
-			BufferString[0] == '$';
+			BufferString[0] = '$';
 		}
 		else if (key == '#') // ending tail
 		{
-			CounterString[i] = 0;
+			BufferString[i] = 0;
 			if (BufferString[0] == '$')
 			{
-				PrintOnLcd(&CounterString[1]);
+				PrintOnLcd(&BufferString[1]);
 			}
+			i = MAX_COMMAND_LENGTH+1;
+		}
+		else if (key > -1)
+		{
+			BufferString[i] = key;
+			BufferString[i + 1] = 0;
+			Serial.println(BufferString[i]);
+			Serial.println(i);
 		}
 		i++;
 		key = 0;
@@ -240,3 +237,4 @@ void loop(void) {
 		}
 	}
 }
+
