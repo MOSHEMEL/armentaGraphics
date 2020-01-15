@@ -66,7 +66,44 @@ char key;
 int counter = -1;
 int percentBattery = 0;
 int FontSizeArmenta = 2;
-bool start_command = false;
+
+enum serial_state
+{
+	IDLE, WAITING_LENGTH, BUILDING_BUFFER, CHECKSUM
+};
+class Serial_Message {
+public:
+	bool start_message;
+	bool awaiting_checksum;
+	char msg_length;
+	char* msg_buf;
+	uint16_t checksum;
+	serial_state state;
+	serial_state next_state;
+};
+Serial_Message serial_message;
+
+uint16_t calc_crc(uint8_t* data, int length)
+{
+	uint16_t crc = 0u;
+	while (length)
+	{
+		length--;
+		crc = crc ^ ((uint16_t)*data++ << 8u);
+		for (uint8_t i = 0u; i < 8u; i++)
+		{
+			if (crc & 0x8000u)
+			{
+				crc = (crc << 1u) ^ 0x1021u;
+			}
+			else
+			{
+				crc = crc << 1u;
+			}
+		}
+	}
+	return crc;
+}
 
 void PrintOnLcd(char* buf)
 {
@@ -123,6 +160,10 @@ void PrintOnLcd(char* buf)
 	else if ((*buf == 'g') || (*buf == 'G'))
 	{
 		parse_cs(buf);
+	}
+	else if ((*buf == 'n') || (*buf == 'N'))
+	{
+		NVIC_SystemReset();
 	}
 	tft.setCursor(0, 0);
 }
@@ -194,12 +235,14 @@ void setup(void) {
 	tft.println("...");
 
 	blank_upper_side();
+	serial_message.msg_buf = BufferString;
+	serial_message.start_message = false;
+	serial_message.next_state = IDLE;
+	serial_message.state = IDLE;
 }
-
 
 void loop(void) {
 	static int i;
-
 	led_toggle = !led_toggle;
 	digitalWrite(LED_BUILTIN, led_toggle);
 	if (
@@ -215,29 +258,88 @@ void loop(void) {
 #else
 		key = Serial1.read();
 #endif
-		if (key == '$') //head
-		{
-			i = 0;
-			BufferString[0] = '$';
-		}
-		else if (key == '#') // ending tail
-		{
-			BufferString[i] = 0;
-			if (BufferString[0] == '$')
+		if (key > -1)
+		{	
+			switch (serial_message.state)
 			{
-				PrintOnLcd(&BufferString[1]);
+			case IDLE:
+				if (key == 0x01)
+				{
+					serial_message.next_state = WAITING_LENGTH;
+					serial_message.checksum = 0;
+					serial_message.msg_length = 0;
+					Serial.print('A');
+				}
+				break;
+			case WAITING_LENGTH:
+				serial_message.msg_length = key;
+				serial_message.next_state = BUILDING_BUFFER;
+				i = 0;
+				Serial.print('B');
+				break;
+			case BUILDING_BUFFER:
+				if (key == '$') //head
+				{
+					i = 0;
+					BufferString[0] = '$';
+				}
+				else if (key == '#') // ending tail
+				{
+					BufferString[i] = '#';
+					BufferString[i+1] = 0;
+					if (BufferString[0] == '$' && (strlen(BufferString) == serial_message.msg_length))
+					{
+						serial_message.next_state = CHECKSUM;
+						// DO NOT RUN COMMAND YET
+						//PrintOnLcd(&BufferString[1]);
+					}
+					else
+					{
+						BufferString[0] = 0;
+						serial_message.next_state = IDLE;
+					}
+					i = -1;
+				}
+				else
+				{
+					BufferString[i] = key;
+					BufferString[i + 1] = 0;
+				}
+				Serial.print('C');
+				Serial.print(i);
+				i++;
+				break;
+			case CHECKSUM:
+				if (i==0)
+				{
+					i++;
+					serial_message.checksum = ((uint16_t)key) << 8;
+				}
+				else if (i==1)
+				{
+					serial_message.checksum = serial_message.checksum | key;
+					uint16_t calc_CRC = calc_crc((uint8_t*)BufferString, serial_message.msg_length);
+					if (calc_CRC == serial_message.checksum)
+					{
+						PrintOnLcd(&BufferString[1]);
+					}
+					else
+					{
+						Serial.println("E");
+						Serial.print(" .. calc ");
+						Serial.print(calc_CRC);
+						Serial.print(" .. buff ");
+						Serial.println(serial_message.checksum);
+						Serial.println(BufferString);
+					}
+					serial_message.next_state = IDLE;
+					i++;
+				}
+				Serial.print('D');
+				Serial.print(i);
+				break;
 			}
-			i = MAX_COMMAND_LENGTH+1;
-		}
-		else if (key > -1)
-		{
-			BufferString[i] = key;
-			BufferString[i + 1] = 0;
-		}
-		i++;
-		key = 0;
-		if (i >= MAX_COMMAND_LENGTH) {
-			i = 0;
+		serial_message.state = serial_message.next_state;
 		}
 	}
 }
