@@ -32,9 +32,16 @@
 	2. fonts are from graphical designer
 	3. size on mkrzero was rescaled to half , cause otherwise the file is too big
 	4. so far testing seems o.k and not much stuff is broken
-	5. TODO: add other screens like errors and etc
-	6. TODO: let guys in field work with new version and write their grievances
-	7. TODO: add flashing from stm32, OTA update of sw.
+	15.01.2020 Nick:
+	1. Bugs identified by V&V:
+		1.1 sometimes an additional letter is added to transmission of counter which makes a 3 digit num
+		into 4 digit and then it is not cleared.
+		1.2 if you send some big number lets say 5 digits(12345) and then a smaller lets say 3 digit
+		there is no clearing of screen
+		1.3 an error screen (AM remaining 1000 and such)
+		is sent about 10 / 20 times, since update function is run faster than pulse is updated
+	2. In order to process less data, maybe implement checksum?!
+	3. Maybe save state to know what is displayed or supposed.
  */
 
 
@@ -55,8 +62,6 @@ bool led_toggle = 0;
 
 int y = 0;
 char  BufferString[MAX_COMMAND_LENGTH];
-char CounterString[MAX_COMMAND_LENGTH];
-unsigned char i;
 char key;
 int counter = -1;
 int percentBattery = 0;
@@ -129,10 +134,10 @@ void setup(void) {
 	Serial.begin(115200);
 	Serial1.begin(115200);
 #endif
-	SPI.beginTransaction(SPISettings(96000000, MSBFIRST, SPI_MODE0));
+	SPI.begin();
 	tft.begin();
 	tft.setRotation(3);
-	pinMode(LED_TOGGLE, OUTPUT);
+	pinMode(LED_BUILTIN, OUTPUT);
 
 #if PROMINI
 	Serial.print("Initializing SD card...");
@@ -192,10 +197,11 @@ void setup(void) {
 }
 
 
-void loop2(void) {
-	
+void loop(void) {
+	static int i;
+
 	led_toggle = !led_toggle;
-	digitalWrite(LED_TOGGLE, led_toggle);
+	digitalWrite(LED_BUILTIN, led_toggle);
 	if (
 #if PROMINI || DEBUG_STANDALONE
 		Serial.available() > 0
@@ -227,8 +233,6 @@ void loop2(void) {
 		{
 			BufferString[i] = key;
 			BufferString[i + 1] = 0;
-			Serial.println(BufferString[i]);
-			Serial.println(i);
 		}
 		i++;
 		key = 0;
@@ -238,3 +242,30 @@ void loop2(void) {
 	}
 }
 
+#define SMALL_INTERVAL_TIME 100
+#define THRESHOLD 20
+void update(void)
+{
+	static long time_to_update = 0;
+	static long update_dynamic_window = 10000; // 10seconds
+	static int update_packages = 0;
+	
+	
+	if (millis() - time_to_update > update_dynamic_window)
+	{
+		// UPDATE
+		if (update_packages / update_dynamic_window > THRESHOLD)
+			update_dynamic_window + 1 * SMALL_INTERVAL_TIME;
+		else
+		{
+			update_dynamic_window = update_dynamic_window / 2;
+			if (update_dynamic_window < SMALL_INTERVAL_TIME)
+			{
+				update_dynamic_window = SMALL_INTERVAL_TIME;
+			}
+		}
+		update_packages = 0;
+		// Get last time
+		time_to_update = millis();
+	}
+}

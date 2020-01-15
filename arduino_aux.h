@@ -21,7 +21,7 @@ void reset_screen();
 
 void blank_5_digits(int curr_number, int digitL)
 {
-	if (curr_number >= 10000)
+	if (curr_number >= 10000 || counter >= 10000)
 	{
 		tft.fillRect(0, 0, 5 * digitL, 120, ILI9341_bk1); // width_all = 5; offset = 0;
 	}
@@ -29,11 +29,11 @@ void blank_5_digits(int curr_number, int digitL)
 
 void blank_4_digits(int curr_number, int digitL)
 {
-	if (curr_number >= 10000)
+	if (curr_number >= 10000 || counter >= 10000)
 	{
 		tft.fillRect(digitL, 0, 4 * digitL, 120, ILI9341_bk1); // width_all = 5; offset = 1;
 	}
-	else if (curr_number >= 1000)
+	else if (curr_number >= 1000 || counter >= 1000)
 	{
 		tft.fillRect(0, 0, 4 * digitL, 120, ILI9341_bk1); // width_all = 4; offset = 0;
 	}
@@ -41,11 +41,11 @@ void blank_4_digits(int curr_number, int digitL)
 
 void blank_3_digits(int curr_number, int digitL)
 {
-	if (curr_number >= 10000)
+	if (curr_number >= 10000 || counter >= 10000)
 	{
 		tft.fillRect(2 * digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 2;
 	}
-	else if (curr_number >= 1000)
+	else if (curr_number >= 1000 || counter >= 1000)
 	{
 		tft.fillRect(digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 1;
 	}
@@ -57,15 +57,15 @@ void blank_3_digits(int curr_number, int digitL)
 
 void blank_2_digits(int curr_number, int digitL)
 {
-	if (curr_number >= 10000)
+	if (curr_number >= 10000 || counter >= 10000)
 	{
 		tft.fillRect(3 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 3;
 	}
-	if (curr_number >= 1000)
+	if (curr_number >= 1000 || counter >= 1000)
 	{
 		tft.fillRect(2 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 2;
 	}
-	else if (curr_number >= 100)
+	else if (curr_number >= 100 || counter >= 100)
 	{
 		tft.fillRect(digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 1;
 	}
@@ -81,19 +81,19 @@ void blank_1_digits(int curr_number, int digitL)
 	{
 		tft.fillRect(0, 0, 320, 120, ILI9341_bk1); // blank everything each 5 times
 	}
-	else if (curr_number >= 10000)
+	else if (curr_number >= 10000 || counter >= 10000)
 	{
 		tft.fillRect(4 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 4;
 	}
-	else if (curr_number >= 1000)
+	else if (curr_number >= 1000 || counter >= 1000)
 	{
 		tft.fillRect(3 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 3;
 	}
-	else if (curr_number >= 100)
+	else if (curr_number >= 100 || counter >= 100)
 	{
 		tft.fillRect(2 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 2;
 	}
-	else if (curr_number >= 10)
+	else if (curr_number >= 10 || counter >= 10)
 	{
 		tft.fillRect(digitL, 0, digitL + 10, 120, ILI9341_bk1); // width_all = 2; offset = 1;
 	}
