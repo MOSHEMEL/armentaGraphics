@@ -209,20 +209,10 @@ void setup(void) {
 #endif
 	paint_half_half();
 
-	delay(20);
-	DRAW_PULSE_Y
-	DRAW_BATTERY
-	DRAW_PRESSURE_HIGH
-	DRAW_AP_ERROR
-
-	delay(20);
 	DRAW_PULSE_N
 	DRAW_BATTERY
 	DRAW_PRESSURE_LOW
 	DRAW_AP_OK
-
-
-
 
 	// am percentage
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
@@ -321,6 +311,7 @@ void loop(void) {
 					uint16_t calc_CRC = calc_crc((uint8_t*)BufferString, serial_message.msg_length);
 					if (calc_CRC == serial_message.checksum)
 					{
+						BufferString[serial_message.msg_length - 1] = 0; // remove the #
 						PrintOnLcd(&BufferString[1]);
 					}
 					else

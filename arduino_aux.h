@@ -211,5 +211,15 @@ void reset_screen()
 	DRAW_PULSE_N
 	DRAW_BATTERY
 	DRAW_PRESSURE_LOW
-	DRAW_AP_ERROR
+	DRAW_AP_OK
+	
+	// am percentage
+	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
+	tft.setCursor(AM_TEXT_POS);
+	tft.println("...");
+
+	// battery percentage
+	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
+	tft.setCursor(BATTERY_TEXT_POS);
+	tft.println("...");
 }
