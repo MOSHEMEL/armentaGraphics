@@ -16,6 +16,7 @@
 #define MAX_COMMAND_LENGTH 128
 #define BATTERY_TEXT_POS 174, 184
 #define AM_TEXT_POS 245, 184
+#define PASS_CRC 0
 
 #if PROMINI
 	#include "drawspi.h"

@@ -253,7 +253,28 @@ void loop(void) {
 			switch (serial_message.state)
 			{
 			case IDLE:
-				if (key == 0x01)
+				if(PASS_CRC)
+				{
+					if (key == '$') //head
+					{
+						i = 0;
+						BufferString[0] = '$';
+					}
+					else if (key == '#') // ending tail
+					{
+						BufferString[i] = '#';
+						BufferString[i + 1] = 0;
+						PrintOnLcd(&BufferString[1]);
+					}
+					else
+					{
+						BufferString[i] = key;
+						BufferString[i + 1] = 0;
+					}
+			        i++;
+					serial_message.state = IDLE;
+				}
+				else if (key == 0x01)
 				{
 					serial_message.next_state = WAITING_LENGTH;
 					serial_message.checksum = 0;
