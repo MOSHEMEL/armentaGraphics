@@ -279,14 +279,14 @@ void loop(void) {
 					serial_message.next_state = WAITING_LENGTH;
 					serial_message.checksum = 0;
 					serial_message.msg_length = 0;
-					Serial.print('A');
+					//Serial.print('A');
 				}
 				break;
 			case WAITING_LENGTH:
 				serial_message.msg_length = key;
 				serial_message.next_state = BUILDING_BUFFER;
 				i = 0;
-				Serial.print('B');
+				//Serial.print('B');
 				break;
 			case BUILDING_BUFFER:
 				if (key == '$') //head
@@ -316,8 +316,8 @@ void loop(void) {
 					BufferString[i] = key;
 					BufferString[i + 1] = 0;
 				}
-				Serial.print('C');
-				Serial.print(i);
+				//Serial.print('C');
+				//Serial.print(i);
 				i++;
 				break;
 			case CHECKSUM:
@@ -337,22 +337,30 @@ void loop(void) {
 					}
 					else
 					{
-						Serial.println("E");
-						Serial.print(" .. calc ");
-						Serial.print(calc_CRC);
-						Serial.print(" .. buff ");
-						Serial.println(serial_message.checksum);
-						Serial.println(BufferString);
+						// Error calculating CRC
+						//Serial.println("E");
+						//Serial.print(" .. calc ");
+						//Serial.print(calc_CRC);
+						//Serial.print(" .. buff ");
+						//Serial.println(serial_message.checksum);
+						//Serial.println(BufferString);
 					}
 					serial_message.next_state = IDLE;
 					i++;
 				}
-				Serial.print('D');
-				Serial.print(i);
+				//Serial.print('D');
+				//Serial.print(i);
 				break;
 			}
 		serial_message.state = serial_message.next_state;
 		}
+	}
+	uint8_t x = tft.readcommand8(ILI9341_RDMODE);
+	if (x != 0x94)
+	{
+		tft.begin();
+		tft.setRotation(3);
+		reset_screen();
 	}
 }
 
