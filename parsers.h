@@ -68,13 +68,15 @@ void parse_battery_percent(char* buf) {
 	for (int y = 0; y < 15; y++) {
 		tft.drawLine(174, Base_y + y, 224, Base_y + y, ILI9341_WHITE);
 	}
+#if !SIMPLE_BAT
 	tft.setTextColor(ILI9341_BLACK);
 	tft.setFont();
 	tft.setTextSize(2);
 	tft.setCursor(BATTERY_TEXT_POS); 
 	tft.print(percentBattery);
 	tft.print('%');
-
+#endif
+	
 #if PROMINI
 	Serial.print("Percent Battery ");
 	Serial.println(percentBattery);
@@ -83,10 +85,22 @@ void parse_battery_percent(char* buf) {
 	Serial.println(percentBattery);
 #endif
 
+#if SIMPLE_BAT
+	if (percentBattery <= 10)
+	{
+		percentBattery = 10;
+	}
+	else 
+	{
+		percentBattery = 100;
+	}
+#endif
 
 	Base_y = 208;
-	if (percentBattery <= 10) {
-		for (int y = 0; y <= percentBattery * 42 / 100; y++) {
+	if (percentBattery <= 10) 
+	{
+		for (int y = 0; y <= percentBattery * 42 / 100; y++) 
+		{
 			//   delay(100);
 			tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
 				ILI9341_RED);

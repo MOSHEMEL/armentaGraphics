@@ -219,11 +219,13 @@ void setup(void) {
 	tft.setCursor(AM_TEXT_POS);
 	tft.println("...");
 
+#if !SIMPLE_BAT
 	// battery percentage
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	tft.setCursor(BATTERY_TEXT_POS);
 	tft.println("...");
-
+#endif
+	
 	blank_upper_side();
 	serial_message.msg_buf = BufferString;
 	serial_message.start_message = false;
