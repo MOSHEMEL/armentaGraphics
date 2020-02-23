@@ -7,7 +7,7 @@
 
 #define DEBUG_FLAG 0
 #define DEBUG_STANDALONE 0
-#define VERSION "3.2"
+#define VERSION "3.3"
 #define PROMINI 0
 #define LED_TOGGLE 0
 #define ILI9341_bk1        0x0555

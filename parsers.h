@@ -205,18 +205,31 @@ void parse_pulse_counter(char* buf)
 	int new_counter = atoi(buf);
 	if (counter != new_counter)
 	{
-		check_digits_changed_and_blank(new_counter);
-		bool printed = graphics_to_Screen(new_counter);
-		if (printed)
+		if(new_counter<100000)
 		{
+			check_digits_changed_and_blank(new_counter);
+			bool printed = graphics_to_Screen(new_counter);
+			if (printed)
+			{
 #if DEBUG_FLAG
-			Serial.print(F("Printing char is "));
-			Serial.print(counter);
-			Serial.print(F(" and takes "));
-			Serial.print(millis() - currentmilis);
-			Serial.println(F(" milisecond long"));
+				Serial.print(F("Printing char is "));
+				Serial.print(counter);
+				Serial.print(F(" and takes "));
+				Serial.print(millis() - currentmilis);
+				Serial.println(F(" milisecond long"));
 #endif
+			}
 		}
+		else
+		{
+			blank_5_digits(new_counter, 64);
+			tft.setTextColor(ILI9341_WHITE);
+			tft.setFont();
+			tft.setTextSize(2);
+			tft.setCursor(8, 20);
+			tft.print(String(new_counter));
+		}
+
 	}
 }
 
