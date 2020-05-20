@@ -213,6 +213,7 @@ void reset_screen()
 	DRAW_PRESSURE_LOW
 	DRAW_AP_OK
 	
+	tft.setFont(); // Probably the reason for the dots
 	// am percentage
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	tft.setCursor(AM_TEXT_POS);

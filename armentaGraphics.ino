@@ -1,3 +1,11 @@
+#include <Adafruit_SPIDevice.h>
+#include <Adafruit_I2CRegister.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_BusIO_Register.h>
+#include <gfxfont.h>
+#include <Adafruit_SPITFT_Macros.h>
+#include <Adafruit_SPITFT.h>
+#include <I2S.h>
 #include <Adafruit_GFX.h>
 #include "config.h"
 #include "armenta.h"
@@ -67,10 +75,14 @@ int counter = -1;
 int percentBattery = 0;
 int FontSizeArmenta = 2;
 
+bool watchdog_wakeup = false;
+uint32_t watchdog_last_update = 0;
+
 enum serial_state
 {
 	IDLE, WAITING_LENGTH, BUILDING_BUFFER, CHECKSUM
 };
+
 class Serial_Message {
 public:
 	bool start_message;
@@ -105,6 +117,29 @@ uint16_t calc_crc(uint8_t* data, int length)
 	return crc;
 }
 
+void uart_armenta_logo()
+{
+	static const char logo[] = ""
+		" NNNN                    NNNN  \r\n"
+		" NNNNiiiiiiiiiiiiiiiiiiiiNNNN  \r\n"
+		"  NNNNNNNNNNNNNNNNNNNNNNNNNN   \r\n"
+		"             iNNi              \r\n"
+		"    oooo     iNNi     oooo     \r\n"
+		"    pppp     iNNi     pppp     \r\n"
+		"             iNNi              \r\n"
+		"             iNNi              \r\n"
+		"             iNNi              \r\n"
+		"             iNNi              \r\n"
+		"             iNNi              \r\n"
+		"             iNNi              \r\n"
+		"             iNNi              \r\n"
+		"             iNNi              \r\n"
+		"             iNNi              \r\n";
+	Serial.print(logo);
+	Serial.print("ARMenta version: ");
+	Serial.println(VERSION);
+}
+
 void PrintOnLcd(char* buf)
 {
 	// If the promini is the board of choise. There is no Serial1
@@ -112,23 +147,23 @@ void PrintOnLcd(char* buf)
 	if ((*buf == 'c') || (*buf == 'C')) // counter [number]
 	{
 		parse_pulse_counter(buf);
-	} // enf if
+	} 
 	else if ((*buf == 'a') || (*buf == 'A')) // pulse present
 	{
 		parse_pulse(buf);
-	} // end if
+	} 
 	else if ((*buf == 'p') || (*buf == 'P')) // pressure [number]
 	{
 		parse_pressure(buf);
-	} // end if
+	} 
 	else if ((*buf == 't') || (*buf == 'T')) // parse applicator in size
 	{
 		parse_aplicator(buf);
-	} // end if
+	} 
 	else if ((*buf == 'b') || (*buf == 'B')) // battery [number]
 	{
 		parse_battery_percent(buf);
-	} // end if
+	}
 	else if ((*buf == 'e') || (*buf == 'E')) // error with number
 	{
 		parse_E(buf);
@@ -148,6 +183,10 @@ void PrintOnLcd(char* buf)
 	else if ((*buf == 'z') || (*buf == 'Z'))
 	{
 		print_error(buf);
+	}
+	else if ((*buf == 'w') || (*buf == 'W'))
+	{
+		print_warning(buf);
 	}
 	else if ((*buf == 'm') || (*buf == 'M'))
 	{
@@ -231,6 +270,8 @@ void setup(void) {
 	serial_message.start_message = false;
 	serial_message.next_state = IDLE;
 	serial_message.state = IDLE;
+	uart_armenta_logo();
+	watchdog_last_update = millis();
 }
 
 void loop(void) {
@@ -267,6 +308,7 @@ void loop(void) {
 						BufferString[i] = '#';
 						BufferString[i + 1] = 0;
 						PrintOnLcd(&BufferString[1]);
+						watchdog_last_update = millis();
 					}
 					else
 					{
@@ -352,6 +394,7 @@ void loop(void) {
 				}
 				//Serial.print('D');
 				//Serial.print(i);
+				watchdog_last_update = millis();
 				break;
 			}
 		serial_message.state = serial_message.next_state;
@@ -360,36 +403,50 @@ void loop(void) {
 	uint8_t x = tft.readcommand8(ILI9341_RDMODE);
 	if (x != 0x94)
 	{
+		Serial.print("Power mode: ");
+		Serial.println(x);
 		tft.begin();
 		tft.setRotation(3);
 		reset_screen();
 	}
-}
-
-#define SMALL_INTERVAL_TIME 100
-#define THRESHOLD 20
-void update(void)
-{
-	static long time_to_update = 0;
-	static long update_dynamic_window = 10000; // 10seconds
-	static int update_packages = 0;
-	
-	
-	if (millis() - time_to_update > update_dynamic_window)
+	if (millis() - watchdog_last_update > WATCHDOG_TIMER_EXPIRE)
 	{
-		// UPDATE
-		if (update_packages / update_dynamic_window > THRESHOLD)
-			update_dynamic_window + 1 * SMALL_INTERVAL_TIME;
+		if(!watchdog_wakeup)
+		{
+			watchdog_wakeup = true;
+		}
 		else
 		{
-			update_dynamic_window = update_dynamic_window / 2;
-			if (update_dynamic_window < SMALL_INTERVAL_TIME)
+			static unsigned long last_error_millis = millis();
+			static char timeout[] = "System Failure E300";
+			char* buf = &timeout[0];
+			if (millis() - last_error_millis > WATCHDOG_TIMER_EXPIRE/2 )
 			{
-				update_dynamic_window = SMALL_INTERVAL_TIME;
+				Serial.println("mcu where are you?");
+				tft.fillScreen(Warning_RED);
+				tft.setFont();
+
+				tft.setTextColor(ILI9341_WHITE);
+				tft.setTextSize(6);
+				tft.setCursor(75, 30);
+				tft.println("Error");
+				tft.setCursor(50, 90);
+				tft.setTextSize(2);
+
+				tft.println(timeout);
+				last_error_millis = millis();
 			}
 		}
-		update_packages = 0;
-		// Get last time
-		time_to_update = millis();
+	}
+	else
+	{
+		if(watchdog_wakeup)
+		{
+			reset_screen();
+			graphics_to_Screen(counter);
+
+			watchdog_wakeup = false;
+			watchdog_last_update = millis();
+		}
 	}
 }

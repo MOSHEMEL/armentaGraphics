@@ -129,7 +129,14 @@ void parse_fail(char* buf)
 	
 	int ammount_left = atoi(buf);
 	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
-		tft.fillScreen(Warning_RED);
+		if (ammount_left==0)
+		{
+			tft.fillScreen(Warning_RED);
+		}
+		else
+		{
+			tft.fillScreen(Warning_BLUE);
+		}
 		tft.setFont(); // we have no letters to show so we cant use font to print letters
 		tft.setTextSize(4);
 
@@ -146,25 +153,42 @@ void parse_fail(char* buf)
 		tft.setFont(&ArmentaFont64pt7b);
 		tft.setTextSize(FontSizeArmenta / 2);
 #endif
-		if (ammount_left == 1000)
+		if (ammount_left >= 1000)
 		{
 			tft.setCursor(30, 200);
 			tft.println(ammount_left);
+			tft.setFont();
+			tft.setTextSize(2);
+			tft.setCursor(30, 220);
+			tft.println("Notify APT Service");
 		}
 		else if (ammount_left == 0)
 		{
 			tft.setCursor(130, 200);
 			tft.println(ammount_left);
+			tft.setFont();
+			tft.setTextSize(2);
+
+			tft.setCursor(30, 220);
+			tft.println("Contact APT Service");
 		}
 		else
 		{
 			tft.setCursor(80, 200);
 			tft.println(ammount_left);
+			tft.setFont();
+			tft.setTextSize(2);
+			tft.setCursor(30, 220);
+			tft.println("Notify APT Service");
 		}
 	}
+
+
+
 	// After we draw the screen - we then show the 
 	delay(2000);
 	tft.setFont();
+	tft.setTextSize(2);
 	reset_screen();
 }
 
@@ -250,8 +274,37 @@ void print_error(char* buf)
 	tft.println("Error");
 	tft.setCursor(50, 90);
 	tft.setTextSize(2);
+  uint16_t size = 0;
+  while(buf[size] != '\0')
+  {
+    size ++;
+  }
+  buf[size-1] = '\0';
 	tft.println(buf);
-	delay(2000);
+	delay(10000);
+	reset_screen();
+}
+
+void print_warning(char* buf)
+{
+	buf++;
+	tft.fillScreen(Warning_BLUE);
+	tft.setFont();
+
+	tft.setTextColor(ILI9341_WHITE);
+	tft.setTextSize(6);
+	tft.setCursor(50, 30);
+	tft.println("Warning");
+	tft.setCursor(50, 90);
+	tft.setTextSize(2);
+	uint16_t size = 0;
+	while (buf[size] != '\0')
+	{
+		size++;
+	}
+	buf[size - 1] = '\0';
+	tft.println(buf);
+	delay(10000);
 	reset_screen();
 }
 
@@ -300,4 +353,10 @@ void parse_cs(char* buf)
 	tft.println(buf);
 	delay(5000);
 	reset_screen();
+}
+
+uint16_t color_565_from_888(uint32_t RGB888)
+{
+	uint16_t RGB565 = (((RGB888 & 0xf80000) >> 8) + ((RGB888 & 0xfc00) >> 5) + ((RGB888 & 0xf8) >> 3));
+	return RGB565;
 }
