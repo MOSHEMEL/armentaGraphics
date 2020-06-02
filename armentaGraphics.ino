@@ -409,7 +409,7 @@ void loop(void) {
 		tft.setRotation(3);
 		reset_screen();
 	}
-	if (millis() - watchdog_last_update > WATCHDOG_TIMER_EXPIRE)
+	if (millis() - watchdog_last_update > WATCHDOG_TIMER_EXPIRE && !DEBUG_STANDALONE)
 	{
 		if(!watchdog_wakeup)
 		{

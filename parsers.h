@@ -20,6 +20,13 @@ void parse_pulse_counter_test(char* buf);
 void parse_version(char* buf);
 void parse_test_battery(void);
 void parse_cs(char* buf);
+uint16_t RGB888toRGB565(const char* rgb32_str_);
+
+uint16_t RGB888toRGB565(const char* rgb32_str_)
+{
+	long rgb32 = strtoul(rgb32_str_, 0, 16);
+	return (rgb32 >> 8 & 0xf800) | (rgb32 >> 5 & 0x07e0) | (rgb32 >> 3 & 0x001f);
+}
 
 void parse_aplicator(char* buf) {
 	int Base_y = 60;
@@ -119,9 +126,140 @@ void parse_battery_percent(char* buf) {
 	}
 }
 
-void parse_E(char* buf) {
+void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, int size)
+{
+
+	/*
+	 * TextSize(1)
+		The space occupied by a character using the standard font is 6 pixels wide by 8 pixels high.
+		A two characters string sent with this command occup a space that is 12 pixels wide by 8 pixels high.
+	 */
+	int len = 0;
+	char *pointer = string;
+	char ascii;
+
+	while (*pointer)
+	{
+		ascii = *pointer;
+		len++;
+		* pointer++;
+	}
+	len = len * 6 * size;
+	int poX = 160 - len / 2;
+
+	if (poX < 0) poX = 0;
+
+	while (*string)
+	{
+		//  void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size);
+		tft.drawChar(poX, y, *string, color, bg_color, size);
+		*string++;
+		poX += 6*size;                  /* Move cursor right            */
+	}
 
 }
+
+
+void parse_E(char* buf)
+{
+	buf++;
+
+	int error_code = atoi(buf);
+	if (error_code > 0)
+	{
+		if (error_code == 4000)
+		{
+			tft.fillScreen(RGB888toRGB565("FFFF00"));
+			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			tft.setTextColor(RGB888toRGB565("00B0F0"));
+			align_center_print("Attention", 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+			align_center_print("Notify APT Service", 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			char str_error[10];
+			sprintf(str_error, "E%d", error_code);
+			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+		}
+		else if (error_code == 4001)
+		{
+			tft.fillScreen(Warning_RED);
+			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			tft.setTextColor(ILI9341_WHITE);
+			align_center_print("Error", 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print("Turn Off And", 90, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print("Reconnect APT", 120, ILI9341_WHITE, Warning_RED, 3);
+			char str_error[10];
+			sprintf(str_error, "E%d", error_code);
+			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+		}
+		else if (error_code == 4010 || error_code == 4011)
+		{
+			tft.fillScreen(Warning_RED);
+			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			tft.setTextColor(ILI9341_WHITE);
+			align_center_print("Error", 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print("Replace AM", 90, ILI9341_WHITE, Warning_RED, 3);
+			char str_error[10];
+			sprintf(str_error, "E%d", error_code);
+			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+		}
+		else if (error_code >= 5000 && error_code < 7000)
+		{
+			tft.fillScreen(Warning_RED);
+			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			tft.setTextColor(ILI9341_WHITE);
+			align_center_print("Error", 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print("Replace AM", 90, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print("Contact APT Service", 120, ILI9341_WHITE, Warning_RED, 2);
+			char str_error[10];
+			sprintf(str_error, "E%d", error_code);
+			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+		}
+		else if (error_code == 503)
+		{
+			/*
+			 *  Error
+				APT Maintenance Required
+				Contact APT Service 
+				E503
+
+			 */
+			tft.fillScreen(Warning_RED);
+			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			tft.setTextColor(ILI9341_WHITE);
+			align_center_print("Error", 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print("APT Maintenance Required", 90, ILI9341_WHITE, Warning_RED, 2);
+			align_center_print("Contact APT Service", 120, ILI9341_WHITE, Warning_RED, 2);
+			char str_error[10];
+			sprintf(str_error, "E%d", error_code);
+			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+		}
+		else if (error_code == 504)
+		{
+			/*
+			 * ATTENTION
+				APT Maintenance Required
+				Contact APT Service 
+				E504
+
+			 */
+			tft.fillScreen(RGB888toRGB565("FFFF00"));
+			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			tft.setTextColor(RGB888toRGB565("00B0F0"));
+			align_center_print("Attention", 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+			align_center_print("APT Maintenance Required", 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			align_center_print("Contact APT Service", 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			char str_error[10];
+			sprintf(str_error, "E%d", error_code);
+			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+
+		}
+	// After we draw the screen - we then show the 
+	delay(2000);
+	tft.setFont();
+	tft.setTextSize(2);
+	reset_screen();
+	}
+}
+
 
 void parse_fail(char* buf)
 {
@@ -132,20 +270,28 @@ void parse_fail(char* buf)
 		if (ammount_left==0)
 		{
 			tft.fillScreen(Warning_RED);
+			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			tft.setTextSize(4);
+			tft.setTextColor(ILI9341_WHITE);
+			tft.setCursor(50, 35);
+			tft.println("AM Pulses");
+			tft.setCursor(50, 65);
+			tft.println("Remaining");
 		}
 		else
 		{
-			tft.fillScreen(Warning_BLUE);
+			tft.fillScreen(RGB888toRGB565("FFFF00"));
+			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			tft.setTextSize(3);
+			tft.setTextColor(RGB888toRGB565("00B0F0"));
+			tft.setCursor(75, 5);
+			tft.println("Attention");
+			tft.setCursor(75, 35);
+			tft.println("AM Pulses");
+			tft.setCursor(75, 65);
+			tft.println("Remaining");
 		}
-		tft.setFont(); // we have no letters to show so we cant use font to print letters
-		tft.setTextSize(4);
 
-		
-		tft.setTextColor(ILI9341_WHITE);
-		tft.setCursor(50, 30);
-		tft.println("AM Pulses");
-		tft.setCursor(50, 60);
-		tft.println("Remaining");
 #if PROMINI
 		tft.setFont(&ArmentaFont32pt7b);
 		tft.setTextSize(FontSizeArmenta);
@@ -159,8 +305,6 @@ void parse_fail(char* buf)
 			tft.println(ammount_left);
 			tft.setFont();
 			tft.setTextSize(2);
-			tft.setCursor(30, 220);
-			tft.println("Notify APT Service");
 		}
 		else if (ammount_left == 0)
 		{
@@ -169,8 +313,8 @@ void parse_fail(char* buf)
 			tft.setFont();
 			tft.setTextSize(2);
 
-			tft.setCursor(30, 220);
-			tft.println("Contact APT Service");
+			tft.setCursor(100, 220);
+			tft.println("Replace AM");
 		}
 		else
 		{
@@ -178,8 +322,6 @@ void parse_fail(char* buf)
 			tft.println(ammount_left);
 			tft.setFont();
 			tft.setTextSize(2);
-			tft.setCursor(30, 220);
-			tft.println("Notify APT Service");
 		}
 	}
 
