@@ -154,7 +154,7 @@ void PrintOnLcd(char* buf)
 	} 
 	else if ((*buf == 'p') || (*buf == 'P')) // pressure [number]
 	{
-		parse_pressure(buf);
+		//parse_pressure(buf);
 	} 
 	else if ((*buf == 't') || (*buf == 'T')) // parse applicator in size
 	{
