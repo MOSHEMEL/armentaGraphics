@@ -1,6 +1,7 @@
 #pragma once
 #include "config.h"
 extern int percentBattery;
+extern uint32_t serial_number;
 #ifndef _STDBOOL
 #include "stdbool.h"
 #endif
@@ -399,6 +400,37 @@ void parse_pulse_counter(char* buf)
 	}
 }
 
+void parse_force_pulse_counter(char* buf)
+{
+	// This function is sent always even if no number needs to be printed
+	buf++;
+	int new_counter = atoi(buf);
+	if (new_counter < 100000)
+	{
+		bool printed = graphics_to_Screen(new_counter);
+		if (printed)
+		{
+#if DEBUG_FLAG
+			Serial.print(F("Printing char is "));
+			Serial.print(counter);
+			Serial.print(F(" and takes "));
+			Serial.print(millis() - currentmilis);
+			Serial.println(F(" milisecond long"));
+#endif
+		}
+	}
+	else
+	{
+		blank_5_digits(new_counter, 64);
+		tft.setTextColor(ILI9341_WHITE);
+		tft.setFont();
+		tft.setTextSize(2);
+		tft.setCursor(8, 20);
+		tft.print(String(new_counter));
+	}	
+}
+
+
 void parse_reset_screen(char* buf)
 {
 	reset_screen();
@@ -495,6 +527,58 @@ void parse_cs(char* buf)
 	tft.println(buf);
 	delay(5000);
 	reset_screen();
+}
+void parse_serial(char* buf)
+{
+	buf++;
+	serial_number = atol(buf);
+	Serial.print("S\N number is ");
+	Serial.println(serial_number);
+}
+
+void parse_serial_show(char* buf)
+{
+	buf++;
+	uint16_t bg_color = RGB888toRGB565("FFFFFF");
+	uint16_t text_color = RGB888toRGB565("000000");
+	tft.setFont(); // we have no letters to show so we cant use font to print letters
+
+
+	char str_serial_status[30];
+	int remaining_pulses = atoi(buf);
+	if (remaining_pulses > 5000)
+	{
+		bg_color = RGB888toRGB565("00B050");
+		text_color = RGB888toRGB565("DDBD0B");
+		tft.setTextColor(text_color);
+		tft.fillScreen(bg_color);
+	}
+	else if(remaining_pulses > 0)
+	{
+		bg_color = RGB888toRGB565("FFFF00");
+		text_color = RGB888toRGB565("2ABDC8");
+		tft.setTextColor(text_color);
+		tft.fillScreen(bg_color);
+		sprintf(str_serial_status, "Pay attention, You are left with less");
+		align_center_print(str_serial_status, 120, text_color, bg_color, 1);
+		sprintf(str_serial_status, "than 5000 pulses.");
+		align_center_print(str_serial_status, 130, text_color, bg_color, 1);
+		sprintf(str_serial_status, "Please replace AM shortly");
+		align_center_print(str_serial_status, 140, text_color, bg_color, 1);
+	}
+	else
+	{
+
+		bg_color = RGB888toRGB565("FF0000");
+		text_color = RGB888toRGB565("FFFFFF");
+		tft.setTextColor(text_color);
+		tft.fillScreen(bg_color);
+	}
+
+	sprintf(str_serial_status, "AM Number %d", serial_number);
+	align_center_print(str_serial_status, 30, text_color, bg_color, 3);
+	sprintf(str_serial_status, "Remaining %d", remaining_pulses);
+	align_center_print(str_serial_status, 90, text_color, bg_color, 3);
 }
 
 uint16_t color_565_from_888(uint32_t RGB888)

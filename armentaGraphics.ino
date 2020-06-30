@@ -77,6 +77,7 @@ int FontSizeArmenta = 2;
 
 bool watchdog_wakeup = false;
 uint32_t watchdog_last_update = 0;
+uint32_t serial_number = 0;
 
 enum serial_state
 {
@@ -147,7 +148,19 @@ void PrintOnLcd(char* buf)
 	if ((*buf == 'c') || (*buf == 'C')) // counter [number]
 	{
 		parse_pulse_counter(buf);
-	} 
+	}
+	if ((*buf == 'd') || (*buf == 'D')) // Force counter [number]
+	{
+		parse_force_pulse_counter(buf);
+	}
+	if ((*buf == 'h') || (*buf == 'H')) // set S/N as [number]
+	{
+		parse_serial(buf);
+	}
+	if ((*buf == 'i') || (*buf == 'I')) // Show S/N as [number] and Remaining
+	{
+		parse_serial_show(buf);
+	}
 	else if ((*buf == 'a') || (*buf == 'A')) // pulse present
 	{
 		parse_pulse(buf);

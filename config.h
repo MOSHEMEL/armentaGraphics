@@ -6,7 +6,7 @@
 #include "Adafruit_ILI9341.h"
 
 #define DEBUG_FLAG 0
-#define DEBUG_STANDALONE 0
+#define DEBUG_STANDALONE 1
 #define VERSION "3.5"
 #define PROMINI 0
 #define LED_TOGGLE 0
@@ -17,7 +17,7 @@
 #define MAX_COMMAND_LENGTH 128
 #define BATTERY_TEXT_POS 174, 184
 #define AM_TEXT_POS 245, 184
-#define PASS_CRC 0
+#define PASS_CRC 1
 #define SIMPLE_BAT 1
 #define WATCHDOG_TIMER_EXPIRE 10000
 
