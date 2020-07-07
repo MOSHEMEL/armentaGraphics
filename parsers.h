@@ -173,8 +173,8 @@ void parse_E(char* buf)
 			tft.fillScreen(RGB888toRGB565("FFFF00"));
 			tft.setFont(); // we have no letters to show so we cant use font to print letters
 			tft.setTextColor(RGB888toRGB565("00B0F0"));
-			align_center_print("Attention", 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
-			align_center_print("Notify APT Service", 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			align_center_print(ATTENTION, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+			align_center_print(NOTIFY, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
@@ -184,9 +184,9 @@ void parse_E(char* buf)
 			tft.fillScreen(Warning_RED);
 			tft.setFont(); // we have no letters to show so we cant use font to print letters
 			tft.setTextColor(ILI9341_WHITE);
-			align_center_print("Error", 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print("Turn Off And", 90, ILI9341_WHITE, Warning_RED, 3);
-			align_center_print("Reconnect APT", 120, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print(ERROR4001_P1, 90, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print(ERROR4001_P2, 120, ILI9341_WHITE, Warning_RED, 3);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
@@ -196,8 +196,8 @@ void parse_E(char* buf)
 			tft.fillScreen(Warning_RED);
 			tft.setFont(); // we have no letters to show so we cant use font to print letters
 			tft.setTextColor(ILI9341_WHITE);
-			align_center_print("Error", 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print("Replace AM", 90, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print(REPLACE_AM, 90, ILI9341_WHITE, Warning_RED, 3);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
@@ -207,9 +207,9 @@ void parse_E(char* buf)
 			tft.fillScreen(Warning_RED);
 			tft.setFont(); // we have no letters to show so we cant use font to print letters
 			tft.setTextColor(ILI9341_WHITE);
-			align_center_print("Error", 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print("Replace AM", 90, ILI9341_WHITE, Warning_RED, 3);
-			align_center_print("Contact APT Service", 120, ILI9341_WHITE, Warning_RED, 2);
+			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print(REPLACE_AM, 90, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print(CONTACT, 120, ILI9341_WHITE, Warning_RED, 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
@@ -226,9 +226,9 @@ void parse_E(char* buf)
 			tft.fillScreen(Warning_RED);
 			tft.setFont(); // we have no letters to show so we cant use font to print letters
 			tft.setTextColor(ILI9341_WHITE);
-			align_center_print("Error", 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print("APT Maintenance Required", 90, ILI9341_WHITE, Warning_RED, 2);
-			align_center_print("Contact APT Service", 120, ILI9341_WHITE, Warning_RED, 2);
+			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print(MAINTENANCE, 90, ILI9341_WHITE, Warning_RED, 2);
+			align_center_print(CONTACT, 120, ILI9341_WHITE, Warning_RED, 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
@@ -245,9 +245,9 @@ void parse_E(char* buf)
 			tft.fillScreen(RGB888toRGB565("FFFF00"));
 			tft.setFont(); // we have no letters to show so we cant use font to print letters
 			tft.setTextColor(RGB888toRGB565("00B0F0"));
-			align_center_print("Attention", 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
-			align_center_print("APT Maintenance Required", 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
-			align_center_print("Contact APT Service", 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			align_center_print(ATTENTION, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+			align_center_print(MAINTENANCE, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			align_center_print(CONTACT, 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
@@ -272,25 +272,18 @@ void parse_fail(char* buf)
 		{
 			tft.fillScreen(Warning_RED);
 			tft.setFont(); // we have no letters to show so we cant use font to print letters
-			tft.setTextSize(4);
-			tft.setTextColor(ILI9341_WHITE);
-			tft.setCursor(50, 35);
-			tft.println("AM Pulses");
-			tft.setCursor(50, 65);
-			tft.println("Remaining");
+			align_center_print(AM_PULSES, 35, ILI9341_WHITE, Warning_RED, 4);
+			align_center_print(REMAINING, 65, ILI9341_WHITE, Warning_RED, 4);
+
 		}
 		else
 		{
 			tft.fillScreen(RGB888toRGB565("FFFF00"));
 			tft.setFont(); // we have no letters to show so we cant use font to print letters
-			tft.setTextSize(3);
-			tft.setTextColor(RGB888toRGB565("00B0F0"));
-			tft.setCursor(75, 5);
-			tft.println("Attention");
-			tft.setCursor(75, 35);
-			tft.println("AM Pulses");
-			tft.setCursor(75, 65);
-			tft.println("Remaining");
+
+			align_center_print(ATTENTION, 5, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(AM_PULSES, 35, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(REMAINING, 65, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
 		}
 
 #if PROMINI
@@ -315,7 +308,7 @@ void parse_fail(char* buf)
 			tft.setTextSize(2);
 
 			tft.setCursor(100, 220);
-			tft.println("Replace AM");
+			tft.println(REPLACE_AM);
 		}
 		else
 		{
@@ -559,11 +552,11 @@ void parse_serial_show(char* buf)
 		text_color = RGB888toRGB565("2ABDC8");
 		tft.setTextColor(text_color);
 		tft.fillScreen(bg_color);
-		sprintf(str_serial_status, "Pay attention, You are left with less");
+		sprintf(str_serial_status, SPLASH_P1);
 		align_center_print(str_serial_status, 120, text_color, bg_color, 1);
-		sprintf(str_serial_status, "than 5000 pulses.");
+		sprintf(str_serial_status, SPLASH_P2);
 		align_center_print(str_serial_status, 130, text_color, bg_color, 1);
-		sprintf(str_serial_status, "Please replace AM shortly");
+		sprintf(str_serial_status, SPLASH_P3);
 		align_center_print(str_serial_status, 140, text_color, bg_color, 1);
 	}
 	else
@@ -575,9 +568,9 @@ void parse_serial_show(char* buf)
 		tft.fillScreen(bg_color);
 	}
 
-	sprintf(str_serial_status, "AM Number %d", serial_number);
+	sprintf(str_serial_status, SN_P1, serial_number);
 	align_center_print(str_serial_status, 30, text_color, bg_color, 3);
-	sprintf(str_serial_status, "Remaining %d", remaining_pulses);
+	sprintf(str_serial_status, SN_P2, remaining_pulses);
 	align_center_print(str_serial_status, 90, text_color, bg_color, 3);
 }
 
