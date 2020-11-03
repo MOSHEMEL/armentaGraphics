@@ -206,6 +206,10 @@ void PrintOnLcd(char* buf)
 	{
 		print_warning(buf);
 	}
+ else if ((*buf == 'j') || (*buf == 'J'))
+ {
+    print_test(buf);
+  }
 	else if ((*buf == 'm') || (*buf == 'M'))
 	{
 		parse_test_battery();

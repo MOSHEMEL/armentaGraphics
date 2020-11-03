@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="armentaGraphics.ino" />
+    <None Include="SAMD_MKRZERO.Debug.debugger_launch.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.armentaGraphics.vsarduino.h">
@@ -62,5 +63,8 @@
     <ClCompile Include="w_cropped.h">
       <Filter>Resource Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="board.txt" />
   </ItemGroup>
 </Project>

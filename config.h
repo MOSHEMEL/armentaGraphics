@@ -13,6 +13,8 @@
 #define ILI9341_bk1        0x0555
 #define Warning_RED 0x7F2E5
 #define Warning_BLUE 0x010C
+#define PASS_GREEN      0x07E0         
+//0X8C01
 #define BUFFPIXEL 20
 #define MAX_COMMAND_LENGTH 128
 #define BATTERY_TEXT_POS 174, 184
@@ -22,8 +24,8 @@
 #define SIMPLE_BAT 1
 #define WATCHDOG_TIMER_EXPIRE 10000
 
-#define ENGLISH					0
-#define SPANISH					1
+#define ENGLISH					1
+#define SPANISH					0
 #define HEBREW					0
 #if PROMINI
 	#include "drawspi.h"

@@ -303,12 +303,15 @@ void parse_fail(char* buf)
 		else if (ammount_left == 0)
 		{
 			tft.setCursor(130, 200);
+			tft.setTextColor(ILI9341_WHITE);
 			tft.println(ammount_left);
 			tft.setFont();
 			tft.setTextSize(2);
 
 			tft.setCursor(100, 220);
 			tft.println(REPLACE_AM);
+			tft.setTextColor(ILI9341_BLACK);
+
 		}
 		else
 		{
@@ -464,6 +467,7 @@ void print_warning(char* buf)
 	tft.println("Warning");
 	tft.setCursor(50, 90);
 	tft.setTextSize(2);
+  //tft.setTextSize(6);
 	uint16_t size = 0;
 	while (buf[size] != '\0')
 	{
@@ -473,6 +477,30 @@ void print_warning(char* buf)
 	tft.println(buf);
 	delay(10000);
 	reset_screen();
+}
+
+void print_test(char* buf)
+{
+  buf++;
+  tft.fillScreen(PASS_GREEN);
+  tft.setFont();
+
+  tft.setTextColor(ILI9341_WHITE);
+  tft.setTextSize(6);
+  tft.setCursor(50, 30);
+  tft.println("Warning");
+  tft.setCursor(50, 90);
+  tft.setTextSize(6);
+  //tft.setTextSize(6);
+  uint16_t size = 0;
+  while (buf[size] != '\0')
+  {
+    size++;
+  }
+  buf[size ] = '\0';
+  tft.println(buf);
+  delay(1000);
+ // reset_screen();
 }
 
 void blank_on_reset(char* buf)
