@@ -13,8 +13,9 @@
 
 #ifndef _VSARDUINO_H_
 #define _VSARDUINO_H_
+#define _VMDEBUG 1
 #define F_CPU 48000000L
-#define ARDUINO 108010
+#define ARDUINO 108013
 #define ARDUINO_SAMD_MKRZERO
 #define ARDUINO_ARCH_SAMD
 #define USE_ARDUINO_MKR_PIN_LAYOUT
@@ -57,6 +58,7 @@ typedef int __builtin_bswap16;
 #include "samd.h"
 //#include "samd21/include/samd21.h"
 
+extern void* malloc(size_t __size); 
 
 
 #include "arduino.h"

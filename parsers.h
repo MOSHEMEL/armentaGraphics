@@ -572,6 +572,7 @@ void parse_serial_show(char* buf)
 	align_center_print(str_serial_status, 30, text_color, bg_color, 3);
 	sprintf(str_serial_status, SN_P2, remaining_pulses);
 	align_center_print(str_serial_status, 90, text_color, bg_color, 3);
+	
 }
 
 uint16_t color_565_from_888(uint32_t RGB888)

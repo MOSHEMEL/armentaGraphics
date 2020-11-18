@@ -6,8 +6,8 @@
 #include "pressure_low.h"
 #include "pulseN.h"
 #include "pulseY.h"
-#include "w_cropped.h"
-#define DRAW_WELCOME tft.drawRGBBitmap(75, 50, (uint16_t*)(w_exported.pixel_data), w_exported.width, w_exported.height);
+#include "new_image.h"
+#define DRAW_WELCOME tft.drawRGBBitmap(75, 50, (uint16_t*)(gimp_image.pixel_data), gimp_image.width, gimp_image.height);
 
 #define DRAW_PULSE_N tft.drawRGBBitmap(90, 168, (uint16_t*)(pulseN.pixel_data), pulseN.width, pulseN.height);
 #define DRAW_PULSE_Y tft.drawRGBBitmap(90, 168, (uint16_t*)(pulseY.pixel_data), pulseY.width, pulseY.height);
