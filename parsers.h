@@ -439,8 +439,8 @@ void print_error(char* buf)
 	tft.setFont();
 	
 	tft.setTextColor(ILI9341_WHITE);
-	tft.setTextSize(4);
-	tft.setCursor(50, 30);
+	tft.setTextSize(3);
+	tft.setCursor(30, 30);
 	//tft.println("Error");
 	//tft.setCursor(50, 90);
 	//tft.setTextSize(2);
@@ -462,8 +462,8 @@ void print_warning(char* buf)
 	tft.setFont();
 
 	tft.setTextColor(ILI9341_WHITE);
-	tft.setTextSize(4);
-	tft.setCursor(50, 30);
+	tft.setTextSize(3);
+	tft.setCursor(30, 30);
 	//tft.println("Warning");
 	//tft.setCursor(50, 90);
 	//tft.setTextSize(2);
@@ -486,8 +486,8 @@ void print_test(char* buf)
   tft.setFont();
 
   tft.setTextColor(ILI9341_WHITE);
-  tft.setTextSize(4);
-  tft.setCursor(50, 30);
+  tft.setTextSize(3);
+  tft.setCursor(30, 30);
  // tft.println("Warning");
  // tft.setCursor(50, 90);
   //tft.setTextSize(6);
