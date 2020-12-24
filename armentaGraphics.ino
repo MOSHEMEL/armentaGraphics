@@ -269,12 +269,16 @@ void setup(void) {
 	delay(1000);
 #endif
 	paint_half_half();
+
 	tft.setTextColor(ILI9341_BLACK);
 	tft.setFont();
 	tft.setTextSize(1);
 	tft.setCursor(10, 155);
 	tft.print("Armenta ltd. gfx:");
 	tft.print(VERSION);
+	tft.setTextSize(5);
+	tft.setCursor(100, 220);
+	tft.print("START TEST");
 	DRAW_PULSE_N
 	DRAW_BATTERY
 	DRAW_PRESSURE_LOW
