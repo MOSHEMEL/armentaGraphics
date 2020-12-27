@@ -276,8 +276,8 @@ void setup(void) {
 	tft.setCursor(10, 155);
 	tft.print("Armenta ltd. gfx:");
 	tft.print(VERSION);
-	tft.setTextSize(5);
-	tft.setCursor(100, 220);
+	tft.setTextSize(3);
+	tft.setCursor(70, 100);
 	tft.print("START TEST");
 	DRAW_PULSE_N
 	DRAW_BATTERY
@@ -296,7 +296,7 @@ void setup(void) {
 	tft.println("...");
 #endif
 	
-	blank_upper_side();
+	//blank_upper_side();
 	serial_message.msg_buf = BufferString;
 	serial_message.start_message = false;
 	serial_message.next_state = IDLE;
