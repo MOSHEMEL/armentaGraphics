@@ -532,8 +532,10 @@ void parse_serial(char* buf)
 void parse_serial_show(char* buf)
 {
 	buf++;
-	uint16_t bg_color = RGB888toRGB565("FFFFFF");
-	uint16_t text_color = RGB888toRGB565("000000");
+	//uint16_t bg_color = RGB888toRGB565("FFFFFF");
+	//uint16_t text_color = RGB888toRGB565("000000");
+	uint16_t bg_color = Warning_BLUE;
+	uint16_t text_color = ILI9341_BLACK
 	tft.setFont(); // we have no letters to show so we cant use font to print letters
 
 
@@ -541,15 +543,19 @@ void parse_serial_show(char* buf)
 	int remaining_pulses = atoi(buf);
 	if (remaining_pulses > 5000)
 	{
-		bg_color = RGB888toRGB565("00B050");
-		text_color = RGB888toRGB565("DDBD0B");
+		//bg_color = RGB888toRGB565("00B050");
+		//text_color = RGB888toRGB565("DDBD0B");
+		uint16_t bg_color = Warning_BLUE;
+		uint16_t text_color = ILI9341_BLACK
 		tft.setTextColor(text_color);
 		tft.fillScreen(bg_color);
 	}
 	else if(remaining_pulses > 0)
 	{
-		bg_color = RGB888toRGB565("FFFF00");
-		text_color = RGB888toRGB565("2ABDC8");
+		//bg_color = RGB888toRGB565("FFFF00");
+		//text_color = RGB888toRGB565("2ABDC8");
+		uint16_t bg_color = Warning_BLUE;
+		uint16_t text_color = ILI9341_BLACK
 		tft.setTextColor(text_color);
 		tft.fillScreen(bg_color);
 		sprintf(str_serial_status, SPLASH_P1);
