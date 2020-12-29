@@ -36,7 +36,7 @@
     <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="new_image.h">
+    <ClInclude Include="new_icon.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>

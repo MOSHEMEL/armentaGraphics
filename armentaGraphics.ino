@@ -256,7 +256,7 @@ void setup(void) {
 	
 	DRAW_WELCOME
 
-	delay(200);
+	delay(2000);
 #if DEBUG_STANDALONE
 	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	tft.println("DEBUG VERSION");
@@ -437,6 +437,7 @@ void loop(void) {
 		{
 			static unsigned long last_error_millis = millis();
 			static char timeout[] = "System Failure E300";
+      //static char timeout[] = "la oración";
 			char* buf = &timeout[0];
 			if (millis() - last_error_millis > WATCHDOG_TIMER_EXPIRE/2 )
 			{
