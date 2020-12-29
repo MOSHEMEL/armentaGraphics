@@ -264,6 +264,7 @@ void setup(void) {
 	tft.println("DEBUG VERSION");
 	delay(1000);
 #endif
+/*
 	paint_half_half();
 
 	DRAW_PULSE_N
@@ -285,11 +286,14 @@ void setup(void) {
 	
 	blank_upper_side();
 	serial_message.msg_buf = BufferString;
+  */
 	serial_message.start_message = false;
 	serial_message.next_state = IDLE;
 	serial_message.state = IDLE;
 	uart_armenta_logo();
 	watchdog_last_update = millis();
+  // while get data till get AM + Remaining - stay at title card;
+  // parse data in a while only 2 messages
 }
 
 void loop(void) {
