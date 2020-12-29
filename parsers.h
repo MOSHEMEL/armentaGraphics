@@ -21,6 +21,8 @@ void parse_pulse_counter_test(char* buf);
 void parse_version(char* buf);
 void parse_test_battery(void);
 void parse_cs(char* buf);
+
+uint32_t currentmilis;
 uint16_t RGB888toRGB565(const char* rgb32_str_);
 
 uint16_t RGB888toRGB565(const char* rgb32_str_)
@@ -360,7 +362,7 @@ void parse_pulse(char* buf) {
 void parse_pulse_counter(char* buf)
 {
 	// This function is sent always even if no number needs to be printed
-	uint32_t currentmilis = millis();
+	currentmilis = millis();
 	buf++;
 	int new_counter = atoi(buf);
 	if (counter != new_counter)
@@ -531,11 +533,12 @@ void parse_serial(char* buf)
 
 void parse_serial_show(char* buf)
 {
+  //Serial.print("show");
 	buf++;
 	//uint16_t bg_color = RGB888toRGB565("FFFFFF");
 	//uint16_t text_color = RGB888toRGB565("000000");
 	uint16_t bg_color = Warning_BLUE;
-	uint16_t text_color = ILI9341_BLACK;
+	uint16_t text_color = ILI9341_WHITE;
 	tft.setFont(); // we have no letters to show so we cant use font to print letters
 
 
@@ -546,7 +549,7 @@ void parse_serial_show(char* buf)
 		//bg_color = RGB888toRGB565("00B050");
 		//text_color = RGB888toRGB565("DDBD0B");
 		uint16_t bg_color = Warning_BLUE;
-		uint16_t text_color = ILI9341_BLACK;
+		uint16_t text_color = ILI9341_WHITE;
 		tft.setTextColor(text_color);
 		tft.fillScreen(bg_color);
 	}
@@ -555,7 +558,7 @@ void parse_serial_show(char* buf)
 		//bg_color = RGB888toRGB565("FFFF00");
 		//text_color = RGB888toRGB565("2ABDC8");
 		uint16_t bg_color = Warning_BLUE;
-		uint16_t text_color = ILI9341_BLACK;
+		uint16_t text_color = ILI9341_WHITE;
 		tft.setTextColor(text_color);
 		tft.fillScreen(bg_color);
 		sprintf(str_serial_status, SPLASH_P1);
