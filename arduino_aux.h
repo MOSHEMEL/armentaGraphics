@@ -7,7 +7,7 @@
 #include "Adafruit_ILI9341.h"
 #include "ArmentaFont.h"
 #include "ArmentaFontHuge.h"
-extern Adafruit_ILI9341 tft;
+extern Adafruit_ILI9341 display ;
 #define ILI9341_bk1        0x0555
 
 extern int counter;
@@ -23,7 +23,7 @@ void blank_5_digits(int curr_number, int digitL)
 {
 	if (curr_number >= 10000 || counter >= 10000)
 	{
-		tft.fillRect(0, 0, 5 * digitL, 120, ILI9341_bk1); // width_all = 5; offset = 0;
+		display.fillRect(0, 0, 5 * digitL, 120, ILI9341_bk1); // width_all = 5; offset = 0;
 	}
 }
 
@@ -31,11 +31,11 @@ void blank_4_digits(int curr_number, int digitL)
 {
 	if (curr_number >= 10000 || counter >= 10000)
 	{
-		tft.fillRect(digitL, 0, 4 * digitL, 120, ILI9341_bk1); // width_all = 5; offset = 1;
+		display.fillRect(digitL, 0, 4 * digitL, 120, ILI9341_bk1); // width_all = 5; offset = 1;
 	}
 	else if (curr_number >= 1000 || counter >= 1000)
 	{
-		tft.fillRect(0, 0, 4 * digitL, 120, ILI9341_bk1); // width_all = 4; offset = 0;
+		display.fillRect(0, 0, 4 * digitL, 120, ILI9341_bk1); // width_all = 4; offset = 0;
 	}
 }
 
@@ -43,15 +43,15 @@ void blank_3_digits(int curr_number, int digitL)
 {
 	if (curr_number >= 10000 || counter >= 10000)
 	{
-		tft.fillRect(2 * digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 2;
+		display.fillRect(2 * digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 2;
 	}
 	else if (curr_number >= 1000 || counter >= 1000)
 	{
-		tft.fillRect(digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 1;
+		display.fillRect(digitL, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 1;
 	}
 	else
 	{
-		tft.fillRect(0, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 0;
+		display.fillRect(0, 0, 3 * digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 0;
 	}
 }
 
@@ -59,19 +59,19 @@ void blank_2_digits(int curr_number, int digitL)
 {
 	if (curr_number >= 10000 || counter >= 10000)
 	{
-		tft.fillRect(3 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 3;
+		display.fillRect(3 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 3;
 	}
 	if (curr_number >= 1000 || counter >= 1000)
 	{
-		tft.fillRect(2 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 2;
+		display.fillRect(2 * digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 2;
 	}
 	else if (curr_number >= 100 || counter >= 100)
 	{
-		tft.fillRect(digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 1;
+		display.fillRect(digitL, 0, 2 * digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 1;
 	}
 	else
 	{
-		tft.fillRect(0, 0, 2 * digitL + 10, 120, ILI9341_bk1); // width_all = 2; offset = 0;
+		display.fillRect(0, 0, 2 * digitL + 10, 120, ILI9341_bk1); // width_all = 2; offset = 0;
 	}
 }
 
@@ -79,27 +79,27 @@ void blank_1_digits(int curr_number, int digitL)
 {
 	if (curr_number % 5==1)
 	{
-		tft.fillRect(0, 0, 320, 120, ILI9341_bk1); // blank everything each 5 times
+		display.fillRect(0, 0, 320, 120, ILI9341_bk1); // blank everything each 5 times
 	}
 	else if (curr_number >= 10000 || counter >= 10000)
 	{
-		tft.fillRect(4 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 4;
+		display.fillRect(4 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 5; offset = 4;
 	}
 	else if (curr_number >= 1000 || counter >= 1000)
 	{
-		tft.fillRect(3 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 3;
+		display.fillRect(3 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 4; offset = 3;
 	}
 	else if (curr_number >= 100 || counter >= 100)
 	{
-		tft.fillRect(2 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 2;
+		display.fillRect(2 * digitL, 0, digitL + 1, 120, ILI9341_bk1); // width_all = 3; offset = 2;
 	}
 	else if (curr_number >= 10 || counter >= 10)
 	{
-		tft.fillRect(digitL, 0, digitL + 10, 120, ILI9341_bk1); // width_all = 2; offset = 1;
+		display.fillRect(digitL, 0, digitL + 10, 120, ILI9341_bk1); // width_all = 2; offset = 1;
 	}
 	else
 	{
-		tft.fillRect(0, 0, digitL + 10, 120, ILI9341_bk1); // width_all = 1; offset = 0;
+		display.fillRect(0, 0, digitL + 10, 120, ILI9341_bk1); // width_all = 1; offset = 0;
 	}
 }
 
@@ -115,7 +115,7 @@ void check_digits_changed_and_blank(int curr_number)
 	bool flags[4];
 	int digitL = 64;
 	
-	tft.setCursor(8, 20);
+	display.setCursor(8, 20);
 	if (tens_of_thousands_digit_is_changed)
 	{
 		blank_5_digits(curr_number, digitL);
@@ -148,8 +148,8 @@ void blank_upper_side()
 		if (y == 15) {
 			Base_y++;
 		}
-		tft.drawLine(18, Base_y + y, 85, Base_y + y, ILI9341_bk1);
-		//   tft.drawLine(18, Base_y + y, 85, Base_y + y, ILI9341_BLUE);
+		display.drawLine(18, Base_y + y, 85, Base_y + y, ILI9341_bk1);
+		//   display.drawLine(18, Base_y + y, 85, Base_y + y, ILI9341_BLUE);
 	}
 }
 
@@ -158,10 +158,10 @@ void paint_half_half() {
 	int Base_y = 0;
 	for (int y = 0; y <= 240; y++) {
 		if (y < 163) {
-			tft.drawLine(0, Base_y + y, 320, Base_y + y, ILI9341_bk1);
+			display.drawLine(0, Base_y + y, 320, Base_y + y, ILI9341_bk1);
 		}
 		else {
-			tft.drawLine(0, Base_y + y, 320, Base_y + y, ILI9341_WHITE);
+			display.drawLine(0, Base_y + y, 320, Base_y + y, ILI9341_WHITE);
 		}
 	}
 }
@@ -185,20 +185,20 @@ bool graphics_to_Screen(int print_number)
 {
 	int Base_y = 0;
 	
-	tft.setCursor(8, 20);
-	tft.setTextColor(ILI9341_WHITE);
+	display.setCursor(8, 20);
+	display.setTextColor(ILI9341_WHITE);
 #if PROMINI
-	tft.setFont(&ArmentaFont32pt7b);
-	tft.setTextSize(FontSizeArmenta);
+	display.setFont(&ArmentaFont32pt7b);
+	display.setTextSize(FontSizeArmenta);
 #else
-	tft.setFont(&ArmentaFont64pt7b);
-	tft.setTextSize(FontSizeArmenta / 2);
+	display.setFont(&ArmentaFont64pt7b);
+	display.setTextSize(FontSizeArmenta / 2);
 #endif
-	tft.setCursor(8, Base_y + 100);
+	display.setCursor(8, Base_y + 100);
 	bool printed = false;
 	if ((print_number <= 99999) && (print_number >= 0))
 	{
-		tft.println(String(print_number));
+		display.println(String(print_number));
 		printed = true;
 		counter = print_number;
 	}
@@ -213,14 +213,14 @@ void reset_screen()
 	DRAW_PRESSURE_LOW
 	DRAW_AP_OK
 	
-	tft.setFont(); // Probably the reason for the dots
+	display.setFont(); // Probably the reason for the dots
 	// am percentage
-	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
-	tft.setCursor(AM_TEXT_POS);
-	tft.println("...");
+	display.setTextColor(ILI9341_BLACK);  display.setTextSize(2);
+	display.setCursor(AM_TEXT_POS);
+	display.println("...");
 
 	// battery percentage
-	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
-	tft.setCursor(BATTERY_TEXT_POS);
-	tft.println("...");
+	display.setTextColor(ILI9341_BLACK);  display.setTextSize(2);
+	display.setCursor(BATTERY_TEXT_POS);
+	display.println("...");
 }

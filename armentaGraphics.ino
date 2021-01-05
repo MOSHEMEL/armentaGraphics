@@ -11,6 +11,7 @@
 #include "armenta.h"
 #include "arduino_aux.h"
 #include <Adafruit_ILI9341.h> // Hardware-specific library
+#include "U8g2_for_Adafruit_GFX.h"
 #include <SPI.h>
 #include <SD.h>
 #include "parsers.h"
@@ -22,7 +23,7 @@
    1. change pinout on ili9341 according to working example used in previous code
    2. add support pin to adress cs on sd_card (currently pin4) - wire is conected to CCS pinout on example
    3. Give better names
-   4. tft.drawRGBBitmap function currently adresses by row, col which are iterators and not positional x,y
+   4. display.drawRGBBitmap function currently adresses by row, col which are iterators and not positional x,y
    5. If it works. Add to the codebase on github and seal up.
    20.09.19 Armenta
    Nick comments:
@@ -51,6 +52,8 @@
 	2. In order to process less data, maybe implement checksum?!
 	3. Maybe save state to know what is displayed or supposed.
  */
+#define TFT_DC 6
+#define TFT_CS 7
 
 
  // TFT display and SD card will share the hardware SPI interface.
@@ -58,10 +61,13 @@
  // cannot be remapped to alternate pins.  For Arduino Uno,
  // Duemilanove, etc., pin 11 = MOSI, pin 12 = MISO, pin 13 = SCK.
 #if PROMINI
-Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9);
+Adafruit_ILI9341 display = Adafruit_ILI9341(10, 9);
 #else
-Adafruit_ILI9341 tft = Adafruit_ILI9341(7, 6);
+//Adafruit_ILI9341 tft = Adafruit_ILI9341(7, 6);
+Adafruit_ILI9341 display = Adafruit_ILI9341(TFT_CS, TFT_DC);
+
 #endif
+U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
 
 #define TFT_RST 5
 // Use hardware SPI (on MKRZERO, #8, #9, #10) and the above for CS/DC
@@ -222,7 +228,7 @@ void PrintOnLcd(char* buf)
 	{
 		NVIC_SystemReset();
 	}
-	tft.setCursor(0, 0);
+	display.setCursor(0, 0);
 }
 
 void setup(void) {
@@ -233,8 +239,8 @@ void setup(void) {
 	Serial1.begin(115200);
 #endif
 	SPI.begin();
-	tft.begin();
-	tft.setRotation(3);
+	display.begin();
+	display.setRotation(3);
 	pinMode(LED_BUILTIN, OUTPUT);
 
 #if PROMINI
@@ -252,16 +258,34 @@ void setup(void) {
 	}
 #endif
 	
-	tft.fillScreen(ILI9341_WHITE);
+	display.fillScreen(ILI9341_WHITE);
+ 
+  DRAW_WELCOME
+	u8g2_for_adafruit_gfx.begin(display);
+ // u8g2_for_adafruit_gfx.setFont(u8g2_font_helvR14_tf);
+ //u8g2_for_adafruit_gfx.setFont(u8g2_font_lubB18_te);
+ u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+              // left to right (this is default) 
+  u8g2_for_adafruit_gfx.setForegroundColor(ILI9341_BLACK);
+  
+  //u8g2_for_adafruit_gfx.setForegroundColor(ILI9341_BLACK); 
 	
-	DRAW_WELCOME
 
 	delay(2000);
 #if DEBUG_STANDALONE
-	tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
-	tft.println("DEBUG VERSION");
-	tft.println("DEBUG VERSION");
-	tft.println("DEBUG VERSION");
+   u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+   u8g2_for_adafruit_gfx.setFontDirection(0);
+    
+	//tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
+	//tft.println("DEBUG VERSION");
+	//tft.println("Umlaut ÄÖÜ");
+   u8g2_for_adafruit_gfx.setCursor(0,20); 
+   u8g2_for_adafruit_gfx.print("DEBUG VERSION"); 
+   u8g2_for_adafruit_gfx.setCursor(0,40); 
+   u8g2_for_adafruit_gfx.print("Umlaut ÄÖÜ");
+   u8g2_for_adafruit_gfx.setCursor(0,60);  
+   u8g2_for_adafruit_gfx.print("la oración");
+	//tft.println("la oración");
 	delay(1000);
 #endif
 /*
@@ -422,13 +446,13 @@ void loop(void) {
 		serial_message.state = serial_message.next_state;
 		}
 	}
-	uint8_t x = tft.readcommand8(ILI9341_RDMODE);
+	uint8_t x = display.readcommand8(ILI9341_RDMODE);
 	if (x != 0x94)
 	{
 		Serial.print("Power mode: ");
 		Serial.println(x);
-		tft.begin();
-		tft.setRotation(3);
+		display.begin();
+		display.setRotation(3);
 		reset_screen();
 	}
 	if (millis() - watchdog_last_update > WATCHDOG_TIMER_EXPIRE && !DEBUG_STANDALONE)
@@ -446,17 +470,17 @@ void loop(void) {
 			if (millis() - last_error_millis > WATCHDOG_TIMER_EXPIRE/2 )
 			{
 				Serial.println("mcu where are you?");
-				tft.fillScreen(Warning_RED);
-				tft.setFont();
+				display.fillScreen(Warning_RED);
+				display.setFont();
 
-				tft.setTextColor(ILI9341_WHITE);
-				tft.setTextSize(6);
-				tft.setCursor(75, 30);
-				tft.println("Error");
-				tft.setCursor(50, 90);
-				tft.setTextSize(2);
+				display.setTextColor(ILI9341_WHITE);
+				display.setTextSize(6);
+				display.setCursor(75, 30);
+				display.println("Error");
+				display.setCursor(50, 90);
+				display.setTextSize(2);
 
-				tft.println(timeout);
+				display.println(timeout);
 				last_error_millis = millis();
 			}
 		}

@@ -52,18 +52,18 @@ void parse_aplicator(char* buf) {
 		else {
 			DRAW_AP_OK
 		}
-		tft.setCursor(8, Base_y + 20);
+		display.setCursor(8, Base_y + 20);
 		Base_y = 184;
 		for (int y = 0; y < 15; y++) {
 			//   delay(100);
-			tft.drawLine(245, Base_y + y, 295, Base_y + y, ILI9341_WHITE);
+			display.drawLine(245, Base_y + y, 295, Base_y + y, ILI9341_WHITE);
 		}
-		tft.setTextColor(ILI9341_BLACK);
-		tft.setFont();
-		tft.setTextSize(2);
-		tft.setCursor(AM_TEXT_POS);
-		tft.print(percentP);
-		tft.print('%');
+		display.setTextColor(ILI9341_BLACK);
+		display.setFont();
+		display.setTextSize(2);
+		display.setCursor(AM_TEXT_POS);
+		display.print(percentP);
+		display.print('%');
 	}
 }
 
@@ -76,15 +76,15 @@ void parse_battery_percent(char* buf) {
 	// battery blank prev text
 	Base_y = 184;
 	for (int y = 0; y < 15; y++) {
-		tft.drawLine(174, Base_y + y, 224, Base_y + y, ILI9341_WHITE);
+		display.drawLine(174, Base_y + y, 224, Base_y + y, ILI9341_WHITE);
 	}
 #if !SIMPLE_BAT
-	tft.setTextColor(ILI9341_BLACK);
-	tft.setFont();
-	tft.setTextSize(2);
-	tft.setCursor(BATTERY_TEXT_POS); 
-	tft.print(percentBattery);
-	tft.print('%');
+	display.setTextColor(ILI9341_BLACK);
+	display.setFont();
+	display.setTextSize(2);
+	display.setCursor(BATTERY_TEXT_POS); 
+	display.print(percentBattery);
+	display.print('%');
 #endif
 	
 #if PROMINI
@@ -112,20 +112,20 @@ void parse_battery_percent(char* buf) {
 		for (int y = 0; y <= percentBattery * 42 / 100; y++) 
 		{
 			//   delay(100);
-			tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
+			display.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
 				ILI9341_RED);
 		}
 	}
 	else {
 		for (int y = 0; y <= percentBattery * 42 / 100; y++) {
 			//   delay(100);
-			tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
+			display.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18,
 				ILI9341_GREEN);
 		}
 	}
 	for (int y = percentBattery * 42 / 100; y <= 42; y++) {
 		//   delay(100);
-		tft.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18, ILI9341_WHITE);
+		display.drawLine(168 + y, Base_y + 0, 168 + y, Base_y + 18, ILI9341_WHITE);
 	}
 }
 
@@ -155,7 +155,7 @@ void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, 
 	while (*string)
 	{
 		//  void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size);
-		tft.drawChar(poX, y, *string, color, bg_color, size);
+		display.drawChar(poX, y, *string, color, bg_color, size);
 		*string++;
 		poX += 6*size;                  /* Move cursor right            */
 	}
@@ -172,9 +172,9 @@ void parse_E(char* buf)
 	{
 		if (error_code == 4000)
 		{
-			tft.fillScreen(RGB888toRGB565("FFFF00"));
-			tft.setFont(); // we have no letters to show so we cant use font to print letters
-			tft.setTextColor(RGB888toRGB565("00B0F0"));
+			display.fillScreen(RGB888toRGB565("FFFF00"));
+			display.setFont(); // we have no letters to show so we cant use font to print letters
+			display.setTextColor(RGB888toRGB565("00B0F0"));
 			align_center_print(ATTENTION, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
 			align_center_print(NOTIFY, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			char str_error[10];
@@ -183,9 +183,9 @@ void parse_E(char* buf)
 		}
 		else if (error_code == 4001)
 		{
-			tft.fillScreen(Warning_RED);
-			tft.setFont(); // we have no letters to show so we cant use font to print letters
-			tft.setTextColor(ILI9341_WHITE);
+			display.fillScreen(Warning_RED);
+			display.setFont(); // we have no letters to show so we cant use font to print letters
+			display.setTextColor(ILI9341_WHITE);
 			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
 			align_center_print(ERROR4001_P1, 90, ILI9341_WHITE, Warning_RED, 3);
 			align_center_print(ERROR4001_P2, 120, ILI9341_WHITE, Warning_RED, 3);
@@ -195,9 +195,9 @@ void parse_E(char* buf)
 		}
 		else if (error_code == 4010 || error_code == 4011)
 		{
-			tft.fillScreen(Warning_RED);
-			tft.setFont(); // we have no letters to show so we cant use font to print letters
-			tft.setTextColor(ILI9341_WHITE);
+			display.fillScreen(Warning_RED);
+			display.setFont(); // we have no letters to show so we cant use font to print letters
+			display.setTextColor(ILI9341_WHITE);
 			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
 			align_center_print(REPLACE_AM, 90, ILI9341_WHITE, Warning_RED, 3);
 			char str_error[10];
@@ -206,9 +206,9 @@ void parse_E(char* buf)
 		}
 		else if (error_code >= 5000 && error_code < 7000)
 		{
-			tft.fillScreen(Warning_RED);
-			tft.setFont(); // we have no letters to show so we cant use font to print letters
-			tft.setTextColor(ILI9341_WHITE);
+			display.fillScreen(Warning_RED);
+			display.setFont(); // we have no letters to show so we cant use font to print letters
+			display.setTextColor(ILI9341_WHITE);
 			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
 			align_center_print(REPLACE_AM, 90, ILI9341_WHITE, Warning_RED, 3);
 			align_center_print(CONTACT, 120, ILI9341_WHITE, Warning_RED, 2);
@@ -225,9 +225,9 @@ void parse_E(char* buf)
 				E503
 
 			 */
-			tft.fillScreen(Warning_RED);
-			tft.setFont(); // we have no letters to show so we cant use font to print letters
-			tft.setTextColor(ILI9341_WHITE);
+			display.fillScreen(Warning_RED);
+			display.setFont(); // we have no letters to show so we cant use font to print letters
+			display.setTextColor(ILI9341_WHITE);
 			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
 			align_center_print(MAINTENANCE, 90, ILI9341_WHITE, Warning_RED, 2);
 			align_center_print(CONTACT, 120, ILI9341_WHITE, Warning_RED, 2);
@@ -244,9 +244,9 @@ void parse_E(char* buf)
 				E504
 
 			 */
-			tft.fillScreen(RGB888toRGB565("FFFF00"));
-			tft.setFont(); // we have no letters to show so we cant use font to print letters
-			tft.setTextColor(RGB888toRGB565("00B0F0"));
+			display.fillScreen(RGB888toRGB565("FFFF00"));
+			display.setFont(); // we have no letters to show so we cant use font to print letters
+			display.setTextColor(RGB888toRGB565("00B0F0"));
 			align_center_print(ATTENTION, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
 			align_center_print(MAINTENANCE, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			align_center_print(CONTACT, 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
@@ -257,8 +257,8 @@ void parse_E(char* buf)
 		}
 	// After we draw the screen - we then show the 
 	delay(2000);
-	tft.setFont();
-	tft.setTextSize(2);
+	display.setFont();
+	display.setTextSize(2);
 	reset_screen();
 	}
 }
@@ -272,16 +272,16 @@ void parse_fail(char* buf)
 	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
 		if (ammount_left==0)
 		{
-			tft.fillScreen(Warning_RED);
-			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			display.fillScreen(Warning_RED);
+			display.setFont(); // we have no letters to show so we cant use font to print letters
 			align_center_print(AM_PULSES, 35, ILI9341_WHITE, Warning_RED, 4);
 			align_center_print(REMAINING, 65, ILI9341_WHITE, Warning_RED, 4);
 
 		}
 		else
 		{
-			tft.fillScreen(RGB888toRGB565("FFFF00"));
-			tft.setFont(); // we have no letters to show so we cant use font to print letters
+			display.fillScreen(RGB888toRGB565("FFFF00"));
+			display.setFont(); // we have no letters to show so we cant use font to print letters
 
 			align_center_print(ATTENTION, 5, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
 			align_center_print(AM_PULSES, 35, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
@@ -289,35 +289,35 @@ void parse_fail(char* buf)
 		}
 
 #if PROMINI
-		tft.setFont(&ArmentaFont32pt7b);
-		tft.setTextSize(FontSizeArmenta);
+		display.setFont(&ArmentaFont32pt7b);
+		display.setTextSize(FontSizeArmenta);
 #else
-		tft.setFont(&ArmentaFont64pt7b);
-		tft.setTextSize(FontSizeArmenta / 2);
+		display.setFont(&ArmentaFont64pt7b);
+		display.setTextSize(FontSizeArmenta / 2);
 #endif
 		if (ammount_left >= 1000)
 		{
-			tft.setCursor(30, 200);
-			tft.println(ammount_left);
-			tft.setFont();
-			tft.setTextSize(2);
+			display.setCursor(30, 200);
+			display.println(ammount_left);
+			display.setFont();
+			display.setTextSize(2);
 		}
 		else if (ammount_left == 0)
 		{
-			tft.setCursor(130, 200);
-			tft.println(ammount_left);
-			tft.setFont();
-			tft.setTextSize(2);
+			display.setCursor(130, 200);
+			display.println(ammount_left);
+			display.setFont();
+			display.setTextSize(2);
 
-			tft.setCursor(100, 220);
-			tft.println(REPLACE_AM);
+			display.setCursor(100, 220);
+			display.println(REPLACE_AM);
 		}
 		else
 		{
-			tft.setCursor(80, 200);
-			tft.println(ammount_left);
-			tft.setFont();
-			tft.setTextSize(2);
+			display.setCursor(80, 200);
+			display.println(ammount_left);
+			display.setFont();
+			display.setTextSize(2);
 		}
 	}
 
@@ -325,8 +325,8 @@ void parse_fail(char* buf)
 
 	// After we draw the screen - we then show the 
 	delay(2000);
-	tft.setFont();
-	tft.setTextSize(2);
+	display.setFont();
+	display.setTextSize(2);
 	reset_screen();
 }
 
@@ -334,7 +334,7 @@ void parse_pressure(char* buf) {
 	int Base_y = 60;
 	buf++;
 	
-	tft.setCursor(8, Base_y + 20);
+	display.setCursor(8, Base_y + 20);
 	if (strncmp(buf, "LOW",3) == 0)
 	{
 		DRAW_PRESSURE_LOW
@@ -349,7 +349,7 @@ void parse_pulse(char* buf) {
 	int Base_y = 60;
 	buf++;
 	
-	tft.setCursor(8, Base_y + 20);
+	display.setCursor(8, Base_y + 20);
 	buf[1] = 0;
 	if ((*buf == 'Y') || (*buf == 'y')) {
 		DRAW_PULSE_Y
@@ -385,11 +385,11 @@ void parse_pulse_counter(char* buf)
 		else
 		{
 			blank_5_digits(new_counter, 64);
-			tft.setTextColor(ILI9341_WHITE);
-			tft.setFont();
-			tft.setTextSize(2);
-			tft.setCursor(8, 20);
-			tft.print(String(new_counter));
+			display.setTextColor(ILI9341_WHITE);
+			display.setFont();
+			display.setTextSize(2);
+			display.setCursor(8, 20);
+			display.print(String(new_counter));
 		}
 
 	}
@@ -417,11 +417,11 @@ void parse_force_pulse_counter(char* buf)
 	else
 	{
 		blank_5_digits(new_counter, 64);
-		tft.setTextColor(ILI9341_WHITE);
-		tft.setFont();
-		tft.setTextSize(2);
-		tft.setCursor(8, 20);
-		tft.print(String(new_counter));
+		display.setTextColor(ILI9341_WHITE);
+		display.setFont();
+		display.setTextSize(2);
+		display.setCursor(8, 20);
+		display.print(String(new_counter));
 	}	
 }
 
@@ -434,22 +434,22 @@ void parse_reset_screen(char* buf)
 void print_error(char* buf)
 {
 	buf++;
-	tft.fillScreen(Warning_RED);
-	tft.setFont();
+	display.fillScreen(Warning_RED);
+	display.setFont();
 	
-	tft.setTextColor(ILI9341_WHITE);
-	tft.setTextSize(6);
-	tft.setCursor(50, 30);
-	tft.println("Error");
-	tft.setCursor(50, 90);
-	tft.setTextSize(2);
+	display.setTextColor(ILI9341_WHITE);
+	display.setTextSize(6);
+	display.setCursor(50, 30);
+	display.println("Error");
+	display.setCursor(50, 90);
+	display.setTextSize(2);
   uint16_t size = 0;
   while(buf[size] != '\0')
   {
     size ++;
   }
   buf[size-1] = '\0';
-	tft.println(buf);
+	display.println(buf);
 	delay(10000);
 	reset_screen();
 }
@@ -457,22 +457,22 @@ void print_error(char* buf)
 void print_warning(char* buf)
 {
 	buf++;
-	tft.fillScreen(Warning_BLUE);
-	tft.setFont();
+	display.fillScreen(Warning_BLUE);
+	display.setFont();
 
-	tft.setTextColor(ILI9341_WHITE);
-	tft.setTextSize(6);
-	tft.setCursor(50, 30);
-	tft.println("Warning");
-	tft.setCursor(50, 90);
-	tft.setTextSize(2);
+	display.setTextColor(ILI9341_WHITE);
+	display.setTextSize(6);
+	display.setCursor(50, 30);
+	display.println("Warning");
+	display.setCursor(50, 90);
+	display.setTextSize(2);
 	uint16_t size = 0;
 	while (buf[size] != '\0')
 	{
 		size++;
 	}
 	buf[size - 1] = '\0';
-	tft.println(buf);
+	display.println(buf);
 	delay(10000);
 	reset_screen();
 }
@@ -481,7 +481,7 @@ void blank_on_reset(char* buf)
 {
 	buf++;
 	int new_counter = atoi(buf);
-	tft.fillRect(0, 0, 320, 120, ILI9341_bk1);
+	display.fillRect(0, 0, 320, 120, ILI9341_bk1);
 	graphics_to_Screen(new_counter);
 }
 
@@ -502,24 +502,24 @@ void parse_version(char* buf)
 {
 	String MCU_version = String(buf);
 	MCU_version.toLowerCase();
-	tft.setTextColor(ILI9341_BLACK);
-	tft.setFont();
-	tft.setTextSize(1);
-	tft.setCursor(10, 155);
-	tft.print("Armenta ltd. gfx:");
-	tft.print(VERSION);
-	tft.print(" mcu:");
-	tft.print(MCU_version);
+	display.setTextColor(ILI9341_BLACK);
+	display.setFont();
+	display.setTextSize(1);
+	display.setCursor(10, 155);
+	display.print("Armenta ltd. gfx:");
+	display.print(VERSION);
+	display.print(" mcu:");
+	display.print(MCU_version);
 }
 void parse_cs(char* buf)
 {
 	buf++;
-	tft.fillScreen(ILI9341_WHITE);
-	tft.setFont();
-	tft.setTextColor(ILI9341_BLACK);
-	tft.setTextSize(2);
-	tft.setCursor(0, 30);
-	tft.println(buf);
+	display.fillScreen(ILI9341_WHITE);
+	display.setFont();
+	display.setTextColor(ILI9341_BLACK);
+	display.setTextSize(2);
+	display.setCursor(0, 30);
+	display.println(buf);
 	delay(5000);
 	reset_screen();
 }
@@ -539,7 +539,7 @@ void parse_serial_show(char* buf)
 	//uint16_t text_color = RGB888toRGB565("000000");
 	uint16_t bg_color = Warning_BLUE;
 	uint16_t text_color = ILI9341_WHITE;
-	tft.setFont(); // we have no letters to show so we cant use font to print letters
+	display.setFont(); // we have no letters to show so we cant use font to print letters
 
 
 	char str_serial_status[30];
@@ -550,8 +550,8 @@ void parse_serial_show(char* buf)
 		//text_color = RGB888toRGB565("DDBD0B");
 		uint16_t bg_color = Warning_BLUE;
 		uint16_t text_color = ILI9341_WHITE;
-		tft.setTextColor(text_color);
-		tft.fillScreen(bg_color);
+		display.setTextColor(text_color);
+		display.fillScreen(bg_color);
 	}
 	else if(remaining_pulses > 0)
 	{
@@ -559,8 +559,8 @@ void parse_serial_show(char* buf)
 		//text_color = RGB888toRGB565("2ABDC8");
 		uint16_t bg_color = Warning_BLUE;
 		uint16_t text_color = ILI9341_WHITE;
-		tft.setTextColor(text_color);
-		tft.fillScreen(bg_color);
+		display.setTextColor(text_color);
+		display.fillScreen(bg_color);
 		sprintf(str_serial_status, SPLASH_P1);
 		align_center_print(str_serial_status, 120, text_color, bg_color, 1);
 		sprintf(str_serial_status, SPLASH_P2);
@@ -573,8 +573,8 @@ void parse_serial_show(char* buf)
 
 		bg_color = RGB888toRGB565("FF0000");
 		text_color = RGB888toRGB565("FFFFFF");
-		tft.setTextColor(text_color);
-		tft.fillScreen(bg_color);
+		display.setTextColor(text_color);
+		display.fillScreen(bg_color);
 	}
 
 	sprintf(str_serial_status, SN_P1, serial_number);
