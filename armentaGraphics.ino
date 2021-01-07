@@ -1,3 +1,4 @@
+
 #include <Adafruit_SPIDevice.h>
 #include <Adafruit_I2CRegister.h>
 #include <Adafruit_I2CDevice.h>
@@ -15,7 +16,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include "parsers.h"
-
+#include <cstdlib>
 
 /*
    16.09.19 Armenta Copyright
@@ -65,7 +66,6 @@ Adafruit_ILI9341 display = Adafruit_ILI9341(10, 9);
 #else
 //Adafruit_ILI9341 tft = Adafruit_ILI9341(7, 6);
 Adafruit_ILI9341 display = Adafruit_ILI9341(TFT_CS, TFT_DC);
-
 #endif
 U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
 
@@ -73,7 +73,7 @@ U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
 // Use hardware SPI (on MKRZERO, #8, #9, #10) and the above for CS/DC
 // If using the breakout, change pins as desired
 bool led_toggle = 0;
-
+extern char LANG[15][40];
 int y = 0;
 char  BufferString[MAX_COMMAND_LENGTH];
 char key;
@@ -242,6 +242,10 @@ void setup(void) {
 	display.begin();
 	display.setRotation(3);
 	pinMode(LED_BUILTIN, OUTPUT);
+  u8g2_for_adafruit_gfx.begin(display);
+  u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+  u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+   u8g2_for_adafruit_gfx.setFontDirection(0);
 
 #if PROMINI
 	Serial.print("Initializing SD card...");
@@ -261,30 +265,24 @@ void setup(void) {
 	display.fillScreen(ILI9341_WHITE);
  
   DRAW_WELCOME
-	u8g2_for_adafruit_gfx.begin(display);
- // u8g2_for_adafruit_gfx.setFont(u8g2_font_helvR14_tf);
- //u8g2_for_adafruit_gfx.setFont(u8g2_font_lubB18_te);
- u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
-              // left to right (this is default) 
-  u8g2_for_adafruit_gfx.setForegroundColor(ILI9341_BLACK);
-  
-  //u8g2_for_adafruit_gfx.setForegroundColor(ILI9341_BLACK); 
 	
-
 	delay(2000);
 #if DEBUG_STANDALONE
-   u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
-   u8g2_for_adafruit_gfx.setFontDirection(0);
-    
+  
+   display.fillScreen(RGB888toRGB565("FFFF00"));
+   //u8g2_for_adafruit_gfx.drawUTF8(0,20,"la oración");
+   //utf8ascii(ENG[10]);
+    align_center_print(LANG[10], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+  //u8g2_for_adafruit_gfx.drawGlyph(5, 20,'Ä');
 	//tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	//tft.println("DEBUG VERSION");
 	//tft.println("Umlaut ÄÖÜ");
-   u8g2_for_adafruit_gfx.setCursor(0,20); 
-   u8g2_for_adafruit_gfx.print("DEBUG VERSION"); 
-   u8g2_for_adafruit_gfx.setCursor(0,40); 
-   u8g2_for_adafruit_gfx.print("Umlaut ÄÖÜ");
-   u8g2_for_adafruit_gfx.setCursor(0,60);  
-   u8g2_for_adafruit_gfx.print("la oración");
+  // u8g2_for_adafruit_gfx.setCursor(0,20); 
+ //  u8g2_for_adafruit_gfx.print("DEBUG VERSION"); 
+  // u8g2_for_adafruit_gfx.setCursor(0,40); 
+  // u8g2_for_adafruit_gfx.print("Umlaut ÄÖÜ");
+   //u8g2_for_adafruit_gfx.setCursor(0,60);  
+   //u8g2_for_adafruit_gfx.print("la oración");
 	//tft.println("la oración");
 	delay(1000);
 #endif

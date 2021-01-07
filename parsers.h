@@ -5,6 +5,7 @@ extern uint32_t serial_number;
 #ifndef _STDBOOL
 #include "stdbool.h"
 #endif
+extern U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
 
 void parse_aplicator(char* buf);
 void parse_battery_percent(char* buf);
@@ -24,7 +25,56 @@ void parse_cs(char* buf);
 
 uint32_t currentmilis;
 uint16_t RGB888toRGB565(const char* rgb32_str_);
+// ****** UTF8-Decoder: convert UTF8-string to extended ASCII *******
+static byte c1;  // Last character buffer
 
+// Convert a single Character from UTF8 to Extended ASCII
+// Return "0" if a byte has to be ignored
+byte utf8ascii(byte ascii) {
+    if ( ascii<128 )   // Standard ASCII-set 0..0x7F handling  
+    {   c1=0;
+        return( ascii );
+    }
+
+    // get previous input
+    byte last = c1;   // get last char
+    c1=ascii;         // remember actual character
+
+    switch (last)     // conversion depending on first UTF8-character
+    {   case 0xC2: return  (ascii);  break;
+        case 0xC3: return  (ascii | 0xC0);  break;
+        case 0x82: if(ascii==0xAC) return(0x80);       // special case Euro-symbol
+    }
+
+    return  (0);                                     // otherwise: return zero, if character has to be ignored
+}
+
+// convert String object from UTF8 String to Extended ASCII
+String utf8ascii(String s)
+{      
+        String r="";
+        char c;
+        for (int i=0; i<s.length(); i++)
+        {
+                c = utf8ascii(s.charAt(i));
+                if (c!=0) r+=c;
+        }
+        return r;
+}
+
+// In Place conversion UTF8-string to Extended ASCII (ASCII is shorter!)
+void utf8ascii(char* s)
+{      
+        int k=0;
+        char c;
+        for (int i=0; i<strlen(s); i++)
+        {
+                c = utf8ascii(s[i]);
+                if (c!=0)
+                        s[k++]=c;
+        }
+        s[k]=0;
+}
 uint16_t RGB888toRGB565(const char* rgb32_str_)
 {
 	long rgb32 = strtoul(rgb32_str_, 0, 16);
@@ -140,28 +190,32 @@ void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, 
 	int len = 0;
 	char *pointer = string;
 	char ascii;
+  char *buf;
 
+ u8g2_for_adafruit_gfx.setForegroundColor(color);
 	while (*pointer)
 	{
 		ascii = *pointer;
 		len++;
-		* pointer++;
+		pointer++;
 	}
 	len = len * 6 * size;
 	int poX = 160 - len / 2;
 
 	if (poX < 0) poX = 0;
-
+  utf8ascii(string);
+  
 	while (*string)
 	{
 		//  void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size);
-		display.drawChar(poX, y, *string, color, bg_color, size);
-		*string++;
-		poX += 6*size;                  /* Move cursor right            */
-	}
-
+		// display.drawChar(poX, y, *string, color, bg_color, size);
+		u8g2_for_adafruit_gfx.drawGlyph(poX, y,*string );
+    Serial.print(*string);
+		string++;
+		poX += 6*size;                  /* Move cursor right */           
 }
 
+}
 
 void parse_E(char* buf)
 {
@@ -175,8 +229,8 @@ void parse_E(char* buf)
 			display.fillScreen(RGB888toRGB565("FFFF00"));
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(RGB888toRGB565("00B0F0"));
-			align_center_print(ATTENTION, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
-			align_center_print(NOTIFY, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+			align_center_print(LANG[1], 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
@@ -186,9 +240,9 @@ void parse_E(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
-			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print(ERROR4001_P1, 90, ILI9341_WHITE, Warning_RED, 3);
-			align_center_print(ERROR4001_P2, 120, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print(LANG[4], 90, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print(LANG[5], 120, ILI9341_WHITE, Warning_RED, 3);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
@@ -198,8 +252,8 @@ void parse_E(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
-			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print(REPLACE_AM, 90, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print(LANG[6], 90, ILI9341_WHITE, Warning_RED, 3);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
@@ -209,9 +263,9 @@ void parse_E(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
-			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print(REPLACE_AM, 90, ILI9341_WHITE, Warning_RED, 3);
-			align_center_print(CONTACT, 120, ILI9341_WHITE, Warning_RED, 2);
+			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print(LANG[6], 90, ILI9341_WHITE, Warning_RED, 3);
+			align_center_print(LANG[2], 120, ILI9341_WHITE, Warning_RED, 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
@@ -228,9 +282,9 @@ void parse_E(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
-			align_center_print(ERROR, 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print(MAINTENANCE, 90, ILI9341_WHITE, Warning_RED, 2);
-			align_center_print(CONTACT, 120, ILI9341_WHITE, Warning_RED, 2);
+			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
+			align_center_print(LANG[7], 90, ILI9341_WHITE, Warning_RED, 2);
+			align_center_print(LANG[2], 120, ILI9341_WHITE, Warning_RED, 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
@@ -247,9 +301,9 @@ void parse_E(char* buf)
 			display.fillScreen(RGB888toRGB565("FFFF00"));
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(RGB888toRGB565("00B0F0"));
-			align_center_print(ATTENTION, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
-			align_center_print(MAINTENANCE, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
-			align_center_print(CONTACT, 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+			align_center_print(LANG[7], 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			align_center_print(LANG[2], 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
@@ -274,8 +328,8 @@ void parse_fail(char* buf)
 		{
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
-			align_center_print(AM_PULSES, 35, ILI9341_WHITE, Warning_RED, 4);
-			align_center_print(REMAINING, 65, ILI9341_WHITE, Warning_RED, 4);
+			align_center_print(LANG[8], 35, ILI9341_WHITE, Warning_RED, 4);
+			align_center_print(LANG[9], 65, ILI9341_WHITE, Warning_RED, 4);
 
 		}
 		else
@@ -283,9 +337,9 @@ void parse_fail(char* buf)
 			display.fillScreen(RGB888toRGB565("FFFF00"));
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 
-			align_center_print(ATTENTION, 5, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
-			align_center_print(AM_PULSES, 35, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
-			align_center_print(REMAINING, 65, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(LANG[0], 5, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(LANG[8], 35, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(LANG[9], 65, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
 		}
 
 #if PROMINI
@@ -308,9 +362,10 @@ void parse_fail(char* buf)
 			display.println(ammount_left);
 			display.setFont();
 			display.setTextSize(2);
-
-			display.setCursor(100, 220);
-			display.println(REPLACE_AM);
+      u8g2_for_adafruit_gfx.setCursor(100,220);  
+      u8g2_for_adafruit_gfx.print(LANG[6]);
+		//	display.setCursor(100, 220);
+		//	display.println(REPLACE_AM);
 		}
 		else
 		{
@@ -561,11 +616,11 @@ void parse_serial_show(char* buf)
 		uint16_t text_color = ILI9341_WHITE;
 		display.setTextColor(text_color);
 		display.fillScreen(bg_color);
-		sprintf(str_serial_status, SPLASH_P1);
+		sprintf(str_serial_status, LANG[10]);
 		align_center_print(str_serial_status, 120, text_color, bg_color, 1);
-		sprintf(str_serial_status, SPLASH_P2);
+		sprintf(str_serial_status, LANG[11]);
 		align_center_print(str_serial_status, 130, text_color, bg_color, 1);
-		sprintf(str_serial_status, SPLASH_P3);
+		sprintf(str_serial_status, LANG[12]);
 		align_center_print(str_serial_status, 140, text_color, bg_color, 1);
 	}
 	else
@@ -577,9 +632,9 @@ void parse_serial_show(char* buf)
 		display.fillScreen(bg_color);
 	}
 
-	sprintf(str_serial_status, SN_P1, serial_number);
+	sprintf(str_serial_status, LANG[13], serial_number);
 	align_center_print(str_serial_status, 30, text_color, bg_color, 3);
-	sprintf(str_serial_status, SN_P2, remaining_pulses);
+	sprintf(str_serial_status, LANG[14], remaining_pulses);
 	align_center_print(str_serial_status, 90, text_color, bg_color, 3);
 	
 }
