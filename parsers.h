@@ -198,6 +198,7 @@ void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, 
 		ascii = *pointer;
 		len++;
 		pointer++;
+    
 	}
 	len = len * 6 * size;
 	int poX = 160 - len / 2;
@@ -226,17 +227,23 @@ void parse_E(char* buf)
 	{
 		if (error_code == 4000)
 		{
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 			display.fillScreen(RGB888toRGB565("FFFF00"));
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(RGB888toRGB565("00B0F0"));
 			align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
-			align_center_print(LANG[1], 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+			align_center_print(LANG[1], 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 		}
 		else if (error_code == 4001)
 		{
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
@@ -246,9 +253,13 @@ void parse_E(char* buf)
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 		}
 		else if (error_code == 4010 || error_code == 4011)
 		{
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
@@ -257,9 +268,13 @@ void parse_E(char* buf)
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 		}
 		else if (error_code >= 5000 && error_code < 7000)
 		{
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
@@ -269,6 +284,8 @@ void parse_E(char* buf)
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 		}
 		else if (error_code == 503)
 		{
@@ -283,7 +300,11 @@ void parse_E(char* buf)
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
 			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
+     u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR10_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 			align_center_print(LANG[7], 90, ILI9341_WHITE, Warning_RED, 2);
+     u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 			align_center_print(LANG[2], 120, ILI9341_WHITE, Warning_RED, 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
@@ -302,7 +323,11 @@ void parse_E(char* buf)
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(RGB888toRGB565("00B0F0"));
 			align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+     u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR10_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 			align_center_print(LANG[7], 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+     u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+      u8g2_for_adafruit_gfx.setFontMode(1);
 			align_center_print(LANG[2], 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
@@ -337,9 +362,9 @@ void parse_fail(char* buf)
 			display.fillScreen(RGB888toRGB565("FFFF00"));
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 
-			align_center_print(LANG[0], 5, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
-			align_center_print(LANG[8], 35, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
-			align_center_print(LANG[9], 65, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(LANG[0], 25, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(LANG[8], 55, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(LANG[9], 85, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
 		}
 
 #if PROMINI
@@ -617,11 +642,11 @@ void parse_serial_show(char* buf)
 		display.setTextColor(text_color);
 		display.fillScreen(bg_color);
 		sprintf(str_serial_status, LANG[10]);
-		align_center_print(str_serial_status, 120, text_color, bg_color, 1);
+		align_center_print(str_serial_status, 120, text_color, bg_color, 2);
 		sprintf(str_serial_status, LANG[11]);
-		align_center_print(str_serial_status, 130, text_color, bg_color, 1);
+		align_center_print(str_serial_status, 140, text_color, bg_color, 2);
 		sprintf(str_serial_status, LANG[12]);
-		align_center_print(str_serial_status, 140, text_color, bg_color, 1);
+		align_center_print(str_serial_status, 160, text_color, bg_color, 2);
 	}
 	else
 	{

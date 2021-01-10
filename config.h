@@ -4,9 +4,9 @@
 #include <SD.h>
 #include <Adafruit_GFX.h>
 #include "Adafruit_ILI9341.h"
-
-#define DEBUG_FLAG 0
+#define DEBUG_FLAG        0
 #define DEBUG_STANDALONE 0
+
 #define VERSION "3.8"
 #define PROMINI 0
 #define LED_TOGGLE 0
