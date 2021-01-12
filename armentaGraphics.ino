@@ -73,7 +73,7 @@ U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
 // Use hardware SPI (on MKRZERO, #8, #9, #10) and the above for CS/DC
 // If using the breakout, change pins as desired
 bool led_toggle = 0;
-extern char LANG[15][40];
+extern char LANG[16][40];
 int y = 0;
 char  BufferString[MAX_COMMAND_LENGTH];
 char key;
@@ -282,7 +282,11 @@ void setup(void) {
   // u8g2_for_adafruit_gfx.setCursor(0,20); 
  //  u8g2_for_adafruit_gfx.print("DEBUG VERSION"); 
   // u8g2_for_adafruit_gfx.setCursor(0,40); 
-  // u8g2_for_adafruit_gfx.print("Umlaut ÄÖÜ");
+  // u8g2_for_adafruit_gfx.setCursor(0,20);
+   //align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5); 
+   //u8g2_for_adafruit_gfx.print("Umlaut ÄÖÜ");
+ //  u8g2_for_adafruit_gfx.setCursor(0,40); 
+  // align_center_print(s1, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
    //u8g2_for_adafruit_gfx.setCursor(0,60);  
    //u8g2_for_adafruit_gfx.print("la oración");
 	//tft.println("la oración");

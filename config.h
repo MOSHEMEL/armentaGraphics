@@ -5,7 +5,7 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_ILI9341.h"
 #define DEBUG_FLAG        0
-#define DEBUG_STANDALONE 0
+#define DEBUG_STANDALONE 1
 
 #define VERSION "3.8"
 #define PROMINI 0
@@ -17,15 +17,15 @@
 #define MAX_COMMAND_LENGTH 128
 #define BATTERY_TEXT_POS 174, 184
 #define AM_TEXT_POS 245, 184
-#define PASS_CRC 0
+#define PASS_CRC 1
 #define PASS_PRESSURE 0
 #define SIMPLE_BAT 1
 #define WATCHDOG_TIMER_EXPIRE 10000
 
-#define ENGLISH					1
+#define ENGLISH					0
 #define SPANISH					0
 #define HEBREW					0
-#define GERMAN          0
+#define GERMAN          1
 #if PROMINI
 	#include "drawspi.h"
 #else
@@ -33,11 +33,11 @@
 #endif
 
 #if ENGLISH
-char LANG[15][40]PROGMEM={
+char LANG[16][40]={
   {"Attention"},
   {"Notify APT Service"},
   {"Contact APT Service"},
-  {"Error"},
+  {"Error'\0'"},
   {"Turn Off And"},
   {"Reconnect APT"},
   {"Replace AM"},
@@ -46,7 +46,7 @@ char LANG[15][40]PROGMEM={
   {"Remaining"},
   {"Pay attention, You are left with less"},
   {"with less than 5000 pulses."},
-  {"Please replace AM shortly"},
+  {"Please replace AM Promptly"},
   {"AM Number %d"},
   {"Remaining %d"}     
   };
@@ -68,22 +68,23 @@ char LANG[15][40]PROGMEM={
 //#define SN_P2			"Remainning %d"
 
 #elif SPANISH
-char LANG[15][40]PROGMEM={
-  {"Atencion"},
-  {"Notificar a Servicio"},
-  {"Contactar Servicio"},
+char LANG[16][40]={
+  {"Atención'\0'"},
+  {"Notificar APT Servicio"},
+  {"Contacto APT Servicio"},
   {"Error"},
   {"Apagar y"},
-  {"Reconnectar el APT"},
+  {"Vuelva a conectar APT"},
   {"Reemplazar AM"},
-  {"Maintenimiento requerido del APT"},
-  {"Pulses"},
-  {"Restantes del AM"},
-  {"Presta atencion, te quedan menos"},
-  {"de 5000 pulsos."},
-  {"Por favor reemplace AM en breve."},
-  {"AM Numero %d"},
-  {"Restantes %d"}     
+  {"APT mantenimiento requerido"},
+  {"AM Pulsos"},
+  {"Restante"},
+  {"Presta atención, te quedas"},
+  {"con menos de 5000 pulsos."},
+  {"Por favor reemplace AM."},
+  {"AM número %d"},
+  {"Restante %d"},
+  {"de inmediato"}     
   };
 //#define ATTENTION		"Atencion"
 //#define NOTIFY			"Notificar a Servicio"
@@ -101,7 +102,7 @@ char LANG[15][40]PROGMEM={
 //#define SN_P1			"AM Numero %d"
 //#define SN_P2			"Restantes %d"
 #elif GERMAN
-char LANG[15][40]PROGMEM={
+char LANG[16][40]={
   {"Achtung"},
   {"APT-Service verständigen"},
   {"APT-Service kontaktieren"},

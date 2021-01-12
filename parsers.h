@@ -50,17 +50,17 @@ byte utf8ascii(byte ascii) {
 }
 
 // convert String object from UTF8 String to Extended ASCII
-String utf8ascii(String s)
-{      
-        String r="";
-        char c;
-        for (int i=0; i<s.length(); i++)
-        {
-                c = utf8ascii(s.charAt(i));
-                if (c!=0) r+=c;
-        }
-        return r;
-}
+//String utf8ascii(String s)
+//{      
+//        String r="";
+//        char c;
+//        for (int i=0; i<s.length(); i++)
+//        {
+//                c = utf8ascii(s.charAt(i));
+//                if (c!=0) r+=c;
+//        }
+//        return r;
+//}
 
 // In Place conversion UTF8-string to Extended ASCII (ASCII is shorter!)
 void utf8ascii(char* s)
@@ -181,7 +181,7 @@ void parse_battery_percent(char* buf) {
 
 void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, int size)
 {
-
+ 
 	/*
 	 * TextSize(1)
 		The space occupied by a character using the standard font is 6 pixels wide by 8 pixels high.
@@ -191,7 +191,7 @@ void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, 
 	char *pointer = string;
 	char ascii;
   char *buf;
-
+ 
  u8g2_for_adafruit_gfx.setForegroundColor(color);
 	while (*pointer)
 	{
@@ -218,8 +218,10 @@ void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, 
 
 }
 
+
 void parse_E(char* buf)
-{
+{ 
+  char s1[40];
 	buf++;
 
 	int error_code = atoi(buf);
@@ -227,16 +229,19 @@ void parse_E(char* buf)
 	{
 		if (error_code == 4000)
 		{
-      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
       u8g2_for_adafruit_gfx.setFontMode(1);
 			display.fillScreen(RGB888toRGB565("FFFF00"));
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(RGB888toRGB565("00B0F0"));
-			align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
-			align_center_print(LANG[1], 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
+      memcpy(s1,LANG[0],40);
+			align_center_print(s1, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+      memcpy(s1,LANG[1],40);
+			align_center_print(s1, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
-			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+      memcpy(s1,str_error,40);
+			align_center_print(s1, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
       u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
       u8g2_for_adafruit_gfx.setFontMode(1);
 		}
@@ -247,12 +252,16 @@ void parse_E(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
-			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print(LANG[4], 90, ILI9341_WHITE, Warning_RED, 3);
-			align_center_print(LANG[5], 120, ILI9341_WHITE, Warning_RED, 3);
+      memcpy(s1,LANG[3],40);
+			align_center_print(s1, 30, ILI9341_WHITE, Warning_RED, 6);
+      memcpy(s1,LANG[4],40);
+			align_center_print(s1, 90, ILI9341_WHITE, Warning_RED, 3);
+      memcpy(s1,LANG[5],40);
+			align_center_print(s1, 120, ILI9341_WHITE, Warning_RED, 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
-			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+      memcpy(s1,str_error,40);
+			align_center_print(s1, 150, ILI9341_WHITE, Warning_RED, 3);
       u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
       u8g2_for_adafruit_gfx.setFontMode(1);
 		}
@@ -263,11 +272,14 @@ void parse_E(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
-			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print(LANG[6], 90, ILI9341_WHITE, Warning_RED, 3);
-			char str_error[10];
+      memcpy(s1,LANG[3],40);
+			align_center_print(s1, 30, ILI9341_WHITE, Warning_RED, 6);
+      memcpy(s1,LANG[6],40);
+			align_center_print(s1, 90, ILI9341_WHITE, Warning_RED, 3);
+			char str_error[10]; 
 			sprintf(str_error, "E%d", error_code);
-			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+      memcpy(s1,str_error,40); 
+			align_center_print(s1, 150, ILI9341_WHITE, Warning_RED, 3);
       u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
       u8g2_for_adafruit_gfx.setFontMode(1);
 		}
@@ -278,12 +290,16 @@ void parse_E(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
-			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
-			align_center_print(LANG[6], 90, ILI9341_WHITE, Warning_RED, 3);
-			align_center_print(LANG[2], 120, ILI9341_WHITE, Warning_RED, 2);
+      memcpy(s1,LANG[3],40);
+			align_center_print(s1, 30, ILI9341_WHITE, Warning_RED, 6);
+      memcpy(s1,LANG[6],40);
+			align_center_print(s1, 90, ILI9341_WHITE, Warning_RED, 3);
+      memcpy(s1,LANG[2],40);
+			align_center_print(s1, 120, ILI9341_WHITE, Warning_RED, 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
-			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+      memcpy(s1,str_error,40);
+			align_center_print(s1, 150, ILI9341_WHITE, Warning_RED, 3);
       u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
       u8g2_for_adafruit_gfx.setFontMode(1);
 		}
@@ -299,16 +315,20 @@ void parse_E(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(ILI9341_WHITE);
-			align_center_print(LANG[3], 30, ILI9341_WHITE, Warning_RED, 6);
-     u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR10_tf);
+      memcpy(s1,LANG[3],40);
+			align_center_print(s1, 30, ILI9341_WHITE, Warning_RED, 6);
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR10_tf);
       u8g2_for_adafruit_gfx.setFontMode(1);
-			align_center_print(LANG[7], 90, ILI9341_WHITE, Warning_RED, 2);
+      memcpy(s1,LANG[7],40);
+			align_center_print(s1, 90, ILI9341_WHITE, Warning_RED, 2);
      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
       u8g2_for_adafruit_gfx.setFontMode(1);
-			align_center_print(LANG[2], 120, ILI9341_WHITE, Warning_RED, 2);
+      memcpy(s1,LANG[2],40);
+			align_center_print(s1, 120, ILI9341_WHITE, Warning_RED, 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
-			align_center_print(str_error, 150, ILI9341_WHITE, Warning_RED, 3);
+      memcpy(s1,str_error,40);
+			align_center_print(s1, 150, ILI9341_WHITE, Warning_RED, 3);
 		}
 		else if (error_code == 504)
 		{
@@ -648,6 +668,10 @@ void parse_serial_show(char* buf)
 		align_center_print(str_serial_status, 140, text_color, bg_color, 2);
 		sprintf(str_serial_status, LANG[12]);
 		align_center_print(str_serial_status, 160, text_color, bg_color, 2);
+    #ifdef SPANISH
+    sprintf(str_serial_status, LANG[15]);
+    align_center_print(str_serial_status, 180, text_color, bg_color, 2);
+    #endif
 	}
 	else
 	{
