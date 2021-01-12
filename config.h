@@ -25,6 +25,7 @@
 #define ENGLISH					1
 #define SPANISH					0
 #define HEBREW					0
+#define GERMAN          0
 #if PROMINI
 	#include "drawspi.h"
 #else
@@ -42,12 +43,12 @@ char LANG[15][40]PROGMEM={
   {"Replace AM"},
   {"APT Maintenance Required"},
   {"AM Pulses"},
-  {"Remainning"},
+  {"Remaining"},
   {"Pay attention, You are left with less"},
-  {"than 5000 pulses."},
+  {"with less than 5000 pulses."},
   {"Please replace AM shortly"},
   {"AM Number %d"},
-  {"Remainning %d"}     
+  {"Remaining %d"}     
   };
   
 //#define ATTENTION		"Attention"
@@ -99,18 +100,22 @@ char LANG[15][40]PROGMEM={
 //#define SPLASH_P3		"Por favor reemplace AM en breve."
 //#define SN_P1			"AM Numero %d"
 //#define SN_P2			"Restantes %d"
-#elif HEBREW
-#define ATTENTION		"Attention"
-#define NOTIFY			"Notify APT Service"
-#define CONTACT			"Contact APT Service"
-#define ERROR			"Error"
-#define ERROR4001_P1	"Turn Off And"
-#define ERROR4001_P2	"Reconnect APT"
-#define REPLACE_AM		"Replace AM"
-#define MAINTENANCE		"APT Maintenance Required"
-#define AM_PULSES		"AM Pulses"
-#define REMAINING		"Remaining"
-#define SPLASH_P1		"Pay attention, You are left with less"
-#define SPLASH_P2		"than 5000 pulses."
-#define SPLASH_P3		"Please replace AM shortly"
+#elif GERMAN
+char LANG[15][40]PROGMEM={
+  {"Achtung"},
+  {"APT-Service verständigen"},
+  {"APT-Service kontaktieren"},
+  {"Error"},
+  {"Abschalten und"},
+  {"APT neu verbinden"},
+  {"AM austauschen"},
+  {"APT Wartung erforderlich"},
+  {"AM Pulse"},
+  {"Verbleibend"},
+  {"Vorsicht, es verbleiben"},
+  {"weniger als 5000 Pulse."},
+  {"Bitte AM bald ersetzen."},
+  {"AM Nummer %d"},
+  {"Verbleibend %d"}     
+  };
 #endif

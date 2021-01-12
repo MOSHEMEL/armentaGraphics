@@ -227,13 +227,13 @@ void parse_E(char* buf)
 	{
 		if (error_code == 4000)
 		{
-      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
+      u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
       u8g2_for_adafruit_gfx.setFontMode(1);
 			display.fillScreen(RGB888toRGB565("FFFF00"));
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			display.setTextColor(RGB888toRGB565("00B0F0"));
 			align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
-			align_center_print(LANG[1], 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
+			align_center_print(LANG[1], 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 2);
 			char str_error[10];
 			sprintf(str_error, "E%d", error_code);
 			align_center_print(str_error, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 3);
@@ -348,6 +348,7 @@ void parse_fail(char* buf)
 	buf++;
 	
 	int ammount_left = atoi(buf);
+    //int ammount_left=1200;
 	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
 		if (ammount_left==0)
 		{

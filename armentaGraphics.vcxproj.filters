@@ -39,6 +39,12 @@
     <ClInclude Include="new_icon.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="u8g2_fonts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="U8g2_for_Adafruit_GFX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="aplicator_error.h">
@@ -61,6 +67,12 @@
     </ClCompile>
     <ClCompile Include="pulseY.h">
       <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="u8g2_fonts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U8g2_for_Adafruit_GFX.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
