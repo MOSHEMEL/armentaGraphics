@@ -151,6 +151,10 @@ void PrintOnLcd(char* buf)
 {
 	// If the promini is the board of choise. There is no Serial1
 	//Serial.println(buf);
+  if ((*buf == 's') || (*buf == 'S')) // counter [number]
+  {
+    print_lang(buf);
+  }
 	if ((*buf == 'c') || (*buf == 'C')) // counter [number]
 	{
 		parse_pulse_counter(buf);

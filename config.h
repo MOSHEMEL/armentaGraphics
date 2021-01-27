@@ -22,8 +22,8 @@
 #define SIMPLE_BAT 1
 #define WATCHDOG_TIMER_EXPIRE 10000
 
-#define ENGLISH					1
-#define SPANISH					0
+#define ENGLISH					0
+#define SPANISH					1
 #define HEBREW					0
 #define GERMAN          0
 #if PROMINI

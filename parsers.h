@@ -6,7 +6,7 @@ extern uint32_t serial_number;
 #include "stdbool.h"
 #endif
 extern U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
-
+void print_lang(char* buf);
 void parse_aplicator(char* buf);
 void parse_battery_percent(char* buf);
 void parse_reset_screen(char* buf);
@@ -476,7 +476,28 @@ void parse_pulse(char* buf) {
 		DRAW_PULSE_N
 	}
 }
-
+void print_lang(char* buf)
+{
+  buf++;
+  display.fillScreen(Warning_RED);
+  display.setFont();
+  
+  display.setTextColor(ILI9341_WHITE);
+  display.setTextSize(6);
+  display.setCursor(50, 30);
+  display.println("LANG:");
+  display.setCursor(50, 90);
+  display.setTextSize(2);
+  uint16_t size = 0;
+  while(buf[size] != '\0')
+  {
+    size ++;
+  }
+  buf[size-1] = '\0';
+  display.println(buf);
+  delay(10000);
+  //reset_screen();
+}
 void parse_pulse_counter(char* buf)
 {
 	// This function is sent always even if no number needs to be printed
