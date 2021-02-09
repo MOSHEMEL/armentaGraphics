@@ -22,34 +22,55 @@
 #define SIMPLE_BAT 1
 #define WATCHDOG_TIMER_EXPIRE 10000
 
-#define ENGLISH					0
-#define SPANISH					1
-#define HEBREW					0
-#define GERMAN          0
+//#define ENGLISH					0
+//#define SPANISH					1
+//#define HEBREW					0
+//#define GERMAN          0
 #if PROMINI
 	#include "drawspi.h"
 #else
 	#include "drawfigures.h"
 #endif
 
-#if ENGLISH
-char LANG[16][40]={
-  {"Attention"},
-  {"Notify APT Service"},
-  {"Contact APT Service"},
-  {"Error"},
-  {"Turn Off And"},
-  {"Reconnect APT"},
-  {"Replace AM"},
-  {"APT Maintenance Required"},
-  {"AM Pulses"},
-  {"Remaining"},
-  {"Pay attention, You are left with less"},
-  {"with less than 5000 pulses."},
-  {"Please replace AM Promptly"},
-  {"AM Number %d"},
-  {"Remaining %d"}     
-  };
+//#if ENGLISH
+//char LANG[16][40] = {
+
+#define LANG_STR_NUM	17
+#define LANG_STR_LEN	40
+#define LANG_X			120
+#define LANG_Y			30
+#define LANG_W			180
+#define LANG_H			90
+
+typedef enum
+{
+	LANG_ENG,
+	LANG_SPA,
+	LANG_GER,
+	LANG_MAX
+} LANG_TypeDef;
+
+char* LANG[LANG_STR_NUM];
+bool lang_done = false;
+
+char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
+	{ "Attention" },
+	{ "Notify APT Service" },
+	{ "Contact APT Service" },
+	{ "Error" },
+	{ "Turn Off And" },
+	{ "Reconnect APT" },
+	{ "Replace AM" },
+	{ "APT Maintenance Required" },
+	{ "AM Pulses" },
+	{ "Remaining" },
+	{ "Pay attention, You are left with less" },
+	{ "with less than 5000 pulses." },
+	{ "Please replace AM Promptly" },
+	{ "AM Number %d" },
+	{ "Remaining %d" },
+	{ "\0" }
+};
   
 //#define ATTENTION		"Attention"
 //#define NOTIFY			"Notify APT Service"
@@ -67,25 +88,27 @@ char LANG[16][40]={
 //#define SN_P1			"AM Number %d"
 //#define SN_P2			"Remainning %d"
 
-#elif SPANISH
-char LANG[16][40]={
-  {"Atención"},
-  {"Notificar APT Servicio"},
-  {"Contacto APT Servicio"},
-  {"Error"},
-  {"Apagar y"},
-  {"Vuelva a conectar APT"},
-  {"Reemplazar AM"},
-  {"APT mantenimiento requerido"},
-  {"AM Pulsos"},
-  {"Restante"},
-  {"Presta atención, te quedas"},
-  {"con menos de 5000 pulsos."},
-  {"Por favor reemplace AM."},
-  {"AM número %d"},
-  {"Restante %d"},
-  {"de inmediato"}     
-  };
+//#elif SPANISH
+//char LANG[16][40] = {
+char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
+	{ "Atención" },
+	{ "Notificar APT Servicio" },
+	{ "Contacto APT Servicio" },
+	{ "Error" },
+	{ "Apagar y" },
+	{ "Vuelva a conectar APT" },
+	{ "Reemplazar AM" },
+	{ "APT mantenimiento requerido" },
+	{ "AM Pulsos" },
+	{ "Restante" },
+	{ "Presta atención, te quedas" },
+	{ "con menos de 5000 pulsos." },
+	{ "Por favor reemplace AM." },
+	{ "AM número %d" },
+	{ "Restante %d" },
+	{ "de inmediato" },
+	{ "\0" }
+};
 //#define ATTENTION		"Atencion"
 //#define NOTIFY			"Notificar a Servicio"
 //#define CONTACT			"Contactar Servicio"
@@ -101,22 +124,25 @@ char LANG[16][40]={
 //#define SPLASH_P3		"Por favor reemplace AM en breve."
 //#define SN_P1			"AM Numero %d"
 //#define SN_P2			"Restantes %d"
-#elif GERMAN
-char LANG[16][40]={
-  {"Achtung"},
-  {"APT-Service verständigen"},
-  {"APT-Service kontaktieren"},
-  {"Error"},
-  {"Abschalten und"},
-  {"APT neu verbinden"},
-  {"AM austauschen"},
-  {"APT Wartung erforderlich"},
-  {"AM Pulse"},
-  {"Verbleibend"},
-  {"Vorsicht, es verbleiben"},
-  {"weniger als 5000 Pulse."},
-  {"Bitte AM bald ersetzen."},
-  {"AM Nummer %d"},
-  {"Verbleibend %d"}     
-  };
-#endif
+//#elif GERMAN
+//char LANG[16][40] = {
+char LANG_GER_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
+	{ "Achtung" },
+	{ "APT-Service verständigen" },
+	{ "APT-Service kontaktieren" },
+	{ "Error" },
+	{ "Abschalten und" },
+	{ "APT neu verbinden" },
+	{ "AM austauschen" },
+	{ "APT Wartung erforderlich" },
+	{ "AM Pulse" },
+	{ "Verbleibend" },
+	{ "Vorsicht, es verbleiben" },
+	{ "weniger als 5000 Pulse." },
+	{ "Bitte AM bald ersetzen." },
+	{ "AM Nummer %d" },
+	{ "Verbleibend %d" },
+	{ "\0" }
+};
+//#endif
+

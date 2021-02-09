@@ -73,7 +73,8 @@ U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
 // Use hardware SPI (on MKRZERO, #8, #9, #10) and the above for CS/DC
 // If using the breakout, change pins as desired
 bool led_toggle = 0;
-extern char LANG[16][40];
+//extern char LANG[16][40];
+extern char* LANG[LANG_STR_NUM];
 int y = 0;
 char  BufferString[MAX_COMMAND_LENGTH];
 char key;
@@ -151,10 +152,10 @@ void PrintOnLcd(char* buf)
 {
 	// If the promini is the board of choise. There is no Serial1
 	//Serial.println(buf);
-  if ((*buf == 's') || (*buf == 'S')) // counter [number]
-  {
-    print_lang(buf);
-  }
+	if ((*buf == 's') || (*buf == 'S')) // counter [number]
+	{
+		parse_lang(buf);
+	}
 	if ((*buf == 'c') || (*buf == 'C')) // counter [number]
 	{
 		parse_pulse_counter(buf);
@@ -323,6 +324,7 @@ void setup(void) {
 	serial_message.next_state = IDLE;
 	serial_message.state = IDLE;
 	uart_armenta_logo();
+	//lang_init();
 	watchdog_last_update = millis();
   // while get data till get AM + Remaining - stay at title card;
   // parse data in a while only 2 messages
@@ -430,7 +432,7 @@ void loop(void) {
 					uint16_t calc_CRC = calc_crc((uint8_t*)BufferString, serial_message.msg_length);
 					if (calc_CRC == serial_message.checksum)
 					{
-						BufferString[serial_message.msg_length - 1] = 0; // remove the #
+						BufferString[serial_message.msg_length - 1] = 0;  // remove the #
 						PrintOnLcd(&BufferString[1]);
 					}
 					else
@@ -454,15 +456,15 @@ void loop(void) {
 		serial_message.state = serial_message.next_state;
 		}
 	}
-	uint8_t x = display.readcommand8(ILI9341_RDMODE);
-	if (x != 0x94)
-	{
-		Serial.print("Power mode: ");
-		Serial.println(x);
-		display.begin();
-		display.setRotation(3);
-		reset_screen();
-	}
+//	uint8_t x = display.readcommand8(ILI9341_RDMODE);
+//	if (x != 0x94)
+//	{
+//		Serial.print("Power mode: ");
+//		Serial.println(x);
+//		display.begin();
+//		display.setRotation(3);
+//		reset_screen();
+//	}
 	if (millis() - watchdog_last_update > WATCHDOG_TIMER_EXPIRE && !DEBUG_STANDALONE)
 	{
 		if(!watchdog_wakeup)
@@ -499,7 +501,7 @@ void loop(void) {
 		{
 			reset_screen();
 			graphics_to_Screen(counter);
-
+			
 			watchdog_wakeup = false;
 			watchdog_last_update = millis();
 		}

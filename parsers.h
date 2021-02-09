@@ -6,7 +6,7 @@ extern uint32_t serial_number;
 #include "stdbool.h"
 #endif
 extern U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
-void print_lang(char* buf);
+void parse_lang(char* buf);
 void parse_aplicator(char* buf);
 void parse_battery_percent(char* buf);
 void parse_reset_screen(char* buf);
@@ -476,27 +476,67 @@ void parse_pulse(char* buf) {
 		DRAW_PULSE_N
 	}
 }
-void print_lang(char* buf)
+void parse_lang(char* buf)
 {
-  buf++;
-  display.fillScreen(Warning_RED);
-  display.setFont();
-  
-  display.setTextColor(ILI9341_WHITE);
-  display.setTextSize(6);
-  display.setCursor(50, 30);
-  display.println("LANG:");
-  display.setCursor(50, 90);
-  display.setTextSize(2);
-  uint16_t size = 0;
-  while(buf[size] != '\0')
-  {
-    size ++;
-  }
-  buf[size-1] = '\0';
-  display.println(buf);
-  delay(10000);
-  //reset_screen();
+	int i = 0;
+	LANG_TypeDef language;
+
+	buf++;
+	language = (LANG_TypeDef)atoi(buf);
+
+	if (lang_done == false)
+	{
+		switch (language)
+		{
+		case LANG_SPA:
+			for (i = 0; i < LANG_STR_NUM; i++)
+			{
+				LANG[i] = LANG_SPA_ARR[i];
+			}
+			break;
+		case LANG_GER:
+			for (i = 0; i < LANG_STR_NUM; i++)
+			{
+				LANG[i] = LANG_GER_ARR[i];
+			}
+			break;
+			//case LANG_ENG:
+		default:
+			for (i = 0; i < LANG_STR_NUM; i++)
+			{
+				LANG[i] = LANG_ENG_ARR[i];
+			}
+			break;
+		}
+	}
+	lang_done = true;
+	
+	//clear language rectangle
+	display.fillRect(LANG_X, LANG_Y, LANG_W, LANG_H, ILI9341_bk1);
+	display.setTextColor(ILI9341_WHITE);
+	display.setTextSize(6);
+	display.setCursor(LANG_X, LANG_Y);
+	display.println("LANG:");
+	display.setCursor(LANG_X, LANG_Y + 60);
+	display.setTextSize(2);
+
+	switch (language)
+	{
+	case LANG_ENG:
+		display.println("English");
+		break;
+	case LANG_SPA:
+		display.println("Spanish");
+		break;
+	case LANG_GER:
+		display.println("German");
+		break;
+	default:
+		//clear language rectangle
+		display.fillRect(LANG_X, LANG_Y, LANG_W, LANG_H, ILI9341_bk1);
+		//graphics_to_Screen(counter);
+		break;
+	}
 }
 void parse_pulse_counter(char* buf)
 {
@@ -710,11 +750,14 @@ void parse_serial_show(char* buf)
 		sprintf(str_serial_status, LANG[12]);
     memcpy(s1,str_serial_status,40);
 		align_center_print(s1, 160, text_color, bg_color, 2);
-    #ifdef SPANISH
-    sprintf(str_serial_status, LANG[15]);
-    memcpy(s1,str_serial_status,40);
-    align_center_print(s1, 180, text_color, bg_color, 2);
-    #endif
+		//#ifdef SPANISH
+		if(LANG[15] != "\0")
+		{
+			sprintf(str_serial_status, LANG[15]);
+			memcpy(s1, str_serial_status, 40);
+			align_center_print(s1, 180, text_color, bg_color, 2);
+		}
+    //#endif
 	}
 	else
 	{
