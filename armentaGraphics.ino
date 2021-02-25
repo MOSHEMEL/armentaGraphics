@@ -253,7 +253,7 @@ void setup(void) {
   //u8g2_for_adafruit_gfx.setFont(u8g2_font_8x13_tf);
   u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
    u8g2_for_adafruit_gfx.setFontDirection(0);
-
+   set_lang(LANG_ENG);
 #if PROMINI
 	Serial.print("Initializing SD card...");
 
@@ -277,9 +277,10 @@ void setup(void) {
 #if DEBUG_STANDALONE
   
    display.fillScreen(RGB888toRGB565("FFFF00"));
+   display.println("HELLO");
    //u8g2_for_adafruit_gfx.drawUTF8(0,20,"la oración");
    //utf8ascii(ENG[10]);
-    align_center_print(LANG[10], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 1);
+   // align_center_print(LANG[10], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 1);
   //u8g2_for_adafruit_gfx.drawGlyph(5, 20,'Ä');
 	//tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	//tft.println("DEBUG VERSION");
@@ -324,7 +325,6 @@ void setup(void) {
 	serial_message.next_state = IDLE;
 	serial_message.state = IDLE;
 	uart_armenta_logo();
-	//lang_init();
 	watchdog_last_update = millis();
   // while get data till get AM + Remaining - stay at title card;
   // parse data in a while only 2 messages

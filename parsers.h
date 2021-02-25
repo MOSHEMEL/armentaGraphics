@@ -179,42 +179,91 @@ void parse_battery_percent(char* buf) {
 	}
 }
 
-void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, int size)
+void at_point_print(char* string, int x, int y, uint16_t color, uint16_t bg_color, int size)
 {
- 
 	/*
 	 * TextSize(1)
 		The space occupied by a character using the standard font is 6 pixels wide by 8 pixels high.
 		A two characters string sent with this command occup a space that is 12 pixels wide by 8 pixels high.
 	 */
 	int len = 0;
-	char *pointer = string;
+	char* pointer = string;
 	char ascii;
-  char *buf;
- 
- u8g2_for_adafruit_gfx.setForegroundColor(color);
+	char* buf;
+	int dsz = 0;
+
+	u8g2_for_adafruit_gfx.setForegroundColor(color);
 	while (*pointer)
 	{
 		ascii = *pointer;
 		len++;
 		pointer++;
-    
+
 	}
 	len = len * 6 * size;
 	int poX = 160 - len / 2;
 
 	if (poX < 0) poX = 0;
-  utf8ascii(string);
-  
+	utf8ascii(string);
+
+	if (x >= 0)
+		poX = x;
+
 	while (*string)
 	{
 		//  void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size);
 		// display.drawChar(poX, y, *string, color, bg_color, size);
-		u8g2_for_adafruit_gfx.drawGlyph(poX, y,*string );
-    Serial.print(*string);
+		u8g2_for_adafruit_gfx.drawGlyph(poX, y, *string);
+		Serial.print(*string);
+		if ((*string >= 'A') && (*string <= 'Z') || (*string == 'm') || (*string == 'w')) //'A' = 0x41 'Z' = 0x5a
+			dsz = 8;
+		else if ((*string == 'i') || (*string == 'l') || (*string == ' '))
+			dsz = 3;
+		else dsz = 6;
 		string++;
-		poX += 6*size;                  /* Move cursor right */           
+		poX += dsz * size;                  /* Move cursor right */
+	}
+
 }
+
+void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color, int size)
+{
+ 
+	at_point_print(string, -1, y, color, bg_color, size);
+
+//	/*
+//	 * TextSize(1)
+//		The space occupied by a character using the standard font is 6 pixels wide by 8 pixels high.
+//		A two characters string sent with this command occup a space that is 12 pixels wide by 8 pixels high.
+//	 */
+//	int len = 0;
+//	char *pointer = string;
+//	char ascii;
+//  char *buf;
+// 
+// u8g2_for_adafruit_gfx.setForegroundColor(color);
+//	while (*pointer)
+//	{
+//		ascii = *pointer;
+//		len++;
+//		pointer++;
+//    
+//	}
+//	len = len * 6 * size;
+//	int poX = 160 - len / 2;
+//
+//	if (poX < 0) poX = 0;
+//  utf8ascii(string);
+//  
+//	while (*string)
+//	{
+//		//  void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size);
+//		// display.drawChar(poX, y, *string, color, bg_color, size);
+//		u8g2_for_adafruit_gfx.drawGlyph(poX, y,*string );
+//    Serial.print(*string);
+//		string++;
+//		poX += 6*size;                  /* Move cursor right */           
+//}
 
 }
 
@@ -476,68 +525,118 @@ void parse_pulse(char* buf) {
 		DRAW_PULSE_N
 	}
 }
+
+void set_lang(LANG_TypeDef language)
+{
+	int i = 0;
+	switch (language)
+	{
+	case LANG_SPA:
+		for (i = 0; i < LANG_STR_NUM; i++)
+		{
+			LANG[i] = LANG_SPA_ARR[i];
+		}
+		break;
+	case LANG_GER:
+		for (i = 0; i < LANG_STR_NUM; i++)
+		{
+			LANG[i] = LANG_GER_ARR[i];
+		}
+		break;
+	case LANG_FRA:
+		for (i = 0; i < LANG_STR_NUM; i++)
+		{
+			LANG[i] = LANG_FRA_ARR[i];
+		}
+		break;
+		//case LANG_ENG:
+	default:
+		language = LANG_ENG;
+		for (i = 0; i < LANG_STR_NUM; i++)
+		{
+			LANG[i] = LANG_ENG_ARR[i];
+		}
+		break;
+	}
+}
+
 void parse_lang(char* buf)
 {
 	int i = 0;
-	LANG_TypeDef language;
+	int j = 0;
+	int cur = 0;
+	LANG_TypeDef language = LANG_ENG;
+	static LANG_TypeDef lang_prev = LANG_MAX;
+	char s1[40];
 
 	buf++;
 	language = (LANG_TypeDef)atoi(buf);
 
-	if (lang_done == false)
-	{
-		switch (language)
-		{
-		case LANG_SPA:
-			for (i = 0; i < LANG_STR_NUM; i++)
-			{
-				LANG[i] = LANG_SPA_ARR[i];
-			}
-			break;
-		case LANG_GER:
-			for (i = 0; i < LANG_STR_NUM; i++)
-			{
-				LANG[i] = LANG_GER_ARR[i];
-			}
-			break;
-			//case LANG_ENG:
-		default:
-			for (i = 0; i < LANG_STR_NUM; i++)
-			{
-				LANG[i] = LANG_ENG_ARR[i];
-			}
-			break;
-		}
-	}
-	lang_done = true;
-	
-	//clear language rectangle
-	display.fillRect(LANG_X, LANG_Y, LANG_W, LANG_H, ILI9341_bk1);
-	display.setTextColor(ILI9341_WHITE);
-	display.setTextSize(6);
-	display.setCursor(LANG_X, LANG_Y);
-	display.println("LANG:");
-	display.setCursor(LANG_X, LANG_Y + 60);
-	display.setTextSize(2);
+	if ((language < 0) || (language >= LANG_MAX))
+		return;
 
-	switch (language)
+	if (lang_set_done == false)
 	{
-	case LANG_ENG:
-		display.println("English");
-		break;
-	case LANG_SPA:
-		display.println("Spanish");
-		break;
-	case LANG_GER:
-		display.println("German");
-		break;
-	default:
-		//clear language rectangle
-		display.fillRect(LANG_X, LANG_Y, LANG_W, LANG_H, ILI9341_bk1);
-		//graphics_to_Screen(counter);
-		break;
+		set_lang(language);
+		lang_set_done = true;
+		return;
+	}
+
+	if (language != lang_prev)
+	{
+		//clear screen
+		display.fillRect(0, 0, 320, 240, ILI9341_bk1);
+		display.setTextColor(ILI9341_WHITE);
+		display.setTextSize(4);
+		display.setCursor(LANG_X, LANG_Y);
+		display.println("Language:");
+
+		display.setTextSize(2);
+		display.setCursor(LANG_X, LANG_Y + 180);
+		display.println("Reset to roll");
+
+		//display.drawRGBBitmap(LANG_X, LANG_Y + 60, (uint16_t*)(lang_errow.pixel_data), lang_errow.width, lang_errow.height);
+
+		u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+		u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+		u8g2_for_adafruit_gfx.setFontDirection(0);
+		if (language < LANG_WIN_LEN)
+		{
+			j = 0;
+			cur = language;
+		}
+		else
+		{
+			cur = LANG_WIN_LEN - 1;
+			j = language - cur;
+		}
+		for (i = 0; i < LANG_WIN_LEN; i++, j++)
+			LANG_WIN[i] = LANG_NAMES[j];
+		for (i = 0; i < LANG_WIN_LEN; i++)
+		{
+			if (i == cur)
+			{
+				u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+				u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+				u8g2_for_adafruit_gfx.setFontDirection(0);
+				memcpy(s1, "-->", 40);
+				at_point_print(s1, LANG_X, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1, 1);
+				memcpy(s1, LANG_WIN[i], 40);
+				at_point_print(s1, LANG_X + 45, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1, 4);
+			}
+			else
+			{
+				u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+				u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+				u8g2_for_adafruit_gfx.setFontDirection(0);
+				memcpy(s1, LANG_WIN[i], 40);
+				at_point_print(s1, LANG_X + 45, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1, 3);
+			}
+		}
+		lang_prev = language;
 	}
 }
+
 void parse_pulse_counter(char* buf)
 {
 	// This function is sent always even if no number needs to be printed
