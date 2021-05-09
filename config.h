@@ -7,19 +7,20 @@
 #define DEBUG_FLAG        0
 #define DEBUG_STANDALONE  0
 
-#define VERSION "3.8"
-#define PROMINI 0
-#define LED_TOGGLE 0
-#define ILI9341_bk1        0x0555
-#define Warning_RED 0x7F2E5
-#define Warning_BLUE 0x010C
-#define BUFFPIXEL 20
-#define MAX_COMMAND_LENGTH 128
-#define BATTERY_TEXT_POS 174, 184
-#define AM_TEXT_POS 245, 184
-#define PASS_CRC 0
-#define PASS_PRESSURE 0
-#define SIMPLE_BAT 1
+#define VERSION				"3.8"
+#define PROMINI				0
+#define LED_TOGGLE			0
+#define ILI9341_bk1			0x0555
+#define Warning_RED			0x7F2E5
+#define Warning_BLUE		0x010C
+#define Warning_YELLOW		RGB888toRGB565("FFFF00")
+#define BUFFPIXEL			20
+#define MAX_COMMAND_LENGTH	128
+#define BATTERY_TEXT_POS	174, 184
+#define AM_TEXT_POS			245, 184
+#define PASS_CRC			0
+#define PASS_PRESSURE		0
+#define SIMPLE_BAT			1
 #define WATCHDOG_TIMER_EXPIRE 10000
 
 #if PROMINI
@@ -58,81 +59,89 @@ bool lang_set_done = false;
 
 char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "Attention" },
-	{ "Notify APT Service" },
-	{ "Contact APT Service" },
+	{ "Notify Service" },
+	{ "Contact Service" },
 	{ "Error" },
-	{ "Turn Off And" },
+	{ "Turn Off and" },
 	{ "Reconnect APT" },
 	{ "Replace AM" },
-	{ "APT Maintenance Required" },
+	{ "Maintenance Required" },
 	{ "AM Pulses" },
 	{ "Remaining" },
 	{ "Pay attention, You are left" },
 	{ "with less than 5000 pulses." },
 	{ "Please replace AM" },
-	{ "AM Number %d" },
-	{ "Remaining %d" },
-	{ "promptly." },
+	//{ "AM Number %d" },
+	//{ "Remaining %d" },
+	{ "AM Number" },
+	{ "Remaining" },
+	{ "promptly" },
 	{ "\0" }
 };
   
 char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "Atención" },
-	{ "Notificar APT Servicio" },
-	{ "Contacto APT Servicio" },
+	{ "Notificar Servicio" },
+	{ "Contacto Servicio" },
 	{ "Error" },
 	{ "Apagar y" },
 	{ "Vuelva a conectar APT" },
 	{ "Reemplazar AM" },
-	{ "APT mantenimiento requerido" },
+	{ "Mantenimiento requerido" },
 	{ "AM Pulsos" },
 	{ "Restante" },
 	{ "Presta atención, te quedas" },
 	{ "con menos de 5000 pulsos." },
 	{ "Por favor reemplace AM" },
-	{ "AM número %d" },
-	{ "Restante %d" },
-	{ "de inmediato." },
+	//{ "AM número %d" },
+	//{ "Restante %d" },
+	{ "AM número" },
+	{ "Restante" },
+	{ "de inmediato" },
 	{ "\0" }
 };
 
 char LANG_GER_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "Achtung" },
-	{ "APT-Service verständigen" },
-	{ "APT-Service kontaktieren" },
+	{ "Service verständigen" },
+	{ "Service kontaktieren" },
 	{ "Error" },
 	{ "Abschalten und" },
 	{ "APT neu verbinden" },
 	{ "AM austauschen" },
-	{ "APT Wartung erforderlich" },
+	{ "Wartung erforderlich" },
 	{ "AM Pulse" },
 	{ "Verbleibend" },
 	{ "Vorsicht, es verbleiben" },
 	{ "weniger als 5000 Pulse." },
 	{ "Bitte AM bald" },
-	{ "AM Nummer %d" },
-	{ "Verbleibend %d" },
-	{ "ersetzen." },
+	//{ "AM Nummer %d" },
+	//{ "Verbleibend %d" },
+	{ "AM Nummer" },
+	{ "Verbleibend" },
+	{ "ersetzen" },
 	{ "\0" }
 };
 
 char LANG_FRA_ARR[LANG_STR_NUM][LANG_STR_LEN] = {
 	{ "Attention" },
-	{ "Informer d’une APT" },
-	{ "Contacter APT" },
+	{ "Notifier le Service" },
+	{ "Contacter le Service" },
 	{ "Erreur" },
 	{ "Désactiver et" },
 	{ "Reconnecter APT" },
 	{ "Remplacer AM" },
-	{ "Maintenance APT requise" },
+	{ "Maintenance requise" },
 	{ "Impulsions AM" },
 	{ "Restant" },
 	{ "Attention, il vous reste" },
 	{ "moins de 5000 impulsions." },
 	{ "Veuillez remplacer AM" },
-	{ "Nombre AM  %d" },
-	{ "Restant %d" },
-	{ "rapidement." },
+	//{ "Nombre AM  %d" },
+	//{ "Restant %d" },
+	{ "Nombre AM" },
+	{ "Restant" },
+	{ "rapidement" },
 	{ "\0" }
 };
 

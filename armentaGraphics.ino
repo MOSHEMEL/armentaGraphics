@@ -85,6 +85,7 @@ int FontSizeArmenta = 2;
 bool watchdog_wakeup = false;
 uint32_t watchdog_last_update = 0;
 uint32_t serial_number = 0;
+int remaining_pulses = 0;
 
 enum serial_state
 {
@@ -247,19 +248,20 @@ void setup(void) {
 	display.begin();
 	display.setRotation(3);
 	pinMode(LED_BUILTIN, OUTPUT);
-  u8g2_for_adafruit_gfx.begin(display);
- //u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
-  u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
-  //u8g2_for_adafruit_gfx.setFont(u8g2_font_8x13_tf);
-  u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
-   u8g2_for_adafruit_gfx.setFontDirection(0);
-   set_lang(LANG_ENG);
+	u8g2_for_adafruit_gfx.begin(display);
+	//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+	 //u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	//u8g2_for_adafruit_gfx.setFont(u8g2_font_8x13_tf);
+	u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+	u8g2_for_adafruit_gfx.setFontDirection(0);
+	set_lang(LANG_ENG);
 #if PROMINI
 	Serial.print("Initializing SD card...");
 
 #endif
 #if PROMINI
-	if (!SD.begin(4)) 
+	if (!SD.begin(4))
 	{ // SD_CS define is acting up
 		Serial.println("failed!");
 		Serial.println("Pro mini setting setup: if not apprropriate board, please switch");
@@ -268,35 +270,114 @@ void setup(void) {
 		Serial.println("OK!");
 	}
 #endif
-	
+
 	display.fillScreen(ILI9341_WHITE);
- 
-  DRAW_WELCOME
-	
-	delay(2000);
+
+	DRAW_WELCOME
+
+		delay(2000);
 #if DEBUG_STANDALONE
-  
-   display.fillScreen(RGB888toRGB565("FFFF00"));
-   display.println("HELLO");
-   //u8g2_for_adafruit_gfx.drawUTF8(0,20,"la oración");
-   //utf8ascii(ENG[10]);
-   // align_center_print(LANG[10], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 1);
-  //u8g2_for_adafruit_gfx.drawGlyph(5, 20,'Ä');
+
+	display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
+	display.println("HELLO");
+	//u8g2_for_adafruit_gfx.drawUTF8(0,20,"la oración");
+	//utf8ascii(ENG[10]);
+	// align_center_print(LANG[10], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 1);
+	//u8g2_for_adafruit_gfx.drawGlyph(5, 20,'Ä');
 	//tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(2);
 	//tft.println("DEBUG VERSION");
 	//tft.println("Umlaut ÄÖÜ");
-  // u8g2_for_adafruit_gfx.setCursor(0,20); 
- //  u8g2_for_adafruit_gfx.print("DEBUG VERSION"); 
-  // u8g2_for_adafruit_gfx.setCursor(0,40); 
-  // u8g2_for_adafruit_gfx.setCursor(0,20);
-   //align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5); 
-   //u8g2_for_adafruit_gfx.print("Umlaut ÄÖÜ");
- //  u8g2_for_adafruit_gfx.setCursor(0,40); 
-  // align_center_print(s1, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
-   //u8g2_for_adafruit_gfx.setCursor(0,60);  
-   //u8g2_for_adafruit_gfx.print("la oración");
+	// u8g2_for_adafruit_gfx.setCursor(0,20); 
+	//  u8g2_for_adafruit_gfx.print("DEBUG VERSION"); 
+	// u8g2_for_adafruit_gfx.setCursor(0,40); 
+	// u8g2_for_adafruit_gfx.setCursor(0,20);
+	//align_center_print(LANG[0], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5); 
+	//u8g2_for_adafruit_gfx.print("Umlaut ÄÖÜ");
+	//  u8g2_for_adafruit_gfx.setCursor(0,40); 
+	// align_center_print(s1, 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 5);
+	//u8g2_for_adafruit_gfx.setCursor(0,60);  
+	//u8g2_for_adafruit_gfx.print("la oración");
 	//tft.println("la oración");
-	delay(1000);
+
+
+
+	char str_serial_status[30];
+	char s1[40];
+	int i = 0;
+	//for (i = 0; i < LANG_STR_NUM; i++)
+	//{
+	//	LANG[i] = LANG_FRA_ARR[i];
+	//}
+	serial_number = 1920046;
+	remaining_pulses = 0;
+	//while (1)
+	//{
+	//	if (i == 0)
+	//	{
+	//		parse_lang(" 0                                                                                            ");
+	//		parse_lang(" 0                                                                                            ");
+	//	}
+	//	else if (i == 1)
+	//	{
+	//		parse_lang(" 1                                                                                            ");
+	//		parse_lang(" 1                                                                                            ");
+	//	}
+	//	else if (i == 2)
+	//	{
+	//		parse_lang(" 2                                                                                            ");
+	//		parse_lang(" 2                                                                                            ");
+	//	}
+	//	else if (i == 3)
+	//	{
+	//		parse_lang(" 3                                                                                            ");
+	//		parse_lang(" 3                                                                                            ");
+	//	}
+	//	//i++;
+	//	if (i > 3)
+	//		i = 0;
+	//	lang_set_done = false;
+	//	delay(3000);
+	//	
+	//	parse_serial_show(" 1234567                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 4000                                                                                            ");
+	//	delay(3000);
+	//
+	//	parse_serial_show(" 123456                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 4000                                                                                            ");
+	//	delay(3000);
+	//
+	//	parse_serial_show(" 5000                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 4000                                                                                            ");
+	//	delay(3000);
+	//
+		parse_serial_show(" 0                                                                                            ");
+		delay(3000);
+		parse_E(" 4000                                                                                            ");
+		delay(3000);
+	//
+	//	parse_E(" 4001                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 4011                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 5000                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 5111                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 6111                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 503                                                                                            ");
+	//	delay(3000);
+	//	parse_E(" 504                                                                                            ");
+	//	delay(3000);
+	//}
+	//while (1)
+	//{
+	//	parse_E(" 503                                                                                            ");
+	//}
+	//delay(1000);
 #endif
 /*
 	paint_half_half();
@@ -317,7 +398,7 @@ void setup(void) {
 	tft.setCursor(BATTERY_TEXT_POS);
 	tft.println("...");
 #endif
-	
+
 	blank_upper_side();
 	serial_message.msg_buf = BufferString;
   */
@@ -326,8 +407,8 @@ void setup(void) {
 	serial_message.state = IDLE;
 	uart_armenta_logo();
 	watchdog_last_update = millis();
-  // while get data till get AM + Remaining - stay at title card;
-  // parse data in a while only 2 messages
+	// while get data till get AM + Remaining - stay at title card;
+	// parse data in a while only 2 messages
 }
 
 void loop(void) {
