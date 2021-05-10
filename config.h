@@ -58,25 +58,25 @@ char* LANG_WIN[LANG_WIN_LEN];
 bool lang_set_done = false;
 
 char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
-	{ "Attention" },
-	{ "Notify Service" },
-	{ "Contact Service" },
-	{ "Error" },
-	{ "Turn Off and" },
-	{ "Reconnect APT" },
-	{ "Replace AM" },
-	{ "Maintenance Required" },
-	{ "AM Pulses" },
-	{ "Remaining" },
-	{ "Pay attention, You are left" },
-	{ "with less than 5000 pulses." },
-	{ "Please replace AM" },
-	//{ "AM Number %d" },
-	//{ "Remaining %d" },
-	{ "AM Number" },
-	{ "Remaining" },
-	{ "promptly" },
-	{ "\0" }
+	{ "Attention" },						// 0
+	{ "Notify Service" },					// 2
+	{ "Contact Service" },					// 1
+	{ "Error" },							// 3
+	{ "Turn Off and" },						// 4
+	{ "Reconnect APT" },					// 5
+	{ "Replace AM" },						// 6
+	{ "Maintenance Required" },				// 7
+	{ "AM Pulses" },						// 8
+	{ "Remaining" },						// 9
+	{ "Pay attention, You are left" },		// 10
+	{ "with less than 5000 pulses." },		// 11
+	{ "Please replace AM" },				// 12
+	//{ "AM Number %d" },					// 
+	//{ "Remaining %d" },					// 
+	{ "AM Number" },						// 13
+	{ "Remaining" },						// 14
+	{ "promptly" },							// 15
+	{ "\0" }								// 16
 };
   
 char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {

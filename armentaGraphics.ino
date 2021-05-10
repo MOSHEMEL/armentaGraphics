@@ -310,8 +310,8 @@ void setup(void) {
 	//}
 	serial_number = 1920046;
 	remaining_pulses = 0;
-	//while (1)
-	//{
+	while (1)
+	{
 	//	if (i == 0)
 	//	{
 	//		parse_lang(" 0                                                                                            ");
@@ -338,44 +338,50 @@ void setup(void) {
 	//	lang_set_done = false;
 	//	delay(3000);
 	//	
-	//	parse_serial_show(" 1234567                                                                                            ");
+	//	parse_serial_show(" 1234567						");
 	//	delay(3000);
-	//	parse_E(" 4000                                                                                            ");
-	//	delay(3000);
-	//
-	//	parse_serial_show(" 123456                                                                                            ");
-	//	delay(3000);
-	//	parse_E(" 4000                                                                                            ");
+	//	parse_E(" 4000									");
 	//	delay(3000);
 	//
-	//	parse_serial_show(" 5000                                                                                            ");
+	//	parse_serial_show(" 123456						");
 	//	delay(3000);
-	//	parse_E(" 4000                                                                                            ");
+	//	parse_E(" 4000									");
 	//	delay(3000);
 	//
-		parse_serial_show(" 0                                                                                            ");
+	//	parse_serial_show(" 5000						");
+	//	delay(3000);
+	//	parse_E(" 4000									");
+	//	delay(3000);
+	//
+	//	parse_serial_show(" 0							");
+	//	delay(3000);
+	//	parse_E(" 4000									");
+	//	delay(3000);
+	//
+	//	parse_E(" 4001									");
+	//	delay(3000);
+	//	parse_E(" 4011									");
+	//	delay(3000);
+	//	parse_E(" 5000									");
+	//	delay(3000);
+	//	parse_E(" 5111									");
+	//	delay(3000);
+	//	parse_E(" 6111									");
+	//	delay(3000);
+	//	parse_E(" 503									");
+	//	delay(3000);
+	//	parse_E(" 504									");
+	//	delay(3000);
+		parse_fail(" 2000								");
 		delay(3000);
-		parse_E(" 4000                                                                                            ");
+		parse_fail(" 200								");
 		delay(3000);
-	//
-	//	parse_E(" 4001                                                                                            ");
-	//	delay(3000);
-	//	parse_E(" 4011                                                                                            ");
-	//	delay(3000);
-	//	parse_E(" 5000                                                                                            ");
-	//	delay(3000);
-	//	parse_E(" 5111                                                                                            ");
-	//	delay(3000);
-	//	parse_E(" 6111                                                                                            ");
-	//	delay(3000);
-	//	parse_E(" 503                                                                                            ");
-	//	delay(3000);
-	//	parse_E(" 504                                                                                            ");
-	//	delay(3000);
-	//}
+		parse_fail(" 0									");
+		delay(3000);
+	}
 	//while (1)
 	//{
-	//	parse_E(" 503                                                                                            ");
+	//	parse_E(" 503									");
 	//}
 	//delay(1000);
 #endif

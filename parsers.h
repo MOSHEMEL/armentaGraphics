@@ -519,10 +519,9 @@ void parse_fail(char* buf)
 			display.fillScreen(Warning_RED);
 			display.setFont(); // we have no letters to show so we cant use font to print letters
 			memcpy(s1, LANG[8], 40);
-			align_center_print(s1, 35, ILI9341_WHITE, Warning_RED);//, 4);
+			align_center_print(s1, 40, ILI9341_WHITE, Warning_RED);//, 4);
 			memcpy(s1, LANG[9], 40);
-			align_center_print(s1, 65, ILI9341_WHITE, Warning_RED);//, 4);
-
+			align_center_print(s1, 90, ILI9341_WHITE, Warning_RED);//, 4);
 		}
 		else
 		{
@@ -537,10 +536,10 @@ void parse_fail(char* buf)
 			u8g2_for_adafruit_gfx.setFontMode(1);
 			memcpy(s1, LANG[8], 40);
 			//align_center_print(s1, 55, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 55, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+			align_center_print(s1, 90, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
 			memcpy(s1, LANG[9], 40);
 			//align_center_print(s1, 85, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 85, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+			align_center_print(s1, 120, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
 		}
 
 #if PROMINI
@@ -552,14 +551,16 @@ void parse_fail(char* buf)
 #endif
 		if (ammount_left >= 1000)
 		{
-			display.setCursor(30, 200);
+			display.setTextColor(ILI9341_BLACK);
+			display.setCursor(30, 210);
 			display.println(ammount_left);
 			display.setFont();
 			display.setTextSize(2);
 		}
 		else if (ammount_left == 0)
 		{
-			display.setCursor(130, 200);
+			display.setTextColor(ILI9341_WHITE);
+			display.setCursor(130, 180);
 			display.println(ammount_left);
 			display.setFont();
 			display.setTextSize(2);
@@ -571,7 +572,8 @@ void parse_fail(char* buf)
 		}
 		else
 		{
-			display.setCursor(80, 200);
+			display.setTextColor(ILI9341_BLACK);
+			display.setCursor(80, 210);
 			display.println(ammount_left);
 			display.setFont();
 			display.setTextSize(2);
@@ -580,11 +582,13 @@ void parse_fail(char* buf)
 
 
 
+#if !DEBUG_STANDALONE
 	// After we draw the screen - we then show the 
 	delay(2000);
 	display.setFont();
 	display.setTextSize(2);
 	reset_screen();
+#endif
 }
 
 void parse_pressure(char* buf) {
