@@ -419,14 +419,14 @@ void loop(void) {
 		}
 	}
 	uint8_t x = tft.readcommand8(ILI9341_RDMODE);
-	if (x != 0x94)
-	{
-		Serial.print("Power mode: ");
-		Serial.println(x);
-		tft.begin();
-		tft.setRotation(3);
-		reset_screen();
-	}
+	//if (x != 0x94)
+	//{
+	//	Serial.print("Power mode: ");
+	//	Serial.println(x);
+	//	tft.begin();
+	//	tft.setRotation(3);
+	//	reset_screen();
+	//}
 	if (millis() - watchdog_last_update > WATCHDOG_TIMER_EXPIRE && !DEBUG_STANDALONE)
 	{
 		if(!watchdog_wakeup)
