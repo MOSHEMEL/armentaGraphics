@@ -198,6 +198,10 @@ void PrintOnLcd(char* buf)
 	{
 		parse_E(buf);
 	}
+	else if ((*buf == 'o') || (*buf == 'O')) // error with number
+	{
+		parse_O(buf);
+	}
 	else if ((*buf == 'r') || (*buf == 'R')) // reset screen and wipe
 	{
 		parse_reset_screen(buf);
@@ -310,8 +314,8 @@ void setup(void) {
 	//}
 	serial_number = 1920046;
 	remaining_pulses = 0;
-	while (1)
-	{
+	//while (1)
+	//{
 	//	if (i == 0)
 	//	{
 	//		parse_lang(" 0                                                                                            ");
@@ -372,17 +376,22 @@ void setup(void) {
 	//	delay(3000);
 	//	parse_E(" 504									");
 	//	delay(3000);
-		parse_fail(" 2000								");
+	//	parse_fail(" 2000								");
+	//	delay(3000);
+	//	parse_fail(" 200								");
+	//	delay(3000);
+	//	parse_fail(" 0									");
+	//	delay(3000);
+	//}
+	while (1)
+	{
+		parse_E(" 503									");
 		delay(3000);
-		parse_fail(" 200								");
+		parse_E(" 504									");
 		delay(3000);
-		parse_fail(" 0									");
+		parse_O(" 503									");
 		delay(3000);
 	}
-	//while (1)
-	//{
-	//	parse_E(" 503									");
-	//}
 	//delay(1000);
 #endif
 /*

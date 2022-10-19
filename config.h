@@ -7,7 +7,7 @@
 #define DEBUG_FLAG        0
 #define DEBUG_STANDALONE  0
 
-#define VERSION				"3.8"
+#define VERSION				"3.9"
 #define PROMINI				0
 #define LED_TOGGLE			0
 #define ILI9341_bk1			0x0555
@@ -29,8 +29,8 @@
 	#include "drawfigures.h"
 #endif
 
-#define LANG_STR_NUM	17
-#define LANG_STR_LEN	40
+#define LANG_STR_NUM	22//17
+#define LANG_STR_LEN	50//40
 #define LANG_WIN_LEN	3
 #define LANG_X			30
 #define LANG_Y			30
@@ -58,25 +58,30 @@ char* LANG_WIN[LANG_WIN_LEN];
 bool lang_set_done = false;
 
 char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
-	{ "Attention" },						// 0
-	{ "Notify Service" },					// 2
-	{ "Contact Service" },					// 1
-	{ "Error" },							// 3
-	{ "Turn Off and" },						// 4
-	{ "Reconnect APT" },					// 5
-	{ "Replace AM" },						// 6
-	{ "Maintenance Required" },				// 7
-	{ "AM Pulses" },						// 8
-	{ "Remaining" },						// 9
-	{ "Pay attention, You are left" },		// 10
-	{ "with less than 5000 pulses." },		// 11
-	{ "Please replace AM" },				// 12
-	//{ "AM Number %d" },					// 
-	//{ "Remaining %d" },					// 
-	{ "AM Number" },						// 13
-	{ "Remaining" },						// 14
-	{ "promptly" },							// 15
-	{ "\0" }								// 16
+	{ "Attention" },								  // 0
+	{ "Notify Service" },							  // 2
+	{ "Contact Service" },							  // 1
+	{ "Error" },									  // 3
+	{ "Turn Off and" },								  // 4
+	{ "Reconnect APT" },							  // 5
+	{ "Replace AM" },								  // 6
+	{ "Maintenance Required" },						  // 7
+	{ "AM Pulses" },								  // 8
+	{ "Remaining" },								  // 9
+	{ "Pay attention, You are left" },				  // 10
+	{ "with less than 5000 pulses." },				  // 11
+	{ "Please replace AM" },						  // 12
+	//{ "AM Number %d" },							  // 
+	//{ "Remaining %d" },							  // 
+	{ "AM Number" },								  // 13
+	{ "Remaining" },								  // 14
+	{ "promptly" },									  // 15
+	{ "Warranty expired" },			     			  // 16
+	{ "Refurbish service required." },				  // 17
+	{ "APT efficiency" },				    		  // 18
+	{ "might be compromised." },					  // 19
+	{ "Further use at your own risk." },			  // 20
+	{ "\0" }										  // 21
 };
   
 char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
