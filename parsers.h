@@ -553,22 +553,22 @@ void E503(int error_code)
 	memcpy(s1, LANG[16], 40);
 	align_center_print(s1, 40, ILI9341_WHITE, Warning_RED);//, 4);
 
-	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
 	u8g2_for_adafruit_gfx.setFontMode(1);
 	memcpy(s1, LANG[17], 40);
 	align_center_print(s1, 90, ILI9341_WHITE, Warning_RED);//, 4);
 
-	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
 	u8g2_for_adafruit_gfx.setFontMode(1);
 	memcpy(s1, LANG[18], 40);
 	align_center_print(s1, 120, ILI9341_WHITE, Warning_RED);//, 4);
 
-	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
 	u8g2_for_adafruit_gfx.setFontMode(1);
 	memcpy(s1, LANG[19], 40);
 	align_center_print(s1, 150, ILI9341_WHITE, Warning_RED);//, 4);
 
-	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
 	u8g2_for_adafruit_gfx.setFontMode(1);
 	memcpy(s1, LANG[20], 40);
 	align_center_print(s1, 190, ILI9341_WHITE, Warning_RED);//, 4);

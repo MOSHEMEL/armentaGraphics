@@ -85,25 +85,30 @@ char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 };
   
 char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
-	{ "Atención" },
-	{ "Notificar Servicio" },
-	{ "Contacto Servicio" },
-	{ "Error" },
-	{ "Apagar y" },
-	{ "Vuelva a conectar APT" },
-	{ "Reemplazar AM" },
-	{ "Mantenimiento requerido" },
-	{ "AM Pulsos" },
-	{ "Restante" },
-	{ "Presta atención, te quedas" },
-	{ "con menos de 5000 pulsos." },
-	{ "Por favor reemplace AM" },
-	//{ "AM número %d" },
-	//{ "Restante %d" },
-	{ "AM número" },
-	{ "Restante" },
-	{ "de inmediato" },
-	{ "\0" }
+	{ "Atención" },									 // 0
+	{ "Notificar Servicio" },						 // 2
+	{ "Contacto Servicio" },						 // 1
+	{ "Error" },									 // 3
+	{ "Apagar y" },									 // 4
+	{ "Vuelva a conectar APT" },					 // 5
+	{ "Reemplazar AM" },							 // 6
+	{ "Mantenimiento requerido" },					 // 7
+	{ "AM Pulsos" },								 // 8
+	{ "Restante" },									 // 9
+	{ "Presta atención, te quedas" },				 // 10
+	{ "con menos de 5000 pulsos." },				 // 11
+	{ "Por favor reemplace AM" },					 // 12
+	//{ "AM número %d" },							 // 
+	//{ "Restante %d" },							 // 
+	{ "AM número" },								 // 13
+	{ "Restante" },									 // 14
+	{ "de inmediato" },								 // 15
+	{ "Garantía expirada" },						 // 16
+	{ "Se requiere servicio de reacondicione." },	 // 17
+	{ "Eficiencia del APT " },						 // 18
+	{ "puede estar comprometida." },				 // 19
+	{ "Uso adicional bajo su propio riesgo." },		 // 20
+	{ "\0" }										 // 21
 };
 
 char LANG_GER_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {

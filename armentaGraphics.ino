@@ -385,12 +385,16 @@ void setup(void) {
 	//}
 	while (1)
 	{
-		parse_E(" 503									");
-		delay(3000);
-		parse_E(" 504									");
-		delay(3000);
+		//parse_E(" 503									");
+		//delay(3000);
+		//parse_E(" 504									");
+		//delay(3000);
+		set_lang(LANG_ENG);
 		parse_O(" 503									");
-		delay(3000);
+		delay(15000);
+		set_lang(LANG_SPA);
+		parse_O(" 503									");
+		delay(15000);
 	}
 	//delay(1000);
 #endif
