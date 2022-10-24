@@ -449,6 +449,8 @@ void loop(void) {
 #endif
 		if (key > -1)
 		{	
+			Serial1.write(key);
+
 			switch (serial_message.state)
 			{
 			case IDLE:
