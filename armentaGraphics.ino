@@ -389,6 +389,12 @@ void setup(void) {
 		//delay(3000);
 		//parse_E(" 504									");
 		//delay(3000);
+		set_lang(LANG_FRA);
+		parse_O(" 503									");
+		delay(15000);
+		set_lang(LANG_GER);
+		parse_O(" 503									");
+		delay(15000);
 		set_lang(LANG_ENG);
 		parse_O(" 503									");
 		delay(15000);

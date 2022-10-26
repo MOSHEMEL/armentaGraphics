@@ -571,7 +571,7 @@ void E503(int error_code)
 	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
 	u8g2_for_adafruit_gfx.setFontMode(1);
 	memcpy(s1, LANG[20], 40);
-	align_center_print(s1, 190, ILI9341_WHITE, Warning_RED);//, 4);
+	align_center_print(s1, 180, ILI9341_WHITE, Warning_RED);//, 4);
 
 	//memcpy(s1,LANG[2],40);
 	//align_center_print(s1, 180, ILI9341_WHITE, Warning_RED);//, 2);

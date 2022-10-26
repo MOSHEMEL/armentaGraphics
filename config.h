@@ -104,55 +104,64 @@ char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "Restante" },									 // 14
 	{ "de inmediato" },								 // 15
 	{ "Garantía expirada" },						 // 16
-	{ "Se requiere servicio de reacondicione." },	 // 17
-	{ "Eficiencia del APT " },						 // 18
+	{ "Se requiere servicio de" },	 // 17
+	{ "reacondicione. Eficiencia del APT " },						 // 18
 	{ "puede estar comprometida." },				 // 19
 	{ "Uso adicional bajo su propio riesgo." },		 // 20
 	{ "\0" }										 // 21
 };
 
 char LANG_GER_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
-	{ "Achtung" },
-	{ "Service verständigen" },
-	{ "Service kontaktieren" },
-	{ "Error" },
-	{ "Abschalten und" },
-	{ "APT neu verbinden" },
-	{ "AM austauschen" },
-	{ "Wartung erforderlich" },
-	{ "AM Pulse" },
-	{ "Verbleibend" },
-	{ "Vorsicht, es verbleiben" },
-	{ "weniger als 5000 Pulse." },
-	{ "Bitte AM bald" },
-	//{ "AM Nummer %d" },
-	//{ "Verbleibend %d" },
-	{ "AM Nummer" },
-	{ "Verbleibend" },
-	{ "ersetzen" },
-	{ "\0" }
+	{ "Achtung" },                                   // 0
+	{ "Service verständigen" },						 // 2
+	{ "Service kontaktieren" },						 // 1
+	{ "Error" },									 // 3
+	{ "Abschalten und" },							 // 4
+	{ "APT neu verbinden" },						 // 5
+	{ "AM austauschen" },							 // 6
+	{ "Wartung erforderlich" },						 // 7
+	{ "AM Pulse" },									 // 8
+	{ "Verbleibend" },								 // 9
+	{ "Vorsicht, es verbleiben" },					 // 10
+	{ "weniger als 5000 Pulse." },					 // 11
+	{ "Bitte AM bald" },							 // 12
+	//{ "AM Nummer %d" },							 // 
+	//{ "Verbleibend %d" },							 // 
+	{ "AM Nummer" },								 // 13
+	{ "Verbleibend" },								 // 14
+	{ "ersetzen" },									 // 15
+	{ "Garantie abgelaufen" },						 // 16
+	{ "Überholungsservice erforderlich." },			 // 17
+	{ "APT - Effizienz könnte" },                    // 18
+	{ "beeinträchtigt sein. Weitere " },             // 19
+	{ "Verwendung auf eigene Gefahr." },        	 // 20
+	{ "\0" }										 // 21
 };
-
 char LANG_FRA_ARR[LANG_STR_NUM][LANG_STR_LEN] = {
-	{ "Attention" },
-	{ "Notifier le Service" },
-	{ "Contacter le Service" },
-	{ "Erreur" },
-	{ "Désactiver et" },
-	{ "Reconnecter APT" },
-	{ "Remplacer AM" },
-	{ "Maintenance requise" },
-	{ "Impulsions AM" },
-	{ "Restant" },
-	{ "Attention, il vous reste" },
-	{ "moins de 5000 impulsions." },
-	{ "Veuillez remplacer AM" },
-	//{ "Nombre AM  %d" },
-	//{ "Restant %d" },
-	{ "Nombre AM" },
-	{ "Restant" },
-	{ "rapidement" },
-	{ "\0" }
+	{ "Attention" },                                 // 0
+	{ "Notifier le Service" },						 // 2
+	{ "Contacter le Service" },						 // 1
+	{ "Erreur" },									 // 3
+	{ "Désactiver et" },							 // 4
+	{ "Reconnecter APT" },							 // 5
+	{ "Remplacer AM" },								 // 6
+	{ "Maintenance requise" },						 // 7
+	{ "Impulsions AM" },							 // 8
+	{ "Restant" },									 // 9
+	{ "Attention, il vous reste" },					 // 10
+	{ "moins de 5000 impulsions." },				 // 11
+	{ "Veuillez remplacer AM" },					 // 12
+	//{ "Nombre AM  %d" },							 // 
+	//{ "Restant %d" },								 // 
+	{ "Nombre AM" },								 // 13
+	{ "Restant" },									 // 14
+	{ "rapidement" },								 // 15
+	{ "Garantie expirée" },							 // 16
+	{ "Service de remise à neuf requis." },				 // 17
+	{ "Efficacité APT pourrait " },		 // 18
+	{ "être compromis. Utilisation" },		 // 19
+	{ "ultérieure à vos risques et périls." },// 20
+	{ "\0" }										 // 21
 };
 
 //static const struct {
