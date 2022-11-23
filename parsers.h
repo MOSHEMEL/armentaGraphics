@@ -88,8 +88,8 @@ void parse_aplicator(char* buf) {
 	int Base_y = 60;
 	buf++;
 	int percentP = atoi(buf);
-	if ((percentP >= 0) && (percentP <= 100)) {
-		
+	//if ((percentP >= 0) && (percentP <= 100)) {
+	if (percentP >= 0) {
 
 	#if PROMINI
 		Serial.print("Percent Applicaor Counter");
@@ -98,7 +98,7 @@ void parse_aplicator(char* buf) {
 		Serial.print("Percent Applicaor Counter");
 		Serial.println(percentP);
 	#endif
-		if (percentP <= 10) // l0 percent
+		if (percentP <= 1000) // l0 percent
 		{
 			DRAW_AP_ERROR
 		}
@@ -116,7 +116,7 @@ void parse_aplicator(char* buf) {
 		display.setTextSize(2);
 		display.setCursor(AM_TEXT_POS);
 		display.print(percentP);
-		display.print('%');
+		//display.print('%');
 	}
 }
 
