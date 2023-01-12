@@ -6,6 +6,10 @@
 #include "Adafruit_ILI9341.h"
 #define DEBUG_FLAG        0
 #define DEBUG_STANDALONE  0
+#define UART_TX
+//#undef UART_TX
+#define UNIT_TEST
+//#undef UNIT_TEST
 
 #define VERSION				"3.9"
 #define PROMINI				0

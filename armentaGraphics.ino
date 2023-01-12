@@ -452,6 +452,9 @@ void loop(void) {
 		key = Serial.read();
 #else
 		key = Serial1.read();
+#ifdef UART_TX
+		Serial1.write(key);
+#endif
 #endif
 		if (key > -1)
 		{	
