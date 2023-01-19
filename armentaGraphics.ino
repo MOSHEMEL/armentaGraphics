@@ -282,7 +282,8 @@ void setup(void) {
 		delay(2000);
 #if DEBUG_STANDALONE
 
-	display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
+	//display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
+  DRAW_BATTERY
 	display.println("HELLO");
 	//u8g2_for_adafruit_gfx.drawUTF8(0,20,"la oración");
 	//utf8ascii(ENG[10]);
@@ -307,7 +308,8 @@ void setup(void) {
 
 	char str_serial_status[30];
 	char s1[40];
-	int i = 0;
+	int i = 8;
+  int num=0;
 	//for (i = 0; i < LANG_STR_NUM; i++)
 	//{
 	//	LANG[i] = LANG_FRA_ARR[i];
@@ -389,18 +391,23 @@ void setup(void) {
 		//delay(3000);
 		//parse_E(" 504									");
 		//delay(3000);
-		set_lang(LANG_FRA);
-		parse_O(" 503									");
+//		set_lang(LANG_FRA);
+//		parse_O(" 503									");
+    delay(1500);
+    sprintf(s1, "B%d",i );
+   // itoa(i,s1,10);
+    parse_battery_percent(s1);
 		delay(15000);
-		set_lang(LANG_GER);
-		parse_O(" 503									");
-		delay(15000);
-		set_lang(LANG_ENG);
-		parse_O(" 503									");
-		delay(15000);
-		set_lang(LANG_SPA);
-		parse_O(" 503									");
-		delay(15000);
+    i=i+10;
+//		set_lang(LANG_GER);
+//		parse_O(" 503									");
+//		delay(15000);
+//		set_lang(LANG_ENG);
+//		parse_O(" 503									");
+//		delay(15000);
+//		set_lang(LANG_SPA);
+//		parse_O(" 503									");
+//		delay(15000);
 	}
 	//delay(1000);
 #endif

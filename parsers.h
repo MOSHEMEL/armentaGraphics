@@ -149,14 +149,15 @@ void parse_battery_percent(char* buf) {
 #endif
 
 #if SIMPLE_BAT
+     percentBattery=percentBattery/10*10;
 	if (percentBattery <= 10)
 	{
 		percentBattery = 10;
 	}
-	else 
-	{
-		percentBattery = 100;
-	}
+//	else 
+//	{
+//		percentBattery = 100;
+//	}
 #endif
 
 	Base_y = 208;
