@@ -284,7 +284,7 @@ void setup(void) {
 
 	//display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
   DRAW_BATTERY
-	//display.println("HELLO");
+	display.println("HELLO");
 	//u8g2_for_adafruit_gfx.drawUTF8(0,20,"la oración");
 	//utf8ascii(ENG[10]);
 	// align_center_print(LANG[10], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 1);
