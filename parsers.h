@@ -1,3 +1,4 @@
+#include "Adafruit_ILI9341.h"
 #pragma once
 #include "config.h"
 extern int percentBattery;
@@ -15,6 +16,7 @@ void parse_E(char* buf);
 void parse_pressure(char* buf);
 void parse_pulse(char* buf);
 void parse_fail(char* buf);
+void parse_fin_batt(char* buf);
 void parse_pulse_counter(char* buf);
 void print_error(char* buf);
 void blank_on_reset(char* buf);
@@ -274,7 +276,33 @@ void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color)/
 //}
 
 }
-
+void parse_fin_batt(char* buf)
+{
+  char s1[40];
+  int config=0;
+      
+      buf++;
+      config =atoi(buf);
+      if(config==GREEN_WARN_BATT)
+      {
+      display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
+			display.setFont(); // we have no letters to show so we cant use font to print letters
+			display.setTextColor(ILI9341_BLACK);
+			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			//u8g2_for_adafruit_gfx.setFontMode(1);
+			u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			u8g2_for_adafruit_gfx.setFontMode(1);
+			memcpy(s1,LANG[21],40);
+			//align_center_print(s1, 40, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
+			align_center_print(s1, 120, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+      }
+      else {
+        display.fillScreen(ILI9341_BLACK);
+      
+      }
+//	display.setTextColor(text_color);
+	
+}
 
 void parse_E(char* buf)
 { 

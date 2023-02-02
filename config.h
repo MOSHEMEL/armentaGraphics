@@ -28,8 +28,8 @@
 #else
 	#include "drawfigures.h"
 #endif
-
-#define LANG_STR_NUM	22//17
+#define GREEN_WARN_BATT     668
+#define LANG_STR_NUM	23//17
 #define LANG_STR_LEN	50//40
 #define LANG_WIN_LEN	3
 #define LANG_X			30
@@ -81,7 +81,8 @@ char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "APT efficiency" },				    		  // 18
 	{ "might be compromised." },					  // 19
 	{ "Further use at your own risk." },			  // 20
-	{ "\0" }										  // 21
+  { "Please charge the battery." },//21
+	{ "\0" }										  // 22
 };
   
 char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {

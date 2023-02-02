@@ -230,10 +230,17 @@ void PrintOnLcd(char* buf)
 	{
 		parse_version(buf);
 	}
-	else if ((*buf == 'g') || (*buf == 'G'))
+	else 
+  
+  if ((*buf == 'g') || (*buf == 'G'))
 	{
 		parse_cs(buf);
 	}
+  else if(*buf=='k')
+  {
+   parse_fin_batt(buf); 
+  }
+
 	else if ((*buf == 'n') || (*buf == 'N'))
 	{
 		NVIC_SystemReset();
@@ -281,8 +288,13 @@ void setup(void) {
 
 		delay(2000);
 #if DEBUG_STANDALONE
-
+  
+  
+  display.fillScreen(ILI9341_BLACK);
+  delay(2000);
 	//display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
+  //parse_fin_batt();
+  while(1);
   DRAW_BATTERY
 	display.println("HELLO");
 	//u8g2_for_adafruit_gfx.drawUTF8(0,20,"la oración");
