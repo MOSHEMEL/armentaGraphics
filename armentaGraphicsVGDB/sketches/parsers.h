@@ -589,7 +589,7 @@ void parse_fail(char* buf)
 	//int ammount_left=1200;
 	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
 	u8g2_for_adafruit_gfx.setFontMode(1);
-	//if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
+	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
 		if (ammount_left == 0)
 		{
 			display.fillScreen(Warning_RED);
@@ -654,7 +654,7 @@ void parse_fail(char* buf)
 			display.setFont();
 			display.setTextSize(2);
 		}
-	//}
+	}
 
 
 
@@ -817,34 +817,34 @@ void parse_pulse_counter(char* buf)
 	currentmilis = millis();
 	buf++;
 	int new_counter = atoi(buf);
-	//if (counter != new_counter)
-	//{
-	if (new_counter < 100000)
+	if (counter != new_counter)
 	{
-		check_digits_changed_and_blank(new_counter);
-		bool printed = graphics_to_Screen(new_counter);
-		if (printed)
+		if(new_counter<100000)
 		{
+			check_digits_changed_and_blank(new_counter);
+			bool printed = graphics_to_Screen(new_counter);
+			if (printed)
+			{
 #if DEBUG_FLAG
-			Serial.print(F("Printing char is "));
-			Serial.print(counter);
-			Serial.print(F(" and takes "));
-			Serial.print(millis() - currentmilis);
-			Serial.println(F(" milisecond long"));
+				Serial.print(F("Printing char is "));
+				Serial.print(counter);
+				Serial.print(F(" and takes "));
+				Serial.print(millis() - currentmilis);
+				Serial.println(F(" milisecond long"));
 #endif
+			}
 		}
-	}
-	else
-	{
-		blank_5_digits(new_counter, 64);
-		display.setTextColor(ILI9341_WHITE);
-		display.setFont();
-		display.setTextSize(2);
-		display.setCursor(8, 20);
-		display.print(String(new_counter));
-	}
+		else
+		{
+			blank_5_digits(new_counter, 64);
+			display.setTextColor(ILI9341_WHITE);
+			display.setFont();
+			display.setTextSize(2);
+			display.setCursor(8, 20);
+			display.print(String(new_counter));
+		}
 
-	//}
+	}
 }
 
 void parse_force_pulse_counter(char* buf)
