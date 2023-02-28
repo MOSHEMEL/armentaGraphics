@@ -81,12 +81,11 @@ char key;
 int counter = -1;
 int percentBattery = 0;
 int FontSizeArmenta = 2;
-
+extern byte not_show_reset;
 bool watchdog_wakeup = false;
 uint32_t watchdog_last_update = 0;
 uint32_t serial_number = 0;
 int remaining_pulses = 0;
-
 enum serial_state
 {
 	IDLE, WAITING_LENGTH, BUILDING_BUFFER, CHECKSUM
@@ -622,13 +621,13 @@ void loop(void) {
 	}
 	else
 	{
-		if(watchdog_wakeup)
+		if((watchdog_wakeup)&&  (not_show_reset==0))
 		{
 			reset_screen();
 			graphics_to_Screen(counter);
-			
+    }
 			watchdog_wakeup = false;
 			watchdog_last_update = millis();
-		}
+		
 	}
 }

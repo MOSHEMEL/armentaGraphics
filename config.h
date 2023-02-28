@@ -31,7 +31,7 @@
 #define GREEN_WARN_BATT     668
 #define LANG_STR_NUM	23//17
 #define LANG_STR_LEN	50//40
-#define LANG_WIN_LEN	3
+#define LANG_WIN_LEN	2
 #define LANG_X			30
 #define LANG_Y			30
 #define LANG_W			180
@@ -41,16 +41,16 @@ typedef enum
 {
 	LANG_ENG,
 	LANG_SPA,
-	LANG_GER,
-	LANG_FRA,
+	// LANG_GER,
+	// LANG_FRA,
 	LANG_MAX
 } LANG_TypeDef;
 
 char LANG_NAMES[LANG_MAX][LANG_STR_LEN] = {
 	{"English"},
 	{"Español"},
-	{"Deutsch"},
-	{"Français"}
+	// {"Deutsch"},
+	// {"Français"}
 };
 
 char* LANG[LANG_STR_NUM];

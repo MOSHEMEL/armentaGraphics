@@ -32,7 +32,7 @@ uint32_t currentmilis;
 uint16_t RGB888toRGB565(const char* rgb32_str_);
 // ****** UTF8-Decoder: convert UTF8-string to extended ASCII *******
 static byte c1;  // Last character buffer
-
+byte not_show_reset=0;
 // Convert a single Character from UTF8 to Extended ASCII
 // Return "0" if a byte has to be ignored
 byte utf8ascii(byte ascii) {
@@ -300,6 +300,7 @@ void parse_fin_batt(char* buf)
         display.fillScreen(ILI9341_BLACK);
       
       }
+      not_show_reset=1;
 //	display.setTextColor(text_color);
 	
 }
@@ -736,18 +737,18 @@ void set_lang(LANG_TypeDef language)
 			LANG[i] = LANG_SPA_ARR[i];
 		}
 		break;
-	case LANG_GER:
-		for (i = 0; i < LANG_STR_NUM; i++)
-		{
-			LANG[i] = LANG_GER_ARR[i];
-		}
-		break;
-	case LANG_FRA:
-		for (i = 0; i < LANG_STR_NUM; i++)
-		{
-			LANG[i] = LANG_FRA_ARR[i];
-		}
-		break;
+	// case LANG_GER:
+	// 	for (i = 0; i < LANG_STR_NUM; i++)
+	// 	{
+	// 		LANG[i] = LANG_GER_ARR[i];
+	// 	}
+	// 	break;
+	// case LANG_FRA:
+	// 	for (i = 0; i < LANG_STR_NUM; i++)
+	// 	{
+	// 		LANG[i] = LANG_FRA_ARR[i];
+	// 	}
+	// 	break;
 		//case LANG_ENG:
 	default:
 		language = LANG_ENG;
