@@ -105,11 +105,16 @@ void check_digits_changed_and_blank(int curr_number)
 {
 	// This function is blanking digits based on the difference modulo
 	// Thus this is a symetric transform that works both descending and ascending
-	bool last_digit_is_changed = !(((curr_number - counter% 10== 0)));
-	bool tens_digit_is_changed = !(((curr_number / 10 - counter / 10% 10== 0)));
-	bool hundreds_digit_is_changed = !(((curr_number / 100 - counter / 100% 10== 0)));
-	bool thousands_digit_is_changed = !(((curr_number / 1000 - counter / 1000% 10== 0)));
-	bool tens_of_thousands_digit_is_changed = !(((curr_number / 10000 - counter / 10000% 10== 0)));
+	//bool last_digit_is_changed = !(((curr_number - counter% 10== 0)));
+	//bool tens_digit_is_changed = !(((curr_number / 10 - counter / 10% 10== 0)));
+	//bool hundreds_digit_is_changed = !(((curr_number / 100 - counter / 100% 10== 0)));
+	//bool thousands_digit_is_changed = !(((curr_number / 1000 - counter / 1000% 10== 0)));
+	//bool tens_of_thousands_digit_is_changed = !(((curr_number / 10000 - counter / 10000% 10== 0)));
+	bool last_digit_is_changed = !(((curr_number - counter) % 10) == 0);
+	bool tens_digit_is_changed = !(((curr_number / 10 - counter / 10) % 10) == 0);
+	bool hundreds_digit_is_changed = !(((curr_number / 100 - counter / 100) % 10) == 0);
+	bool thousands_digit_is_changed = !(((curr_number / 1000 - counter / 1000) % 10) == 0);
+	bool tens_of_thousands_digit_is_changed = !(((curr_number / 10000 - counter / 10000) % 10) == 0);
 	bool flags[4];
 	int digitL = 64;
 	

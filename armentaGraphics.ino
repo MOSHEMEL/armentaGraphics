@@ -235,7 +235,7 @@ void PrintOnLcd(char* buf)
 	{
 		parse_cs(buf);
 	}
-  else if(*buf=='k')
+  else if((*buf=='k') || (*buf == 'K'))
   {
    parse_fin_batt(buf); 
   }
