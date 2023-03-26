@@ -619,7 +619,7 @@ void parse_fail(char* buf)
 	//int ammount_left=1200;
 	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
 	u8g2_for_adafruit_gfx.setFontMode(1);
-	if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
+	//if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
 		if (ammount_left == 0)
 		{
 			display.fillScreen(Warning_RED);
@@ -684,7 +684,7 @@ void parse_fail(char* buf)
 			display.setFont();
 			display.setTextSize(2);
 		}
-	}
+	//}
 
 
 
@@ -847,8 +847,8 @@ void parse_pulse_counter(char* buf)
 	currentmilis = millis();
 	buf++;
 	int new_counter = atoi(buf);
-	if (counter != new_counter)
-	{
+	//if (counter != new_counter)
+	//{
 		if(new_counter<100000)
 		{
 			check_digits_changed_and_blank(new_counter);
@@ -874,7 +874,7 @@ void parse_pulse_counter(char* buf)
 			display.print(String(new_counter));
 		}
 
-	}
+	//}
 }
 
 void parse_force_pulse_counter(char* buf)
