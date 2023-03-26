@@ -6,6 +6,7 @@
 #include "Adafruit_ILI9341.h"
 #define DEBUG_FLAG        0
 #define DEBUG_STANDALONE  0
+#define UNIT_TEST
 
 #define VERSION				"3.91"
 #define PROMINI				0
