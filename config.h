@@ -5,7 +5,7 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_ILI9341.h"
 #define DEBUG_FLAG        0
-#define DEBUG_STANDALONE  0
+#define DEBUG_STANDALONE  1
 #define UNIT_TEST
 
 #define VERSION				"3.91"
@@ -30,7 +30,7 @@
 	#include "drawfigures.h"
 #endif
 #define GREEN_WARN_BATT     668
-#define LANG_STR_NUM	23//17
+#define LANG_STR_NUM	39//17
 #define LANG_STR_LEN	50//40
 #define LANG_WIN_LEN	2
 #define LANG_X			30
@@ -60,8 +60,8 @@ bool lang_set_done = false;
 
 char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "Attention" },								  // 0
-	{ "Notify Service" },							  // 2
-	{ "Contact Service" },							  // 1
+	{ "Notify Service" },							  // 1
+	{ "Contact Service" },							  // 2
 	{ "Error" },									  // 3
 	{ "Turn Off and" },								  // 4
 	{ "Reconnect APT" },							  // 5
@@ -82,8 +82,24 @@ char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "APT efficiency" },				    		  // 18
 	{ "might be compromised." },					  // 19
 	{ "Further use at your own risk." },			  // 20
-  { "Please charge the battery." },//21
-	{ "\0" }										  // 22
+	{ "Please charge the battery." },				  // 21
+	{ "RECONNECT" },								  // 22
+	{ "APT CABLE" },								  // 23
+	{ "Pulses Remaining " },						  // 24
+	{ "PRESS RESET" },								  // 25
+	{ "REPLACE AM" },								  // 26
+	{ "Maintenance is due." },						  // 27
+	{ "Efficiencyand safety" },						  // 28
+	{ "compromised" },								  // 29
+	{ "CONTACT SERVICE" },							  // 30
+	{ "Battery 25 \%" },							  // 31
+	{ "Battery 20 \%" },							  // 32
+	{ "Battery 15 \%" },							  // 33
+	{ "please charge" },							  // 34
+	{ "Battery Depleted" },							  // 35
+	{ "Charge to continue" },						  // 36
+	{ "Low ambient temperature" },					  // 37
+	{ "\0" }										  // 38
 };
   
 char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {

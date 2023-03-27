@@ -8,6 +8,42 @@ extern int remaining_pulses;
 #include "stdbool.h"
 #endif
 extern U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
+
+#define PARSE_LINE_SIZE	40
+
+#define PARSE_LINE_1	40
+#define PARSE_LINE_2	55
+#define PARSE_LINE_3	70
+#define PARSE_LINE_4	85
+#define PARSE_LINE_5	100
+#define PARSE_LINE_6	115
+#define PARSE_LINE_7	130
+#define PARSE_LINE_8	145
+#define PARSE_LINE_9	160
+#define PARSE_LINE_10	175
+#define PARSE_LINE_11	190
+#define PARSE_LINE_12	205
+
+#define PARSE_FONT_SET(font) \
+{ \
+	u8g2_for_adafruit_gfx.setFont(font); \
+	u8g2_for_adafruit_gfx.setFontMode(1); \
+}
+
+#define PARSE_BG_SET(color_txt, color_bg) \
+{ \
+	display.fillScreen(color_bg); \
+	display.setFont(); \
+	display.setTextColor(color_txt); \
+}
+
+#define PARSE_PRINT(str, line, color_txt, color_bg) \
+{ \
+	char s1[PARSE_LINE_SIZE]; \
+	memcpy(s1, str, PARSE_LINE_SIZE); \
+	align_center_print(s1, line, color_txt, color_bg); \
+}
+
 void parse_lang(char* buf);
 void parse_aplicator(char* buf);
 void parse_battery_percent(char* buf);
@@ -279,29 +315,75 @@ void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color)/
 void parse_fin_batt(char* buf)
 {
   char s1[40];
-  int config=0;
+  //int config = 0;
+  int percent = 0;
       
       buf++;
-      config =atoi(buf);
-      if(config==GREEN_WARN_BATT)
-      {
-      display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
-			display.setFont(); // we have no letters to show so we cant use font to print letters
-			display.setTextColor(ILI9341_BLACK);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			//u8g2_for_adafruit_gfx.setFontMode(1);
-			u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			u8g2_for_adafruit_gfx.setFontMode(1);
-			memcpy(s1,LANG[21],40);
-			//align_center_print(s1, 40, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 120, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
-      }
-      else {
-        display.fillScreen(ILI9341_BLACK);
-      
-      }
-      not_show_reset=1;
-//	display.setTextColor(text_color);
+	  //config = atoi(buf);
+	  percent =atoi(buf);
+
+	  if ((percent == 15) || (percent == 20) || (percent == 25))
+	  {
+		  uint16_t color_txt = ILI9341_BLACK;
+		  uint16_t color_bg = Warning_YELLOW;
+
+		  PARSE_BG_SET(color_txt, color_bg);
+		  PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+		  if (percent == 25)
+			  PARSE_PRINT(LANG[31], PARSE_LINE_5, color_txt, color_bg);
+		  if (percent == 20)
+			  PARSE_PRINT(LANG[32], PARSE_LINE_5, color_txt, color_bg);
+		  if (percent == 15)
+			  PARSE_PRINT(LANG[33], PARSE_LINE_5, color_txt, color_bg);
+		  PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+		  PARSE_PRINT(LANG[34], PARSE_LINE_7, color_txt, color_bg);
+		  PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+		  PARSE_PRINT(LANG[25], PARSE_LINE_12, color_txt, color_bg);
+	  }
+	  else if (percent == 0)
+	  {
+		  uint16_t color_txt = ILI9341_WHITE;
+		  uint16_t color_bg = Warning_RED;
+
+		  PARSE_BG_SET(color_txt, color_bg);
+		  PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+		  PARSE_PRINT(LANG[35], PARSE_LINE_6, color_txt, color_bg);
+		  PARSE_PRINT(LANG[36], PARSE_LINE_10, color_txt, color_bg);
+	  }
+	  else if (percent == 200)
+	  {
+		  uint16_t color_txt = ILI9341_WHITE;
+		  uint16_t color_bg = Warning_RED;
+		  char str_error[10];
+
+		  sprintf(str_error, "E%d", percent);
+
+		  PARSE_BG_SET(color_txt, color_bg);
+		  PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+		  PARSE_PRINT(str_error, PARSE_LINE_6, color_txt, color_bg);
+		  PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+		  PARSE_PRINT(LANG[37], PARSE_LINE_9, color_txt, color_bg);
+	  }
+
+      //if(config==GREEN_WARN_BATT)
+      //{
+		//display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
+		//display.setFont(); // we have no letters to show so we cant use font to print letters
+		//display.setTextColor(ILI9341_BLACK);
+		////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+		////u8g2_for_adafruit_gfx.setFontMode(1);
+		//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+		//u8g2_for_adafruit_gfx.setFontMode(1);
+		//memcpy(s1,LANG[21],40);
+		////align_center_print(s1, 40, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
+		//align_center_print(s1, 120, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+      //}
+      //else {
+      //  display.fillScreen(ILI9341_BLACK);
+      //
+      //}
+      //not_show_reset=1;
+	  ////display.setTextColor(text_color);
 	
 }
 
@@ -367,32 +449,43 @@ void parse_E(char* buf)
 		}
 		else if (error_code == 4001)
 		{
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			//u8g2_for_adafruit_gfx.setFontMode(1);
-			display.fillScreen(Warning_RED);
-			display.setFont(); // we have no letters to show so we cant use font to print letters
-			display.setTextColor(ILI9341_WHITE);
-			u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
-			u8g2_for_adafruit_gfx.setFontMode(1);
-			memcpy(s1,LANG[3],40);
-			align_center_print(s1, 40, ILI9341_WHITE, Warning_RED);//, 4);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			//u8g2_for_adafruit_gfx.setFontMode(1);
-			u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			u8g2_for_adafruit_gfx.setFontMode(1);
-			memcpy(s1,LANG[4],40);
-			align_center_print(s1, 90, ILI9341_WHITE, Warning_RED);//, 3);
-			memcpy(s1,LANG[5],40);
-			align_center_print(s1, 120, ILI9341_WHITE, Warning_RED);//, 3);
+			uint16_t color_txt = ILI9341_WHITE;
+			uint16_t color_bg = Warning_RED;
 			char str_error[10];
+
+			PARSE_BG_SET(color_txt, color_bg);
+			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
 			sprintf(str_error, "E%d", error_code);
-			memcpy(s1,str_error,40);
-			align_center_print(s1, 150, ILI9341_WHITE, Warning_RED);//, 4);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+			PARSE_PRINT(str_error, PARSE_LINE_4, color_txt, color_bg);
+			PARSE_PRINT(LANG[22], PARSE_LINE_9, color_txt, color_bg);
+			PARSE_PRINT(LANG[23], PARSE_LINE_12, color_txt, color_bg);
+
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			////u8g2_for_adafruit_gfx.setFontMode(1);
+			//display.fillScreen(Warning_RED);
+			//display.setFont(); // we have no letters to show so we cant use font to print letters
+			//display.setTextColor(ILI9341_WHITE);
+			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+			//u8g2_for_adafruit_gfx.setFontMode(1);
+			//memcpy(s1, LANG[3], 40);
+			//align_center_print(s1, 40, ILI9341_WHITE, Warning_RED);//, 4);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR14_tf);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			////u8g2_for_adafruit_gfx.setFontMode(1);
 			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
 			//u8g2_for_adafruit_gfx.setFontMode(1);
+			//memcpy(s1, LANG[4], 40);
+			//align_center_print(s1, 90, ILI9341_WHITE, Warning_RED);//, 3);
+			//memcpy(s1, LANG[5], 40);
+			//align_center_print(s1, 120, ILI9341_WHITE, Warning_RED);//, 3);
+			//char str_error[10];
+			//sprintf(str_error, "E%d", error_code);
+			//memcpy(s1, str_error, 40);
+			//align_center_print(s1, 150, ILI9341_WHITE, Warning_RED);//, 4);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			////u8g2_for_adafruit_gfx.setFontMode(1);
 		}
 		else if (error_code == 4010 || error_code == 4011)
 		{
@@ -452,6 +545,23 @@ void parse_E(char* buf)
 		}
 		else if (error_code == 503)
 		{
+			uint16_t color_txt = ILI9341_WHITE;
+			uint16_t color_bg = Warning_RED;
+			char str_error[10];
+
+			PARSE_BG_SET(color_txt, color_bg);
+			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+			sprintf(str_error, "E%d", error_code);
+			PARSE_PRINT(str_error, PARSE_LINE_2, color_txt, color_bg);
+			PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+			PARSE_PRINT(LANG[27], PARSE_LINE_4, color_txt, color_bg);
+			PARSE_PRINT(LANG[28], PARSE_LINE_6, color_txt, color_bg);
+			PARSE_PRINT(LANG[29], PARSE_LINE_8, color_txt, color_bg);
+			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+			PARSE_PRINT(LANG[30], PARSE_LINE_12, color_txt, color_bg);
+		
+			//E503(error_code);
+
 			/*
 			 *  Error
 				APT Maintenance Required
@@ -459,7 +569,7 @@ void parse_E(char* buf)
 				E503
 
 			 */
-			 E503(error_code);
+			 
 			//display.fillScreen(Warning_RED);
 			//display.setFont(); // we have no letters to show so we cant use font to print letters
 			//display.setTextColor(ILI9341_WHITE);
@@ -489,6 +599,20 @@ void parse_E(char* buf)
 		}
 		else if (error_code == 504)
 		{
+			uint16_t color_txt = ILI9341_BLACK;
+			uint16_t color_bg = Warning_YELLOW;
+			char str_error[10];
+
+			PARSE_BG_SET(color_txt, color_bg);
+			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+			sprintf(str_error, "A%d", error_code);
+			PARSE_PRINT(str_error, PARSE_LINE_4, color_txt, color_bg);
+			PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+			PARSE_PRINT(LANG[7], PARSE_LINE_6, color_txt, color_bg);
+			PARSE_PRINT(LANG[2], PARSE_LINE_8, color_txt, color_bg);
+			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+			PARSE_PRINT(LANG[25], PARSE_LINE_12, color_txt, color_bg);
+			
 			/*
 			 * ATTENTION
 				APT Maintenance Required
@@ -496,35 +620,35 @@ void parse_E(char* buf)
 				E504
 
 			 */
-			 display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
-			display.setFont(); // we have no letters to show so we cant use font to print letters
-			display.setTextColor(RGB888toRGB565("00B0F0"));
+			//display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
+			//display.setFont(); // we have no letters to show so we cant use font to print letters
+			//display.setTextColor(RGB888toRGB565("00B0F0"));
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			////u8g2_for_adafruit_gfx.setFontMode(1);
+			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+			//u8g2_for_adafruit_gfx.setFontMode(1);
+			//memcpy(s1,LANG[0],40);
+			////align_center_print(s1, 40, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
+			//align_center_print(s1, 40, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR10_tf);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			////u8g2_for_adafruit_gfx.setFontMode(1);
 			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
 			//u8g2_for_adafruit_gfx.setFontMode(1);
-			u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
-			u8g2_for_adafruit_gfx.setFontMode(1);
-			memcpy(s1,LANG[0],40);
-			//align_center_print(s1, 40, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 40, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR10_tf);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			//u8g2_for_adafruit_gfx.setFontMode(1);
-			u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			u8g2_for_adafruit_gfx.setFontMode(1);
-			memcpy(s1,LANG[7],40);
-			//align_center_print(s1, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 90, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
-			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			//u8g2_for_adafruit_gfx.setFontMode(1);
-			memcpy(s1,LANG[2],40);
-			//align_center_print(s1, 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 2);
-			align_center_print(s1, 120, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 2);
-			char str_error[10];
-			sprintf(str_error, "E%d", error_code);
-			memcpy(s1,str_error,40);
-			//align_center_print(s1, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 150, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+			//memcpy(s1,LANG[7],40);
+			////align_center_print(s1, 90, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
+			//align_center_print(s1, 90, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR12_tf);
+			////u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			////u8g2_for_adafruit_gfx.setFontMode(1);
+			//memcpy(s1,LANG[2],40);
+			////align_center_print(s1, 120, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 2);
+			//align_center_print(s1, 120, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 2);
+			//char str_error[10];
+			//sprintf(str_error, "E%d", error_code);
+			//memcpy(s1,str_error,40);
+			////align_center_print(s1, 150, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
+			//align_center_print(s1, 150, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
 		}
 	// After we draw the screen - we then show the 
 #if !DEBUG_STANDALONE
@@ -614,87 +738,136 @@ void E503(int error_code)
 void parse_fail(char* buf)
 {
 	buf++;
-	char s1[40];
+	//char s1[40];
 	int ammount_left = atoi(buf);
-	//int ammount_left=1200;
-	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-	u8g2_for_adafruit_gfx.setFontMode(1);
-	//if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
-		if (ammount_left == 0)
-		{
-			display.fillScreen(Warning_RED);
-			display.setFont(); // we have no letters to show so we cant use font to print letters
-			memcpy(s1, LANG[8], 40);
-			align_center_print(s1, 40, ILI9341_WHITE, Warning_RED);//, 4);
-			memcpy(s1, LANG[9], 40);
-			align_center_print(s1, 90, ILI9341_WHITE, Warning_RED);//, 4);
-		}
-		else
-		{
-			display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
-			display.setFont(); // we have no letters to show so we cant use font to print letters
-			u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
-			u8g2_for_adafruit_gfx.setFontMode(1);
-			memcpy(s1, LANG[0], 40);
-			//align_center_print(s1, 40, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 40, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
-			u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-			u8g2_for_adafruit_gfx.setFontMode(1);
-			memcpy(s1, LANG[8], 40);
-			//align_center_print(s1, 55, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 90, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
-			memcpy(s1, LANG[9], 40);
-			//align_center_print(s1, 85, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
-			align_center_print(s1, 120, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
-		}
+	uint16_t color_txt;
+	uint16_t color_bg;
+	char str_error[10];
+	char str_act[10];
 
-#if PROMINI
-		display.setFont(&ArmentaFont32pt7b);
-		display.setTextSize(FontSizeArmenta);
-#else
-		display.setFont(&ArmentaFont64pt7b);
-		display.setTextSize(FontSizeArmenta / 2);
-#endif
-		if (ammount_left >= 1000)
-		{
-			display.setTextColor(ILI9341_BLACK);
-			display.setCursor(30, 210);
-			display.println(ammount_left);
-			display.setFont();
-			display.setTextSize(2);
-		}
-		else if (ammount_left == 0)
-		{
-			display.setTextColor(ILI9341_WHITE);
-			display.setCursor(130, 180);
-			display.println(ammount_left);
-			display.setFont();
-			display.setTextSize(2);
-			u8g2_for_adafruit_gfx.setCursor(100, 220);
-			memcpy(s1, LANG[6], 40);
-			u8g2_for_adafruit_gfx.print(s1);
-			//	display.setCursor(100, 220);
-			//	display.println(REPLACE_AM);
-		}
-		else
-		{
-			display.setTextColor(ILI9341_BLACK);
-			display.setCursor(80, 210);
-			display.println(ammount_left);
-			display.setFont();
-			display.setTextSize(2);
-		}
+	if (ammount_left == 0)
+	{
+		color_bg = Warning_RED;
+		color_txt = ILI9341_WHITE;
+		sprintf(str_act, "%s", LANG[26]);
+
+	}
+	else
+	{
+		color_bg = Warning_YELLOW;
+		color_txt = ILI9341_BLACK;
+		sprintf(str_act, "%s", LANG[25]);
+	}
+
+	//display.fillScreen(color_bg);
+	//display.setFont();
+	//display.setTextColor(color_txt);
+	PARSE_BG_SET(color_txt, color_bg);
+	//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+	//u8g2_for_adafruit_gfx.setFontMode(1);
+	PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+	sprintf(str_error, "%d", ammount_left);
+	//memcpy(s1, str_error, 40);
+	//align_center_print(s1, PARSE_LINE_1, color_txt, color_bg);
+	PARSE_PRINT(str_error, PARSE_LINE_4, color_txt, color_bg);
+	//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	//u8g2_for_adafruit_gfx.setFontMode(1);
+	PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+	//memcpy(s1,LANG[23],40);
+	//align_center_print(s1, PARSE_LINE_2, color_txt, color_bg);
+	PARSE_PRINT(LANG[24], PARSE_LINE_6, color_txt, color_bg);
+	//memcpy(s1, LANG[2], 40);
+	//align_center_print(s1, PARSE_LINE_3, color_txt, color_bg);
+	PARSE_PRINT(LANG[2], PARSE_LINE_8, color_txt, color_bg);
+	//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+	//u8g2_for_adafruit_gfx.setFontMode(1);
+	PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+	//memcpy(s1, str_act, 40);
+	//align_center_print(s1, PARSE_LINE_4, color_txt, color_bg);
+	PARSE_PRINT(str_act, PARSE_LINE_12, color_txt, color_bg);
+
+
+
+	//int ammount_left=1200;
+	//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	//u8g2_for_adafruit_gfx.setFontMode(1);
+	//if ((ammount_left >= 0) && (ammount_left % 200 == 0)) {
+	//if (ammount_left == 0)
+	//{
+	//	display.fillScreen(Warning_RED);
+	//	display.setFont(); // we have no letters to show so we cant use font to print letters
+	//	memcpy(s1, LANG[8], 40);
+	//	align_center_print(s1, 40, ILI9341_WHITE, Warning_RED);//, 4);
+	//	memcpy(s1, LANG[9], 40);
+	//	align_center_print(s1, 90, ILI9341_WHITE, Warning_RED);//, 4);
+	//}
+	//else
+	//{
+	//	display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
+	//	display.setFont(); // we have no letters to show so we cant use font to print letters
+	//	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+	//	u8g2_for_adafruit_gfx.setFontMode(1);
+	//	memcpy(s1, LANG[0], 40);
+	//	//align_center_print(s1, 40, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
+	//	align_center_print(s1, 40, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+	//	u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	//	u8g2_for_adafruit_gfx.setFontMode(1);
+	//	memcpy(s1, LANG[8], 40);
+	//	//align_center_print(s1, 55, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
+	//	align_center_print(s1, 90, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+	//	memcpy(s1, LANG[9], 40);
+	//	//align_center_print(s1, 85, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"));//, 4);
+	//	align_center_print(s1, 120, ILI9341_BLACK, Warning_YELLOW);// RGB888toRGB565("FFFF00"));//, 4);
+	//}
+
+//#if PROMINI
+//	display.setFont(&ArmentaFont32pt7b);
+//	display.setTextSize(FontSizeArmenta);
+//#else
+//	display.setFont(&ArmentaFont64pt7b);
+//	display.setTextSize(FontSizeArmenta / 2);
+//#endif
+
+	//if (ammount_left >= 1000)
+	//{
+	//	display.setTextColor(ILI9341_BLACK);
+	//	display.setCursor(30, 210);
+	//	display.println(ammount_left);
+	//	display.setFont();
+	//	display.setTextSize(2);
+	//}
+	//else if (ammount_left == 0)
+	//{
+	//	display.setTextColor(ILI9341_WHITE);
+	//	display.setCursor(130, 180);
+	//	display.println(ammount_left);
+	//	display.setFont();
+	//	display.setTextSize(2);
+	//	u8g2_for_adafruit_gfx.setCursor(100, 220);
+	//	memcpy(s1, LANG[6], 40);
+	//	u8g2_for_adafruit_gfx.print(s1);
+	//	//	display.setCursor(100, 220);
+	//	//	display.println(REPLACE_AM);
+	//}
+	//else
+	//{
+	//	display.setTextColor(ILI9341_BLACK);
+	//	display.setCursor(80, 210);
+	//	display.println(ammount_left);
+	//	display.setFont();
+	//	display.setTextSize(2);
+	//}
 	//}
 
 
 
-#if !DEBUG_STANDALONE
+//#if !DEBUG_STANDALONE
 	// After we draw the screen - we then show the 
 	//delay(2000);
 	//display.setFont();
 	//display.setTextSize(2);
 	//reset_screen();
-#endif
+//#endif
 }
 
 void parse_pressure(char* buf) {
@@ -1110,4 +1283,19 @@ uint16_t color_565_from_888(uint32_t RGB888)
 {
 	uint16_t RGB565 = (((RGB888 & 0xf80000) >> 8) + ((RGB888 & 0xfc00) >> 5) + ((RGB888 & 0xf8) >> 3));
 	return RGB565;
+}
+void parse_syserror(char* buf)
+{
+	buf++;
+	uint16_t color_bg = Warning_RED;
+	uint16_t color_txt = ILI9341_WHITE;
+	char str_error[10];
+
+	sprintf(str_error, "E%d", 300);
+
+	PARSE_BG_SET(color_txt, color_bg);
+	PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+	PARSE_PRINT(str_error, PARSE_LINE_6, color_txt, color_bg);
+	PARSE_PRINT(LANG[30], PARSE_LINE_10, color_txt, color_bg);
+
 }

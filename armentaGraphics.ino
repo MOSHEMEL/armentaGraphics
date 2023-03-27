@@ -285,17 +285,17 @@ void setup(void) {
 
 	DRAW_WELCOME
 
-		delay(2000);
+	delay(2000);
 #if DEBUG_STANDALONE
   
   
-  display.fillScreen(ILI9341_BLACK);
-  delay(2000);
+	//display.fillScreen(ILI9341_BLACK);
+	//delay(2000);
 	//display.fillScreen(Warning_YELLOW);// RGB888toRGB565("FFFF00"));
-  //parse_fin_batt();
-  while(1);
-  DRAW_BATTERY
-	display.println("HELLO");
+	//parse_fin_batt();
+	//while(1);
+	//DRAW_BATTERY
+	//display.println("HELLO");
 	//u8g2_for_adafruit_gfx.drawUTF8(0,20,"la oración");
 	//utf8ascii(ENG[10]);
 	// align_center_print(LANG[10], 30, RGB888toRGB565("00B0F0"), RGB888toRGB565("FFFF00"), 1);
@@ -317,16 +317,16 @@ void setup(void) {
 
 
 
-	char str_serial_status[30];
-	char s1[40];
-	int i = 8;
-  int num=0;
+	//char str_serial_status[30];
+	//char s1[40];
+	//int i = 8;
+	//int num=0;
 	//for (i = 0; i < LANG_STR_NUM; i++)
 	//{
 	//	LANG[i] = LANG_FRA_ARR[i];
 	//}
-	serial_number = 1920046;
-	remaining_pulses = 0;
+	//serial_number = 1920046;
+	//remaining_pulses = 0;
 	//while (1)
 	//{
 	//	if (i == 0)
@@ -396,31 +396,56 @@ void setup(void) {
 	//	parse_fail(" 0									");
 	//	delay(3000);
 	//}
-	while (1)
-	{
+	//while (1)
+	//{
 		//parse_E(" 503									");
 		//delay(3000);
 		//parse_E(" 504									");
 		//delay(3000);
-//		set_lang(LANG_FRA);
-//		parse_O(" 503									");
-    delay(1500);
-    sprintf(s1, "B%d",i );
-   // itoa(i,s1,10);
-    parse_battery_percent(s1);
-		delay(15000);
-    i=i+10;
-//		set_lang(LANG_GER);
-//		parse_O(" 503									");
-//		delay(15000);
-//		set_lang(LANG_ENG);
-//		parse_O(" 503									");
-//		delay(15000);
-//		set_lang(LANG_SPA);
-//		parse_O(" 503									");
-//		delay(15000);
-	}
+		//set_lang(LANG_FRA);
+		//parse_O(" 503									");
+		//delay(1500);
+		//sprintf(s1, "B%d",i );
+		// itoa(i,s1,10);
+		//parse_battery_percent(s1);
+		//delay(15000);
+		//i=i+10;
+		//set_lang(LANG_GER);
+		//parse_O(" 503									");
+		//delay(15000);
+		//set_lang(LANG_ENG);
+		//parse_O(" 503									");
+		//delay(15000);
+		//set_lang(LANG_SPA);
+		//parse_O(" 503									");
+		//delay(15000);
+	//}
 	//delay(1000);
+	while (1)
+	{
+		parse_E(" 4001									");
+		delay(3000);
+		parse_syserror(" 300									");
+		delay(3000);
+		parse_fail(" 7000									");
+		delay(3000);
+		parse_fail(" 1000									");
+		delay(3000);
+		parse_fail(" 0									");
+		delay(3000);
+		parse_E(" 503									");
+		delay(3000);
+		parse_E(" 504									");
+		delay(3000);
+		parse_fin_batt(" 25									");
+		delay(3000);
+		parse_fin_batt(" 15									");
+		delay(3000);
+		parse_fin_batt(" 0									");
+		delay(3000);
+		parse_fin_batt(" 200									");
+		delay(3000);
+	}
 #endif
 /*
 	paint_half_half();
@@ -601,23 +626,27 @@ void loop(void) {
 		else
 		{
 			static unsigned long last_error_millis = millis();
-			static char timeout[] = "System Failure E300";
-      //static char timeout[] = "la oración";
+			//static char timeout[] = "System Failure E300";
+			static char timeout[] = "300";
+			//static char timeout[] = "la oración";
 			char* buf = &timeout[0];
 			if (millis() - last_error_millis > WATCHDOG_TIMER_EXPIRE/2 )
 			{
 				Serial.println("mcu where are you?");
-				display.fillScreen(Warning_RED);
-				display.setFont();
 
-				display.setTextColor(ILI9341_WHITE);
-				display.setTextSize(6);
-				display.setCursor(75, 30);
-				display.println("Error");
-				display.setCursor(50, 90);
-				display.setTextSize(2);
+				parse_syserror(buf);
 
-				display.println(timeout);
+				//display.fillScreen(Warning_RED);
+				//display.setFont();
+				
+				//display.setTextColor(ILI9341_WHITE);
+				//display.setTextSize(6);
+				//display.setCursor(75, 30);
+				//display.println("Error");
+				//display.setCursor(50, 90);
+				//display.setTextSize(2);
+				
+				//display.println(timeout);
 				last_error_millis = millis();
 			}
 		}
