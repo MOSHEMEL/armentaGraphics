@@ -423,8 +423,28 @@ void setup(void) {
 	//delay(1000);
 	while (1)
 	{
+		remaining_pulses = 0;
+		parse_E(" 4000									");
+		delay(3000);
+		remaining_pulses = 6000;
+		parse_E(" 4000									");
+		delay(3000);
+		remaining_pulses = 8000;
+		parse_E(" 4000									");
+		delay(3000);
 		parse_E(" 4001									");
 		delay(3000);
+		parse_E(" 4010									");
+		delay(3000);
+		parse_E(" 6999									");
+		delay(3000);
+		parse_remaining_show(" 8000									");
+		delay(3000);
+		parse_remaining_show(" 6000									");
+		delay(3000);
+		parse_remaining_show(" 0									");
+		delay(3000);
+		continue;
 		parse_syserror(" 300									");
 		delay(3000);
 		parse_fail(" 7000									");

@@ -30,6 +30,8 @@
 	#include "drawfigures.h"
 #endif
 #define GREEN_WARN_BATT     668
+#define REMAINING_WARN      7000
+
 #define LANG_STR_NUM	39//17
 #define LANG_STR_LEN	50//40
 #define LANG_WIN_LEN	2
