@@ -423,6 +423,8 @@ void setup(void) {
 	//delay(1000);
 	while (1)
 	{
+		parse_O(" 503									");
+		delay(3000);
 		remaining_pulses = 0;
 		parse_E(" 4000									");
 		delay(3000);
@@ -438,13 +440,13 @@ void setup(void) {
 		delay(3000);
 		parse_E(" 6999									");
 		delay(3000);
-		parse_remaining_show(" 8000									");
+		serial_number = 123123;
+		parse_serial_show(" 8000									");
 		delay(3000);
-		parse_remaining_show(" 6000									");
+		parse_serial_show(" 6000									");
 		delay(3000);
-		parse_remaining_show(" 0									");
+		parse_serial_show(" 0									");
 		delay(3000);
-		continue;
 		parse_syserror(" 300									");
 		delay(3000);
 		parse_fail(" 7000									");
