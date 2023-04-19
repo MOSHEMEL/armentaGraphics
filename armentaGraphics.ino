@@ -423,8 +423,6 @@ void setup(void) {
 	//delay(1000);
 	while (1)
 	{
-		parse_O(" 503									");
-		delay(3000);
 		remaining_pulses = 0;
 		parse_E(" 4000									");
 		delay(3000);
@@ -458,6 +456,8 @@ void setup(void) {
 		parse_E(" 503									");
 		delay(3000);
 		parse_E(" 504									");
+		delay(3000);
+		parse_O(" 503									");
 		delay(3000);
 		parse_fin_batt(" 25									");
 		delay(3000);

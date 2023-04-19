@@ -430,22 +430,37 @@ void parse_E(char* buf)
 		//	//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
 		//  //u8g2_for_adafruit_gfx.setFontMode(1);
 
-			char b[40];
-			color_bg = Warning_YELLOW;
+			//char b[40];
+			//color_bg = Warning_YELLOW;
+			//
+			//sprintf(b, " %d", REMAINING_WARN);
+			//
+			//if (remaining_pulses < REMAINING_WARN)
+			//	sprintf(b, " %d", remaining_pulses);
+			//
+			//color_txt = parse_remaining_show(b);
 
-			sprintf(b, " %d", REMAINING_WARN);
-
-			if (remaining_pulses < REMAINING_WARN)
-				sprintf(b, " %d", remaining_pulses);
-
-			color_txt = parse_remaining_show(b);
-
-			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
 			if (remaining_pulses > 0)
+			{
+				color_txt = ILI9341_BLACK;
+				color_bg = Warning_YELLOW;
 				sprintf(str_error, "A%d", error_code);
+			}
 			else
+			{
+				color_txt = ILI9341_WHITE;
+				color_bg = Warning_RED;
 				sprintf(str_error, "E%d", error_code);
-			PARSE_PRINT(str_error, PARSE_LINE_1, color_txt, color_bg);
+			}
+			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+			PARSE_BG_SET(color_txt, color_bg);
+
+			PARSE_PRINT(str_error, PARSE_LINE_5, color_txt, color_bg);
+
+			PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+			PARSE_PRINT(LANG[2], PARSE_LINE_7, color_txt, color_bg);
+			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+			PARSE_PRINT(LANG[26], PARSE_LINE_12, color_txt, color_bg);
 
 			//char b[40] = " 5000";
 			//if (remaining_pulses < 5000)
@@ -1329,6 +1344,7 @@ uint16_t parse_remaining_show(char* buf)
 		//}
 		//#endif
 	//}
+	
 	if (remaining_pulses <= REMAINING_WARN)
 	{
 		if (remaining_pulses > 0)
@@ -1339,6 +1355,7 @@ uint16_t parse_remaining_show(char* buf)
 		else
 			color_bg = Warning_RED;// RGB888toRGB565("FF0000");
 	}
+
 	PARSE_BG_SET(color_txt, color_bg);
 	PARSE_FONT_SET(u8g2_font_ncenR18_tf);
 
