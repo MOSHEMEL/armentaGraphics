@@ -711,10 +711,10 @@ void parse_E(char* buf)
 		}
 	// After we draw the screen - we then show the 
 #if !DEBUG_STANDALONE
-	//delay(2000);
-	//display.setFont();
-	//display.setTextSize(2);
-	//reset_screen();
+	delay(2000);
+	display.setFont();
+	display.setTextSize(2);
+	reset_screen();
 #endif
 	}
 }
@@ -951,10 +951,10 @@ void parse_fail(char* buf)
 
 //#if !DEBUG_STANDALONE
 	// After we draw the screen - we then show the 
-	//delay(2000);
-	//display.setFont();
-	//display.setTextSize(2);
-	//reset_screen();
+	delay(2000);
+	display.setFont();
+	display.setTextSize(2);
+	reset_screen();
 //#endif
 }
 
@@ -1197,7 +1197,8 @@ void print_error(char* buf)
   buf[size-1] = '\0';
 	display.println(buf);
 	//delay(10000);
-	//reset_screen();
+	delay(2000);
+	reset_screen();
 }
 
 void print_warning(char* buf)
@@ -1220,7 +1221,8 @@ void print_warning(char* buf)
 	buf[size - 1] = '\0';
 	display.println(buf);
 	//delay(10000);
-	//reset_screen();
+	delay(2000);
+	reset_screen();
 }
 
 void blank_on_reset(char* buf)
@@ -1267,7 +1269,8 @@ void parse_cs(char* buf)
 	display.setCursor(0, 30);
 	display.println(buf);
 	//delay(5000);
-	//reset_screen();
+	delay(2000);
+	reset_screen();
 }
 void parse_serial(char* buf)
 {

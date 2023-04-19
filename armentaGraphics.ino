@@ -229,17 +229,14 @@ void PrintOnLcd(char* buf)
 	{
 		parse_version(buf);
 	}
-	else 
-  
-  if ((*buf == 'g') || (*buf == 'G'))
+	else if ((*buf == 'g') || (*buf == 'G'))
 	{
 		parse_cs(buf);
 	}
-  else if((*buf=='k') || (*buf == 'K'))
-  {
-   parse_fin_batt(buf); 
-  }
-
+	else if((*buf=='k') || (*buf == 'K'))
+	{
+	parse_fin_batt(buf); 
+	}
 	else if ((*buf == 'n') || (*buf == 'N'))
 	{
 		NVIC_SystemReset();
