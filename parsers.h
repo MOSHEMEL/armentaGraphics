@@ -364,6 +364,18 @@ void parse_fin_batt(char* buf)
 		  PARSE_FONT_SET(u8g2_font_ncenR18_tf);
 		  PARSE_PRINT(LANG[37], PARSE_LINE_9, color_txt, color_bg);
 	  }
+	  else
+	  {
+		  uint16_t color_txt = ILI9341_WHITE;
+		  uint16_t color_bg = Warning_RED;
+		  char str_error[10];
+
+		  sprintf(str_error, "E%d", percent);
+
+		  PARSE_BG_SET(color_txt, color_bg);
+		  PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+		  PARSE_PRINT(str_error, PARSE_LINE_6, color_txt, color_bg);
+	  }
 
       //if(config==GREEN_WARN_BATT)
       //{
@@ -1189,12 +1201,12 @@ void print_error(char* buf)
 	display.println("Error");
 	display.setCursor(50, 90);
 	display.setTextSize(2);
-  uint16_t size = 0;
-  while(buf[size] != '\0')
-  {
-    size ++;
-  }
-  buf[size-1] = '\0';
+	//uint16_t size = 0;
+	//while(buf[size] != '\0')
+	//{
+	//  size ++;
+	//}
+	//buf[size-1] = '\0';
 	display.println(buf);
 	//delay(10000);
 	delay(2000);
