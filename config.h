@@ -5,10 +5,11 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_ILI9341.h"
 #define DEBUG_FLAG        0
-#define DEBUG_STANDALONE  1
+#define DEBUG_STANDALONE  0
 #define UNIT_TEST
+//#define UART_TX
 
-#define VERSION				"3.91"
+#define VERSION				"4.1"
 #define PROMINI				0
 #define LED_TOGGLE			0
 #define ILI9341_bk1			0x0555
