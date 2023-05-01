@@ -9,7 +9,7 @@
 #define UNIT_TEST
 //#define UART_TX
 
-#define VERSION				"4.1"
+#define VERSION				"3.10"
 #define PROMINI				0
 #define LED_TOGGLE			0
 #define ILI9341_bk1			0x0555
