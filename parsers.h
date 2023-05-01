@@ -1224,12 +1224,12 @@ void print_warning(char* buf)
 	display.println("Warning");
 	display.setCursor(50, 90);
 	display.setTextSize(2);
-	uint16_t size = 0;
-	while (buf[size] != '\0')
-	{
-		size++;
-	}
-	buf[size - 1] = '\0';
+	//uint16_t size = 0;
+	//while (buf[size] != '\0')
+	//{
+	//	size++;
+	//}
+	//buf[size - 1] = '\0';
 	display.println(buf);
 	//delay(10000);
 	//reset_screen();
