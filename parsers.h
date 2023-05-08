@@ -452,27 +452,27 @@ void parse_E(char* buf)
 			//
 			//color_txt = parse_remaining_show(b);
 
-			if (remaining_pulses > 0)
-			{
-				color_txt = ILI9341_BLACK;
-				color_bg = Warning_YELLOW;
-				sprintf(str_error, "A%d", error_code);
-			}
-			else
-			{
-				color_txt = ILI9341_WHITE;
-				color_bg = Warning_RED;
-				sprintf(str_error, "E%d", error_code);
-			}
+			//if (remaining_pulses > 0)
+			//{
+			color_txt = ILI9341_BLACK;
+			color_bg = Warning_YELLOW;
+			sprintf(str_error, "A%d", error_code);
+			//}
+			//else
+			//{
+			//	color_txt = ILI9341_WHITE;
+			//	color_bg = Warning_RED;
+			//	sprintf(str_error, "E%d", error_code);
+			//}
 			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
 			PARSE_BG_SET(color_txt, color_bg);
 
-			PARSE_PRINT(str_error, PARSE_LINE_5, color_txt, color_bg);
+			PARSE_PRINT(str_error, PARSE_LINE_6, color_txt, color_bg);
 
-			PARSE_FONT_SET(u8g2_font_ncenR18_tf);
-			PARSE_PRINT(LANG[2], PARSE_LINE_7, color_txt, color_bg);
-			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
-			PARSE_PRINT(LANG[26], PARSE_LINE_12, color_txt, color_bg);
+			//PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+			PARSE_PRINT(LANG[2], PARSE_LINE_10, color_txt, color_bg);
+			//PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+			//PARSE_PRINT(LANG[26], PARSE_LINE_12, color_txt, color_bg);
 
 			//char b[40] = " 5000";
 			//if (remaining_pulses < 5000)
