@@ -9,7 +9,7 @@ extern int remaining_pulses;
 #endif
 extern U8G2_FOR_ADAFRUIT_GFX u8g2_for_adafruit_gfx;
 
-#define PARSE_LINE_SIZE	40
+#define PARSE_LINE_SIZE	LANG_STR_LEN
 
 #define PARSE_LINE_1	40
 #define PARSE_LINE_2	55
@@ -314,7 +314,7 @@ void align_center_print(char *string, int y, uint16_t color, uint16_t bg_color)/
 }
 void parse_fin_batt(char* buf)
 {
-  char s1[40];
+  //char s1[40];
   //int config = 0;
   int percent = 0;
       
@@ -354,7 +354,7 @@ void parse_fin_batt(char* buf)
 	  {
 		  uint16_t color_txt = ILI9341_WHITE;
 		  uint16_t color_bg = Warning_RED;
-		  char str_error[10];
+		  char str_error[PARSE_LINE_SIZE];
 
 		  sprintf(str_error, "E%d", percent);
 
@@ -368,7 +368,7 @@ void parse_fin_batt(char* buf)
 	  {
 		  uint16_t color_txt = ILI9341_WHITE;
 		  uint16_t color_bg = Warning_RED;
-		  char str_error[10];
+		  char str_error[PARSE_LINE_SIZE];
 
 		  sprintf(str_error, "E%d", percent);
 
@@ -404,7 +404,7 @@ void parse_E(char* buf)
 	//char s1[40];
 	uint16_t color_txt;
 	uint16_t color_bg;
-	char str_error[10];
+	char str_error[PARSE_LINE_SIZE];
 
 	buf++;
 
@@ -672,7 +672,7 @@ void parse_E(char* buf)
 		{
 			uint16_t color_txt = ILI9341_BLACK;
 			uint16_t color_bg = Warning_YELLOW;
-			char str_error[10];
+			char str_error[PARSE_LINE_SIZE];
 
 			PARSE_BG_SET(color_txt, color_bg);
 			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
@@ -723,10 +723,10 @@ void parse_E(char* buf)
 		}
 	// After we draw the screen - we then show the 
 #if !DEBUG_STANDALONE
-	delay(2000);
-	display.setFont();
-	display.setTextSize(2);
-	reset_screen();
+	//delay(2000);
+	//display.setFont();
+	//display.setTextSize(2);
+	//reset_screen();
 #endif
 	}
 }
@@ -754,7 +754,7 @@ void E503(int error_code)
 {
 	uint16_t color_txt = ILI9341_WHITE;
 	uint16_t color_bg = Warning_RED;
-	char str_error[10];
+	char str_error[PARSE_LINE_SIZE];
 
 	PARSE_BG_SET(color_txt, color_bg);
 	PARSE_FONT_SET(u8g2_font_ncenR24_tf);
@@ -842,8 +842,8 @@ void parse_fail(char* buf)
 	int ammount_left = atoi(buf);
 	uint16_t color_txt;
 	uint16_t color_bg;
-	char str_error[10];
-	char str_act[10];
+	char str_error[PARSE_LINE_SIZE];
+	char str_act[PARSE_LINE_SIZE];
 
 	if (ammount_left == 0)
 	{
@@ -963,11 +963,11 @@ void parse_fail(char* buf)
 
 //#if !DEBUG_STANDALONE
 	// After we draw the screen - we then show the 
-	delay(2000);
-	display.setFont();
-	display.setTextSize(2);
-	reset_screen();
-//#endif
+	//delay(2000);
+	//display.setFont();
+	//display.setTextSize(2);
+	//reset_screen();
+	//#endif
 }
 
 void parse_pressure(char* buf) {
@@ -1040,7 +1040,7 @@ void parse_lang(char* buf)
 	int cur = 0;
 	LANG_TypeDef language = LANG_ENG;
 	static LANG_TypeDef lang_prev = LANG_MAX;
-	char s1[40];
+	char s1[PARSE_LINE_SIZE];
 
 	buf++;
 	language = (LANG_TypeDef)atoi(buf);
@@ -1209,8 +1209,8 @@ void print_error(char* buf)
 	//buf[size-1] = '\0';
 	display.println(buf);
 	//delay(10000);
-	delay(2000);
-	reset_screen();
+	//delay(2000);
+	//reset_screen();
 }
 
 void print_warning(char* buf)
@@ -1233,8 +1233,8 @@ void print_warning(char* buf)
 	//buf[size - 1] = '\0';
 	display.println(buf);
 	//delay(10000);
-	delay(2000);
-	reset_screen();
+	//delay(2000);
+	//reset_screen();
 }
 
 void blank_on_reset(char* buf)
@@ -1281,8 +1281,8 @@ void parse_cs(char* buf)
 	display.setCursor(0, 30);
 	display.println(buf);
 	//delay(5000);
-	delay(2000);
-	reset_screen();
+	//delay(2000);
+	//reset_screen();
 }
 void parse_serial(char* buf)
 {
@@ -1295,7 +1295,7 @@ void parse_serial(char* buf)
 uint16_t parse_remaining_show(char* buf)
 {
 	//char s1[40];
-	char str_serial_status[40];
+	char str_serial_status[PARSE_LINE_SIZE];
 	uint16_t color_bg = Warning_BLUE;
 	uint16_t color_txt = ILI9341_WHITE;
 	//Serial.print("show");
@@ -1402,7 +1402,7 @@ void parse_serial_show(char* buf)
 	uint16_t color_bg = Warning_BLUE;
 	uint16_t color_txt = ILI9341_WHITE;
 
-	char str_serial_status[40];
+	char str_serial_status[PARSE_LINE_SIZE];
 	color_txt = parse_remaining_show(buf);
 
 	sprintf(str_serial_status, "%s %d", LANG[13], serial_number);
@@ -1421,7 +1421,7 @@ void parse_syserror(char* buf)
 	buf++;
 	uint16_t color_bg = Warning_RED;
 	uint16_t color_txt = ILI9341_WHITE;
-	char str_error[10];
+	char str_error[PARSE_LINE_SIZE];
 
 	sprintf(str_error, "E%d", 300);
 

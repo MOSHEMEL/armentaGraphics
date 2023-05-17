@@ -6,7 +6,7 @@
 #include "Adafruit_ILI9341.h"
 #define DEBUG_FLAG        0
 #define DEBUG_STANDALONE  0
-#define UNIT_TEST
+//#define UNIT_TEST
 //#define UART_TX
 
 #define VERSION				"3.10"
@@ -92,7 +92,7 @@ char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "PRESS RESET" },								  // 25
 	{ "REPLACE AM" },								  // 26
 	{ "Maintenance is due." },						  // 27
-	{ "Efficiencyand safety" },						  // 28
+	{ "Efficiency and safety" },					  // 28
 	{ "compromised" },								  // 29
 	{ "CONTACT SERVICE" },							  // 30
 	{ "Battery 25 \%" },							  // 31
