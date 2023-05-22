@@ -327,6 +327,12 @@ void parse_fin_batt(char* buf)
 		  uint16_t color_txt = ILI9341_BLACK;
 		  uint16_t color_bg = Warning_YELLOW;
 
+		  if (percent == 15)
+		  {
+			  color_txt = ILI9341_WHITE;
+			  color_bg = Warning_RED;
+		  }
+
 		  PARSE_BG_SET(color_txt, color_bg);
 		  PARSE_FONT_SET(u8g2_font_ncenR24_tf);
 		  if (percent == 25)
@@ -1039,7 +1045,7 @@ void parse_lang(char* buf)
 	int j = 0;
 	int cur = 0;
 	LANG_TypeDef language = LANG_ENG;
-	static LANG_TypeDef lang_prev = LANG_MAX;
+	//static LANG_TypeDef lang_prev = LANG_MAX;
 	char s1[PARSE_LINE_SIZE];
 
 	buf++;
@@ -1059,61 +1065,61 @@ void parse_lang(char* buf)
 	}
 #endif /* UNIT_TEST */
 
-	if (language != lang_prev)
+	//if (language != lang_prev)
+	//{
+	//clear screen
+	display.fillRect(0, 0, 320, 240, ILI9341_bk1);
+	display.setTextColor(ILI9341_WHITE);
+	display.setTextSize(4);
+	display.setCursor(LANG_X, LANG_Y);
+	display.println("Language:");
+
+	display.setTextSize(2);
+	display.setCursor(LANG_X, LANG_Y + 180);
+	display.println("Reset to roll");
+
+	//display.drawRGBBitmap(LANG_X, LANG_Y + 60, (uint16_t*)(lang_errow.pixel_data), lang_errow.width, lang_errow.height);
+
+	//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+	//u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+	PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+	u8g2_for_adafruit_gfx.setFontDirection(0);
+	if (language < LANG_WIN_LEN)
 	{
-		//clear screen
-		display.fillRect(0, 0, 320, 240, ILI9341_bk1);
-		display.setTextColor(ILI9341_WHITE);
-		display.setTextSize(4);
-		display.setCursor(LANG_X, LANG_Y);
-		display.println("Language:");
-
-		display.setTextSize(2);
-		display.setCursor(LANG_X, LANG_Y + 180);
-		display.println("Reset to roll");
-
-		//display.drawRGBBitmap(LANG_X, LANG_Y + 60, (uint16_t*)(lang_errow.pixel_data), lang_errow.width, lang_errow.height);
-
-		//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-		//u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
-		PARSE_FONT_SET(u8g2_font_ncenR18_tf);
-		u8g2_for_adafruit_gfx.setFontDirection(0);
-		if (language < LANG_WIN_LEN)
+		j = 0;
+		cur = language;
+	}
+	else
+	{
+		cur = LANG_WIN_LEN - 1;
+		j = language - cur;
+	}
+	for (i = 0; i < LANG_WIN_LEN; i++, j++)
+		LANG_WIN[i] = LANG_NAMES[j];
+	for (i = 0; i < LANG_WIN_LEN; i++)
+	{
+		if (i == cur)
 		{
-			j = 0;
-			cur = language;
+			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
+			//u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+			PARSE_FONT_SET(u8g2_font_ncenR24_tf);
+			u8g2_for_adafruit_gfx.setFontDirection(0);
+			memcpy(s1, "-->", 40);
+			at_point_print(s1, LANG_X, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1);//, 1);
+			memcpy(s1, LANG_WIN[i], 40);
+			at_point_print(s1, LANG_X + 45, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1);//, 4);
 		}
 		else
 		{
-			cur = LANG_WIN_LEN - 1;
-			j = language - cur;
+			//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
+			//u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
+			PARSE_FONT_SET(u8g2_font_ncenR18_tf);
+			u8g2_for_adafruit_gfx.setFontDirection(0);
+			memcpy(s1, LANG_WIN[i], 40);
+			at_point_print(s1, LANG_X + 45, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1);//, 3);
 		}
-		for (i = 0; i < LANG_WIN_LEN; i++, j++)
-			LANG_WIN[i] = LANG_NAMES[j];
-		for (i = 0; i < LANG_WIN_LEN; i++)
-		{
-			if (i == cur)
-			{
-				//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR24_tf);
-				//u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
-				PARSE_FONT_SET(u8g2_font_ncenR24_tf);
-				u8g2_for_adafruit_gfx.setFontDirection(0);
-				memcpy(s1, "-->", 40);
-				at_point_print(s1, LANG_X, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1);//, 1);
-				memcpy(s1, LANG_WIN[i], 40);
-				at_point_print(s1, LANG_X + 45, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1);//, 4);
-			}
-			else
-			{
-				//u8g2_for_adafruit_gfx.setFont(u8g2_font_ncenR18_tf);
-				//u8g2_for_adafruit_gfx.setFontMode(1);                 // use u8g2 none transparent mode
-				PARSE_FONT_SET(u8g2_font_ncenR18_tf);
-				u8g2_for_adafruit_gfx.setFontDirection(0);
-				memcpy(s1, LANG_WIN[i], 40);
-				at_point_print(s1, LANG_X + 45, LANG_Y + 72 + 30 * i, ILI9341_WHITE, ILI9341_bk1);//, 3);
-			}
-		}
-		lang_prev = language;
+		//}
+		//lang_prev = language;
 	}
 }
 

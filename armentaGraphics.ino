@@ -418,6 +418,7 @@ void setup(void) {
 		//delay(15000);
 	//}
 	//delay(1000);
+	set_lang(LANG_SPA);
 	while (1)
 	{
 		remaining_pulses = 0;
