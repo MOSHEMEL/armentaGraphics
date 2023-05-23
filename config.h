@@ -6,7 +6,7 @@
 #include "Adafruit_ILI9341.h"
 #define DEBUG_FLAG        0
 #define DEBUG_STANDALONE  0
-#define UNIT_TEST
+//#define UNIT_TEST
 //#define UART_TX
 
 #define VERSION				"4.1"
@@ -105,31 +105,48 @@ char LANG_ENG_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
 	{ "\0" }										  // 38
 };
   
-char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
-	{ "Atención" },									 // 0
-	{ "Notificar Servicio" },						 // 2
-	{ "Contacto Servicio" },						 // 1
-	{ "Error" },									 // 3
-	{ "Apagar y" },									 // 4
-	{ "Vuelva a conectar APT" },					 // 5
-	{ "Reemplazar AM" },							 // 6
-	{ "Mantenimiento requerido" },					 // 7
-	{ "AM Pulsos" },								 // 8
-	{ "Restante" },									 // 9
-	{ "Presta atención, te quedas" },				 // 10
-	{ "con menos de 5000 pulsos." },				 // 11
-	{ "Por favor reemplace AM" },					 // 12
-	//{ "AM número %d" },							 // 
-	//{ "Restante %d" },							 // 
-	{ "AM número" },								 // 13
-	{ "Restante" },									 // 14
-	{ "de inmediato" },								 // 15
-	{ "Garantía expirada" },						 // 16
-	{ "Se requiere servicio de" },	 // 17
-	{ "reacondicione. Eficiencia del APT " },						 // 18
-	{ "puede estar comprometida." },				 // 19
-	{ "Uso adicional bajo su propio riesgo." },		 // 20
-	{ "\0" }										 // 21
+char LANG_SPA_ARR[LANG_STR_NUM][LANG_STR_LEN] = {
+	{ "Atención" },									  // 0
+	{ "Notificar Servicio" },						  // 1
+	{ "Contacte al Servicio" },						  // 2
+	{ "Error" },									  // 3
+	{ "Apagar y" },									  // 4
+	{ "Vuelva a conectar APT" },					  // 5
+	{ "Reemplazar AM" },							  // 6
+	{ "Mantenimiento Requerido" },					  // 7
+	{ "AM Pulsos" },								  // 8
+	{ "Restante" },									  // 9
+	{ "Presta atención, te quedas" },				  // 10
+	{ "con menos de 5000 pulsos." },				  // 11
+	{ "Por favor reemplace AM" },					  // 12
+	//{ "AM número %d" },							  // 
+	//{ "Restante %d" },							  // 
+	{ "Número de AM" },								  // 13
+	{ "Restante" },									  // 14
+	{ "de inmediato" },								  // 15
+	{ "Garantía expirada" },						  // 16
+	{ "Se requiere servicio de" },					  // 17
+	{ "reacondicione. eficiencia del APT " },		  // 18
+	{ "puede estar comprometida." },				  // 19
+	{ "Uso adicional bajo su propio riesgo." },		  // 20
+	{ "Por favor cargue la batería." },				  // 21
+	{ "Volver a Conectar" },						  // 22
+	{ "Cable de APT" },								  // 23
+	{ "Restantes de Pulsos" },						  // 24
+	{ "Pulsa Reiniciar" },							  // 25
+	{ "Reemplazar AM" },							  // 26
+	{ "Mantenimiento es debido." },					  // 27
+	{ "Eficiencia y seguridad" },					  // 28
+	{ "comprometida" },								  // 29
+	{ "Contacte al Servicio" },						  // 30
+	{ "Batería en 25 \%" },							  // 31
+	{ "Batería en 20 \%" },							  // 32
+	{ "Batería en 15 \%" },							  // 33
+	{ "por favor carga" },							  // 34
+	{ "Batería Descargada" },						  // 35
+	{ "Cargar p/ continuar" },						  // 36
+	{ "Baja temperatura ambiente" },				  // 37
+	{ "\0" },								    	  // 38
 };
 
 char LANG_GER_ARR[LANG_STR_NUM][LANG_STR_LEN] =  {
