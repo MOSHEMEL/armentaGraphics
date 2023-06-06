@@ -1017,19 +1017,19 @@ void set_lang(LANG_TypeDef language)
 			LANG[i] = LANG_SPA_ARR[i];
 		}
 		break;
-	// case LANG_GER:
-	// 	for (i = 0; i < LANG_STR_NUM; i++)
-	// 	{
-	// 		LANG[i] = LANG_GER_ARR[i];
-	// 	}
-	// 	break;
-	// case LANG_FRA:
-	// 	for (i = 0; i < LANG_STR_NUM; i++)
-	// 	{
-	// 		LANG[i] = LANG_FRA_ARR[i];
-	// 	}
-	// 	break;
-		//case LANG_ENG:
+	    //case LANG_GER:
+	    //	for (i = 0; i < LANG_STR_NUM; i++)
+	    //	{
+	    //		LANG[i] = LANG_GER_ARR[i];
+	    //	}
+	    //	break;
+	    //case LANG_FRA:
+	    //	for (i = 0; i < LANG_STR_NUM; i++)
+	    //	{
+	    //		LANG[i] = LANG_FRA_ARR[i];
+	    //	}
+	    //	break;
+		case LANG_ENG:
 	default:
 		language = LANG_ENG;
 		for (i = 0; i < LANG_STR_NUM; i++)
@@ -1055,16 +1055,14 @@ void parse_lang(char* buf)
 	if ((language < 0) || (language >= LANG_MAX))
 		return;
 
-#ifndef UNIT_TEST
 	if (lang_set_done == false)
 	{
-#endif /* UNIT_TEST */
 		set_lang(language);
-#ifndef UNIT_TEST
+#if UNIT_TEST == 0
 		lang_set_done = true;
 		return;
-	}
 #endif /* UNIT_TEST */
+	}
 
 	//if (language != lang_prev)
 	//{
